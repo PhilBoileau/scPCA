@@ -1,12 +1,20 @@
 Package: scPCA
-Title: What the Package Does (One Line, Title Case)
+Title: Sparse Contrastive Principal Component Analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Philippe",
+           family = "Boileau",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "philippe_boileau@berkeley.edu")
+Description: This package contains the necessary tools to perform the sparse
+             contrastive principal component analysis (scPCA) of 
+             high-dimensional data. scPCA combines the interpretability and
+             stability of penalized PCA with the contrastive PCA's ability to
+             create low-dimensional representations of data that summarize
+             high-dimensional structure of interest.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat
+RoxygenNote: 6.1.1
