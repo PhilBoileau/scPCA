@@ -4,30 +4,61 @@
 \alias{cPCA}
 \title{Constrastive Principal Component Analysis}
 \usage{
-cPCA(target, background, num_eigen, contrast)
+cPCA(target, background, num_eigen = 2, contrasts = exp(seq(log(0.1),
+  log(1000), length.out = 40)), start = NULL, end = NULL,
+  num_contrasts = NULL, num_medoids)
 }
 \arguments{
-\item{target}{The target data. Either a dataframe or a matrix with
+\item{target}{The target data. Either a numeric dataframe or a matrix with
 observations as rows and features as columns.}
 
-\item{background}{The background data. Either a dataframe or a matrix with
-observations as rows and features as columns. The number of features
+\item{background}{The background data. Either a numeric dataframe or a matrix
+with observations as rows and features as columns. The number of features
 must match the number of features in the target data.}
 
-\item{num_eigen}{The number of contrastive principal components to compute.}
+\item{num_eigen}{The number of contrastive principal components to compute.
+Must be a non-negative integer between 1 and the number of columns in the
+target data. Default is 2.}
 
-\item{contrast}{The value of the contrastive parameter.}
+\item{contrasts}{The numeric vector of the contrastive parameters. Each
+element must be a unique non-negative real number. Defaults to 40
+logarithmically spaced values between 0.1 and 1000 when \code{start},
+\code{end} and \code{num_contrasts} parameters are \code{NULL}.
+Alternatively, see \code{start}, \code{end} and \code{num_contrasts}
+parameters.}
+
+\item{start}{The starting value in the sequence of contrast parameters. Use
+\code{start}, \code{end} and \code{num_contrasts} parameters to create the
+sequence of contrast parameters instead of an explicit vector passed to
+\code{contrasts}. Defaults to \code{NULL}. Otherwise, must be an element of
+the positive reals.}
+
+\item{end}{The ending value in the log sequence of contrast parameters. Use
+\code{start}, \code{end} and \code{num_contrasts} parameters to create the
+sequence of contrast parameters instead of an explicit vector passed to
+\code{contrasts}. Defaults to \code{NULL}. Otherwise, must be an element of
+the positive reals.}
+
+\item{num_contrasts}{The number of elements in the log sequence of contrast
+parameters. Use \code{start}, \code{end} and \code{num_contrasts} parameters
+to create the log sequence of contrast parameters instead of an explicit
+vector passed to \code{contrasts}. Defaults to \code{NULL}. Otherswise, must
+be an integer larger than 1.}
+
+\item{num_medoids}{The number of medoids to select during the spectral
+clustering of the constrastive subspaces.}
 }
 \value{
-A list containing the lower-dimensional representation of the target
-  data as a data frame and the column matrix of contrastive principal
-  components.
+A list containing the vector of contrast parameters that were
+  selected as medoids by spectral clustering, the list of eigenvector
+  matrices associated with each of these contrast parameters and the list
+  of reduced-dimension target data associated with these contrast parameters.
 }
 \description{
 Given target and background dataframes or matrices, \code{cPCA}
   will perform the contrastive principal component analysis of the target
-  data for a given number of eigenvectors and a predetermined value
-  for the contrast parameter. For more information on this method, see
+  data for a given number of eigenvectors and a vector of real valued
+  contrast parameters. For more information on this method, see
   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}
   {Abid et al.}.
 }
