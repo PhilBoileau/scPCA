@@ -12,6 +12,8 @@
 #' @param background The background data. Either a numeric dataframe or a matrix
 #'   with observations as rows and features as columns. The number of features
 #'   must match the number of features in the target data.
+#' @param center Whether the target and background data should have their
+#'   columns' centered. Defaults to \code{TRUE}.
 #' @param num_eigen The number of contrastive principal components to compute.
 #'   Must be a non-negative integer between 1 and the number of columns in the
 #'   target data. Default is 2.
@@ -54,7 +56,7 @@
 #' @examples
 #' cPCA(target = toy_df[, 2:31],
 #'      background = background_df)
-cPCA <- function(target, background, num_eigen = 2,
+cPCA <- function(target, background, center = TRUE, num_eigen = 2,
                  contrasts, start = NULL, end = NULL, num_contrasts = NULL,
                  num_medoids){
 
@@ -87,11 +89,14 @@ cPCA <- function(target, background, num_eigen = 2,
             (num_medoids > num_contrasts && !is.null(num_contrasts)))){
     stop(paste("The num_medoids parameter must be a positive integer that is",
                "smaller than the number of contrastive parameters."))
+  } else if(center != TRUE && center != FALSE){
+    stop("The center parameter should be set to TRUE or FALSE.")
   }
 
-  # center both dataframes
-  target <- scale(target, center = TRUE, scale = FALSE)
-  background <- scale(background, center = TRUE, scale = FALSE)
+  if(center){
+    target <- scale(target, center = TRUE, scale = FALSE)
+    background <- scale(background, center = TRUE, scale = FALSE)
+  }
 
   # calculate the empirical covariance matrices, correct scalling factor
   len_target <- nrow(target)
@@ -119,8 +124,8 @@ cPCA <- function(target, background, num_eigen = 2,
   # for each contrasted covariance matrix, compute the eigenvectors
   loadings_mat <- lapply(1:num_contrasts,
                         function(x){
-                          RSpectra::eigs_sym(A = c_contrasts[[x]],
-                                             k = num_eigen)$vectors
+                          eigen(c_contrasts[[x]],
+                                symmetric = TRUE)$vectors
                         })
 
   # for each loadings matrix, project target onto constrastive subspace
