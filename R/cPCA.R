@@ -37,7 +37,9 @@
 #'   vector passed to \code{contrasts}. Defaults to \code{NULL}. Otherswise, must
 #'   be an integer larger than 1.
 #' @param num_medoids The number of medoids to select during the spectral
-#'   clustering of the constrastive subspaces.
+#'   clustering of the constrastive subspaces. Defaults to
+#'   \code{round(num_contrasts/5)} if there are at least 5 contrastive
+#'   parameters, 1 otherwise.
 #'
 #' @return A list containing the vector of contrast parameters that were
 #'   selected as medoids by spectral clustering, the list of eigenvector
@@ -50,9 +52,10 @@
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
+#' cPCA(target = toy_df[, 2:31],
+#'      background = background_df)
 cPCA <- function(target, background, num_eigen = 2,
-                 contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
-                 start = NULL, end = NULL, num_contrasts = NULL,
+                 contrasts, start = NULL, end = NULL, num_contrasts = NULL,
                  num_medoids){
 
   # make sure that all parameters are input properly
@@ -67,8 +70,9 @@ cPCA <- function(target, background, num_eigen = 2,
             num_eigen < 1 || num_eigen > ncol(target) || num_eigen%%1 != 0){
     stop(paste("The num_eigen parameter must be a non-negative integer",
                "between 1 and the number of columns in the target data."))
-  } else if(class(contrasts) != "numeric" || length(contrasts) < 1 ||
-            contrasts >= 0){
+  } else if(!missing(contrasts) &&
+            (class(contrasts) != "numeric" || length(contrasts) < 1 ||
+             contrasts >= 0)){
     stop("The contrasts parameter must be a non-negative numeric vector.")
   } else if(!is.null(start) && start <= 0){
     stop("The start parameter must be NULL or a positive real value.")
@@ -78,6 +82,11 @@ cPCA <- function(target, background, num_eigen = 2,
   } else if(!is.null(num_contrasts) &&
             (num_contrasts < 2 || num_contrasts%%1 != 0)){
     stop("The num_contrasts parameter must be NULL or an integer larger than 1.")
+  } else if(!missing(num_medoids) && (num_medoids <= 0 ||
+            (num_medoids > length(contrast) && is.null(num_contrasts)) ||
+            (num_medoids > num_contrasts && !is.null(num_contrasts)))){
+    stop(paste("The num_medoids parameter must be a positive integer that is",
+               "smaller than the number of contrastive parameters."))
   }
 
   # center both dataframes
@@ -93,37 +102,43 @@ cPCA <- function(target, background, num_eigen = 2,
   # determine the range of contrast parameters to use
   if(!is.null(start) && !is.null(end) && !is.null(num_contrasts)){
     contrasts <- exp(seq(log(start), log(end), length.out = num_contrasts))
+  } else {
+    contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
   }
 
   # perform cPCA on the contrasted covariance matrices, get list of contrasts
   c_contrasts <- lapply(contrasts, function(x){c_target - x*c_background})
 
-  # length of contrasts vector
-  len_con <- length(c_contrasts)
+  # set length of contrasts vector and number of medoids to consider.
+  num_contrasts <- length(c_contrasts)
+  if(missing(num_medoids) && num_contrasts >= 5)
+    num_medoids <- round(num_contrasts / 5)
+  else if(missing(num_medoids))
+    num_medoids <- 1
 
   # for each contrasted covariance matrix, compute the eigenvectors
-  loadings_mat <- lappy(1:len_con,
+  loadings_mat <- lapply(1:num_contrasts,
                         function(x){
                           RSpectra::eigs_sym(A = c_contrasts[[x]],
                                              k = num_eigen)$vectors
                         })
 
   # for each loadings matrix, project target onto constrastive subspace
-  spaces <- lapply(1:len_con,
+  spaces <- lapply(1:num_contrasts,
                    function(x){
                      as.matrix(target) %*% loadings_mat[[x]]
                    })
 
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(1:len_con,
+  qr_decomps <- lapply(1:num_contrasts,
                        function(x){
                          qr.Q(qr(spaces[[x]]))
                        })
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(1:len_con,
+  aff_vect <- sapply(1:(num_contrasts-1),
                      function(i){
-                       sapply((i+1):len_con,
+                       sapply((i+1):num_contrasts,
                               function(j){
                                 Q_i <- qr_decomps[[i]]
                                 Q_j <- qr_decomps[[j]]
@@ -131,8 +146,8 @@ cPCA <- function(target, background, num_eigen = 2,
                                 return(d[1]*d[2])
                               })
                      })
-  aff_mat <- diag(x = 0.5, nrow = len_con)
-  aff_mat[lower.tri(aff_mat, diag = FALSE)] <- aff_vect
+  aff_mat <- diag(x = 0.5, nrow = num_contrasts)
+  aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
   aff_mat <- t(aff_mat)
   # fix any computation errors, see numpy.nan_to_num
   aff_mat[is.nan(aff_mat)] <- 0
@@ -148,18 +163,20 @@ cPCA <- function(target, background, num_eigen = 2,
   contrast_medoids <- sapply(1:num_medoids,
                              function(x){
                                sub_index <- which(spec_clust == x)
-                               sub_aff_mat <- aff_mat[sub_index, sub_index]
+                               sub_aff_mat <- as.matrix(
+                                 aff_mat[sub_index, sub_index])
                                aff_sums <- colSums(sub_aff_mat)
                                return(contrasts[sub_index[which.max(aff_sums)]])
                              })
 
   # create the lists of contrastive parameter medoids, loadings and projections
+  contrast_medoids <- contrast_medoids[order(contrast_medoids)]
   med_index <- which(contrasts %in% contrast_medoids)
   med_loadings_mat <- loadings_mat[med_index]
   med_spaces <- spaces[med_index]
 
   # return the alpha medoids with associated loadings and low-dim rep of target
-  return(list(med_index,
+  return(list(contrast_medoids,
               med_loadings_mat,
               med_spaces))
 

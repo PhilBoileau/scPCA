@@ -4,9 +4,8 @@
 \alias{cPCA}
 \title{Constrastive Principal Component Analysis}
 \usage{
-cPCA(target, background, num_eigen = 2, contrasts = exp(seq(log(0.1),
-  log(1000), length.out = 40)), start = NULL, end = NULL,
-  num_contrasts = NULL, num_medoids)
+cPCA(target, background, num_eigen = 2, contrasts, start = NULL,
+  end = NULL, num_contrasts = NULL, num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -46,7 +45,9 @@ vector passed to \code{contrasts}. Defaults to \code{NULL}. Otherswise, must
 be an integer larger than 1.}
 
 \item{num_medoids}{The number of medoids to select during the spectral
-clustering of the constrastive subspaces.}
+clustering of the constrastive subspaces. Defaults to
+\code{round(num_contrasts/5)} if there are at least 5 contrastive
+parameters, 1 otherwise.}
 }
 \value{
 A list containing the vector of contrast parameters that were
@@ -61,6 +62,10 @@ Given target and background dataframes or matrices, \code{cPCA}
   contrast parameters. For more information on this method, see
   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}
   {Abid et al.}.
+}
+\examples{
+cPCA(target = toy_df[, 2:31],
+     background = background_df)
 }
 \author{
 Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
