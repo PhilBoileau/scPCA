@@ -83,9 +83,7 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
   } else if(!is.null(num_contrasts) &&
             (num_contrasts < 2 || num_contrasts%%1 != 0)){
     stop("The num_contrasts parameter must be NULL or an integer larger than 1.")
-  } else if(!missing(num_medoids) && (num_medoids <= 0 ||
-            (num_medoids > length(contrast) && is.null(num_contrasts)) ||
-            (num_medoids > num_contrasts && !is.null(num_contrasts)))){
+  } else if(!missing(num_medoids) && num_medoids <= 0){
     stop(paste("The num_medoids parameter must be a positive integer that is",
                "smaller than the number of contrastive parameters."))
   } else if(center != TRUE && center != FALSE){
