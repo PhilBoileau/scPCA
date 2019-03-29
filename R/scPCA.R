@@ -129,6 +129,10 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
   else if(missing(num_medoids))
     num_medoids <- 1
 
+  # create the grid of contrast and penalty paramters
+  param_grid <- expand.grid(penalties, contrasts)
+  colnames(param_grid) <- c("lambda", "alpha")
+
   # for each contrasted covariance matrix, compute the eigenvectors using
   # the penalization term
   loadings_mat <- lapply(1:num_contrasts,
@@ -151,17 +155,15 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
   # unlist the nested list into a single list
   loadings_mat <- unlist(loadings_mat, recursive = FALSE)
 
-  # create the grid of contrast and penalty paramters
-  param_grid <- expand.grid(penalties, contrasts)
-  colnames(param_grid) <- c("lambda", "alpha")
-
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- lapply(1:(num_contrasts*num_penal),
                    function(x){
                      as.matrix(target) %*% loadings_mat[[x]]
                    })
 
-  # remove all spaces projected to the 0 vector
+  # remove all spaces projected to the 0 vector, update parameter grid, loadings
+  param_grid <- param_grid[which(!duplicated(spaces)), ]
+  loadings_mat <- loadings_mat[which(!duplicated(spaces))]
   spaces <- unique(spaces)
 
   # get the number of unique spaces
@@ -205,7 +207,9 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
                                sub_aff_mat <- as.matrix(
                                  aff_mat[sub_index, sub_index])
                                aff_sums <- colSums(sub_aff_mat)
-                               param_grid[sub_index[which.max(aff_sums)], ]
+                               return(
+                                 param_grid[sub_index[which.max(aff_sums)], ]
+                               )
                              })
 
   # fix formating
@@ -220,6 +224,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
 
   # get the index of the paramaters chosen as medoids
   combo <- rbind(param_grid, contrast_medoids)
+  rownames(combo) <- seq(1, nrow(combo))
   med_index <- as.numeric(
     rownames(combo[duplicated(combo, fromLast = TRUE),, drop = TRUE])
   )
