@@ -87,10 +87,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
   } else if(!is.null(num_contrasts) &&
             (num_contrasts < 2 || num_contrasts%%1 != 0)){
     stop("The num_contrasts parameter must be NULL or an integer larger than 1.")
-  } else if(!missing(num_medoids) &&
-            (num_medoids <= 0 ||
-            (num_medoids > length(contrast) && is.null(num_contrasts)) ||
-            (num_medoids > num_contrasts && !is.null(num_contrasts)))){
+  } else if(!missing(num_medoids) && num_medoids <= 0){
     stop(paste("The num_medoids parameter must be a positive integer that is",
                "smaller than the number of contrastive parameters."))
   } else if(center != TRUE && center != FALSE){
@@ -164,16 +161,22 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
                      as.matrix(target) %*% loadings_mat[[x]]
                    })
 
+  # remove all spaces projected to the 0 vector
+  spaces <- unique(spaces)
+
+  # get the number of unique spaces
+  num_spaces <- length(spaces)
+
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(1:(num_contrasts*num_penal),
+  qr_decomps <- lapply(1:num_spaces,
                        function(x){
                          qr.Q(qr(spaces[[x]]))
                        })
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(1:(num_contrasts*num_penal-1),
+  aff_vect <- sapply(1:(num_spaces-1),
                      function(i){
-                       sapply((i+1):(num_contrasts*num_penal),
+                       sapply((i+1):num_spaces,
                               function(j){
                                 Q_i <- qr_decomps[[i]]
                                 Q_j <- qr_decomps[[j]]
@@ -181,7 +184,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
                                 return(d[1]*d[2])
                               })
                      })
-  aff_mat <- diag(x = 0.5, nrow = num_contrasts*num_penal)
+  aff_mat <- diag(x = 0.5, nrow = num_spaces)
   aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
   aff_mat <- t(aff_mat)
   # fix any computation errors, see numpy.nan_to_num
