@@ -1,9 +1,10 @@
-#' Constrastive Principal Component Analysis
+#' Sparse Constrastive Principal Component Analysis
 #'
-#' @description Given target and background dataframes or matrices, \code{cPCA}
-#'   will perform the contrastive principal component analysis of the target
-#'   data for a given number of eigenvectors and a vector of real valued
-#'   contrast parameters. For more information on this method, see
+#' @description Given target and background dataframes or matrices, \code{scPCA}
+#'   will perform the sparse contrastive principal component analysis of the
+#'   target data for a given number of eigenvectors, a vector of real valued
+#'   contrast parameters and a vector of penalty terms. For more information on
+#'   the contrastice PCA method, which this method is an extension of, see
 #'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}
 #'   {Abid et al.}.
 #'
@@ -23,6 +24,8 @@
 #'   \code{end} and \code{num_contrasts} parameters are \code{NULL}.
 #'   Alternatively, see \code{start}, \code{end} and \code{num_contrasts}
 #'   parameters.
+#' @param penalties The numeric vector of penatly terms for the L1 pernalty on
+#'   the loadings. Defaults to 11 equidistant values between  0 and 0.5.
 #' @param start The starting value in the sequence of contrast parameters. Use
 #'   \code{start}, \code{end} and \code{num_contrasts} parameters to create the
 #'   sequence of contrast parameters instead of an explicit vector passed to
@@ -43,21 +46,22 @@
 #'   \code{round(num_contrasts/5)} if there are at least 5 contrastive
 #'   parameters, 1 otherwise.
 #'
-#' @return A list containing the vector of contrast parameters that were
-#'   selected as medoids by spectral clustering, the list of eigenvector
-#'   matrices associated with each of these contrast parameters and the list
-#'   of reduced-dimension target data associated with these contrast parameters.
+#' @return A list containing the vector of contrast and penalty parameter pairs
+#'   that were selected as medoids by spectral clustering, the list of
+#'   eigenvector matrices associated with each of these pairs and the list
+#'   of reduced-dimension target data.
 #'
 #' @importFrom kernlab specc as.kernelMatrix
+#' @importFrom elasticnet spca
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
 #' cPCA(target = toy_df[, 2:31],
 #'      background = background_df)
-cPCA <- function(target, background, center = TRUE, num_eigen = 2,
-                 contrasts, start = NULL, end = NULL, num_contrasts = NULL,
-                 num_medoids){
+scPCA <- function(target, background, center = TRUE, num_eigen = 2,
+                 contrasts, penalties, start = NULL, end = NULL,
+                 num_contrasts = NULL, num_medoids){
 
   # make sure that all parameters are input properly
   if(!(class(target) %in% c("tbl_df", "tbl", "data.frame", "matrix"))){
@@ -79,17 +83,20 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
     stop("The start parameter must be NULL or a positive real value.")
   } else if(!is.null(end) && end <= start){
     stop(paste("The end parameter must be NULL or a positive real value larger",
-                "than the start parameter."))
+               "than the start parameter."))
   } else if(!is.null(num_contrasts) &&
             (num_contrasts < 2 || num_contrasts%%1 != 0)){
     stop("The num_contrasts parameter must be NULL or an integer larger than 1.")
-  } else if(!missing(num_medoids) && (num_medoids <= 0 ||
+  } else if(!missing(num_medoids) &&
+            (num_medoids <= 0 ||
             (num_medoids > length(contrast) && is.null(num_contrasts)) ||
             (num_medoids > num_contrasts && !is.null(num_contrasts)))){
     stop(paste("The num_medoids parameter must be a positive integer that is",
                "smaller than the number of contrastive parameters."))
   } else if(center != TRUE && center != FALSE){
     stop("The center parameter should be set to TRUE or FALSE.")
+  } else if(!missing(penalties) && (penalties <= 0)){
+    stop("The penalties parameter must consist of positive numeric values.")
   }
 
   if(center){
@@ -110,39 +117,63 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
     contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
   }
 
+  # determine the range of penalty terms to use
+  if(missing(penalties))
+    penalties <- seq(0, 0.5, length.out = 11)
+
   # perform cPCA on the contrasted covariance matrices, get list of contrasts
   c_contrasts <- lapply(contrasts, function(x){c_target - x*c_background})
 
-  # set length of contrasts vector and number of medoids to consider.
+  # set length of contrasts and penalty vectors and number of medoids
   num_contrasts <- length(c_contrasts)
+  num_penal <- length(penalties)
   if(missing(num_medoids) && num_contrasts >= 5)
     num_medoids <- round(num_contrasts / 5)
   else if(missing(num_medoids))
     num_medoids <- 1
 
-  # for each contrasted covariance matrix, compute the eigenvectors
+  # for each contrasted covariance matrix, compute the eigenvectors using
+  # the penalization term
   loadings_mat <- lapply(1:num_contrasts,
-                        function(x){
-                          eigen(c_contrasts[[x]],
-                                symmetric = TRUE)$vectors[, 1:num_eigen]
-                        })
+                         function(x){
+                           lapply(penalties,
+                                  function(y){
+                                    if(y == 0){
+                                      eigen(c_contrasts[[x]],
+                                        symmetric = TRUE)$vectors[, 1:num_eigen]
+                                    } else {
+                                      elasticnet::spca(c_contrasts[[x]],
+                                                    K = num_eigen,
+                                                    para = rep(y, num_eigen),
+                                                    type = "Gram",
+                                                    sparse = "penalty")$loadings
+                                    }
+                                  })
+                         })
+
+  # unlist the nested list into a single list
+  loadings_mat <- unlist(loadings_mat, recursive = FALSE)
+
+  # create the grid of contrast and penalty paramters
+  param_grid <- expand.grid(penalties, contrasts)
+  colnames(param_grid) <- c("lambda", "alpha")
 
   # for each loadings matrix, project target onto constrastive subspace
-  spaces <- lapply(1:num_contrasts,
+  spaces <- lapply(1:(num_contrasts*num_penal),
                    function(x){
                      as.matrix(target) %*% loadings_mat[[x]]
                    })
 
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(1:num_contrasts,
+  qr_decomps <- lapply(1:(num_contrasts*num_penal),
                        function(x){
                          qr.Q(qr(spaces[[x]]))
                        })
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(1:(num_contrasts-1),
+  aff_vect <- sapply(1:(num_contrasts*num_penal-1),
                      function(i){
-                       sapply((i+1):num_contrasts,
+                       sapply((i+1):(num_contrasts*num_penal),
                               function(j){
                                 Q_i <- qr_decomps[[i]]
                                 Q_j <- qr_decomps[[j]]
@@ -150,18 +181,19 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
                                 return(d[1]*d[2])
                               })
                      })
-  aff_mat <- diag(x = 0.5, nrow = num_contrasts)
+  aff_mat <- diag(x = 0.5, nrow = num_contrasts*num_penal)
   aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
   aff_mat <- t(aff_mat)
   # fix any computation errors, see numpy.nan_to_num
   aff_mat[is.nan(aff_mat)] <- 0
   aff_mat[is.na(aff_mat)] <- 0
-  aff_mat[is.infinite(aff_mat)] <- 1000
+  aff_mat[is.infinite(aff_mat)] <- 1
   aff_mat <- t(aff_mat) + aff_mat
 
   # perfrom spectral clustering using the affinity matrix
   spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-                               centers = num_medoids)
+                               centers = num_medoids,
+                               iterations = 10000)
 
   # identify the alpha medoids of the spectral clustering
   contrast_medoids <- sapply(1:num_medoids,
@@ -170,12 +202,24 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
                                sub_aff_mat <- as.matrix(
                                  aff_mat[sub_index, sub_index])
                                aff_sums <- colSums(sub_aff_mat)
-                               return(contrasts[sub_index[which.max(aff_sums)]])
+                               param_grid[sub_index[which.max(aff_sums)], ]
                              })
 
+  # fix formating
+  contrast_medoids <- matrix(unlist(contrast_medoids),
+                             nrow = num_medoids,
+                             byrow = TRUE)
+  colnames(contrast_medoids) <- c("lambda", "alpha")
+
   # create the lists of contrastive parameter medoids, loadings and projections
-  contrast_medoids <- contrast_medoids[order(contrast_medoids)]
-  med_index <- which(contrasts %in% contrast_medoids)
+  contrast_medoids <- contrast_medoids[order(contrast_medoids[, 2],
+                                             contrast_medoids[, 1]), ]
+
+  # get the index of the paramaters chosen as medoids
+  combo <- rbind(param_grid, contrast_medoids)
+  med_index <- as.numeric(
+    rownames(combo[duplicated(combo, fromLast = TRUE),, drop = TRUE])
+  )
   med_loadings_mat <- loadings_mat[med_index]
   med_spaces <- spaces[med_index]
 

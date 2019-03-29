@@ -4,8 +4,8 @@
 \alias{cPCA}
 \title{Constrastive Principal Component Analysis}
 \usage{
-cPCA(target, background, num_eigen = 2, contrasts, start = NULL,
-  end = NULL, num_contrasts = NULL, num_medoids)
+cPCA(target, background, center = TRUE, num_eigen = 2, contrasts,
+  start = NULL, end = NULL, num_contrasts = NULL, num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -14,6 +14,9 @@ observations as rows and features as columns.}
 \item{background}{The background data. Either a numeric dataframe or a matrix
 with observations as rows and features as columns. The number of features
 must match the number of features in the target data.}
+
+\item{center}{Whether the target and background data should have their
+columns' centered. Defaults to \code{TRUE}.}
 
 \item{num_eigen}{The number of contrastive principal components to compute.
 Must be a non-negative integer between 1 and the number of columns in the
