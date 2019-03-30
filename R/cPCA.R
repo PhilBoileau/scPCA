@@ -48,6 +48,8 @@
 #'   matrices associated with each of these contrast parameters and the list
 #'   of reduced-dimension target data associated with these contrast parameters.
 #'
+#' @export
+#'
 #' @importFrom kernlab specc as.kernelMatrix
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}

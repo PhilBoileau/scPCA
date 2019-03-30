@@ -51,17 +51,19 @@
 #'   eigenvector matrices associated with each of these pairs and the list
 #'   of reduced-dimension target data.
 #'
+#' @export
+#'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom elasticnet spca
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
-#' cPCA(target = toy_df[, 2:31],
+#' scPCA(target = toy_df[, 2:31],
 #'      background = background_df)
 scPCA <- function(target, background, center = TRUE, num_eigen = 2,
-                 contrasts, penalties, start = NULL, end = NULL,
-                 num_contrasts = NULL, num_medoids){
+                  contrasts, penalties, start = NULL, end = NULL,
+                  num_contrasts = NULL, num_medoids){
 
   # make sure that all parameters are input properly
   if(!(class(target) %in% c("tbl_df", "tbl", "data.frame", "matrix"))){
