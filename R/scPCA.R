@@ -79,7 +79,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
                "between 1 and the number of columns in the target data."))
   } else if(!missing(contrasts) &&
             (class(contrasts) != "numeric" || length(contrasts) < 1 ||
-             contrasts >= 0)){
+             contrasts <= 0)){
     stop("The contrasts parameter must be a non-negative numeric vector.")
   } else if(!is.null(start) && start <= 0){
     stop("The start parameter must be NULL or a positive real value.")
@@ -112,7 +112,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
   # determine the range of contrast parameters to use
   if(!is.null(start) && !is.null(end) && !is.null(num_contrasts)){
     contrasts <- exp(seq(log(start), log(end), length.out = num_contrasts))
-  } else {
+  } else if(is.missing(contrasts)) {
     contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
   }
 
