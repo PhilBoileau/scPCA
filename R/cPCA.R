@@ -62,10 +62,11 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
                  num_medoids){
 
   # make sure that all parameters are input properly
-  if(!(class(target) %in% c("tbl_df", "tbl", "data.frame", "matrix"))){
+  if(!(class(target) %in% c("tbl_df", "tbl", "spec_tbl_df",
+                            "data.frame", "matrix"))){
     stop("Is your target data in the proper format? Check the documentation.")
   } else if(!(class(background) %in%
-              c("tbl_df", "tbl", "data.frame", "matrix")) ||
+              c("tbl_df", "tbl", "spec_tbl_df", "data.frame", "matrix")) ||
             ncol(target) != ncol(background)){
     stop(paste("Is your background data in the proper format?",
                "Check the documentation."))
