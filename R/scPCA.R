@@ -113,7 +113,7 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
   # determine the range of contrast parameters to use
   if(!is.null(start) && !is.null(end) && !is.null(num_contrasts)){
     contrasts <- exp(seq(log(start), log(end), length.out = num_contrasts))
-  } else if(is.missing(contrasts)) {
+  } else if(missing(contrasts)) {
     contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
   }
 

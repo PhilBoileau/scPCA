@@ -73,7 +73,7 @@ cPCA <- function(target, background, center = TRUE, num_eigen = 2,
   } else if(class(num_eigen) != "numeric" || length(num_eigen) != 1 ||
             num_eigen < 1 || num_eigen > ncol(target) || num_eigen%%1 != 0){
     stop(paste("The num_eigen parameter must be a non-negative integer",
-               "between 1 and the number of columns in the target data."))
+               "betwieen 1 and the number of columns in the target data."))
   } else if(!missing(contrasts) &&
             (class(contrasts) != "numeric" || length(contrasts) < 1 ||
              contrasts >= 0)){
