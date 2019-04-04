@@ -15,6 +15,8 @@
 #'   must match the number of features in the target data.
 #' @param center Whether the target and background data should have their
 #'   columns' centered. Defaults to \code{TRUE}.
+#' @param scale Whether the target and background data should have their
+#'   columns' scaled. Defaults to \code{TRUE}.
 #' @param num_eigen The number of contrastive principal components to compute.
 #'   Must be a non-negative integer between 1 and the number of columns in the
 #'   target data. Default is 2.
@@ -61,8 +63,8 @@
 #' @examples
 #' scPCA(target = toy_df[, 2:31],
 #'      background = background_df)
-scPCA <- function(target, background, center = TRUE, num_eigen = 2,
-                  contrasts, penalties, start = NULL, end = NULL,
+scPCA <- function(target, background, center = TRUE, scale = TRUE,
+                  num_eigen = 2, contrasts, penalties, start = NULL, end = NULL,
                   num_contrasts = NULL, num_medoids){
 
   # make sure that all parameters are input properly
@@ -99,9 +101,16 @@ scPCA <- function(target, background, center = TRUE, num_eigen = 2,
     stop("The penalties parameter must consist of positive numeric values.")
   }
 
-  if(center){
+
+  if(center && scale){
+    target <- scale(target, center = TRUE, scale = TRUE)
+    background <- scale(background, center = TRUE, scale = TRUE)
+  } else if(center == TRUE && scale == FALSE){
     target <- scale(target, center = TRUE, scale = FALSE)
     background <- scale(background, center = TRUE, scale = FALSE)
+  } else if(center == FALSE && scale == TRUE){
+    target <- scale(target, center = FALSE, scale = TRUE)
+    background <- scale(background, center = FALSE, scale = TRUE)
   }
 
   # calculate the empirical covariance matrices, correct scalling factor

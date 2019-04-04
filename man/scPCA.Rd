@@ -4,9 +4,9 @@
 \alias{scPCA}
 \title{Sparse Constrastive Principal Component Analysis}
 \usage{
-scPCA(target, background, center = TRUE, num_eigen = 2, contrasts,
-  penalties, start = NULL, end = NULL, num_contrasts = NULL,
-  num_medoids)
+scPCA(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
+  contrasts, penalties, start = NULL, end = NULL,
+  num_contrasts = NULL, num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -18,6 +18,9 @@ must match the number of features in the target data.}
 
 \item{center}{Whether the target and background data should have their
 columns' centered. Defaults to \code{TRUE}.}
+
+\item{scale}{Whether the target and background data should have their
+columns' scaled. Defaults to \code{TRUE}.}
 
 \item{num_eigen}{The number of contrastive principal components to compute.
 Must be a non-negative integer between 1 and the number of columns in the
