@@ -1,0 +1,54 @@
+branches:
+  only:
+  - master
+
+env:
+  global:
+  - RGL_USE_NULL=TRUE
+
+language: r
+sudo: required
+cache: packages
+cran: https://cran.rstudio.com
+
+warnings_are_errors: true
+r_build_args: '--no-manual'
+r_check_args: '--no-build-vignettes --no-manual'
+
+r:
+  - bioc-release
+  - bioc-devel
+
+before_install:
+  #- Rscript -e 'source("https://bioconductor.org/biocLite.R"); biocLite()'
+  - Rscript -e 'update.packages(ask = FALSE)'
+
+r_packages:
+  - devtools
+  - covr
+  - BiocManager
+
+r_github_packages:
+  - r-lib/sessioninfo
+  - r-lib/covr
+
+bioc_packages:
+  - BiocStyle
+  - BiocCheck
+  - BiocGenerics
+  - S4Vectors
+  - SummarizedExperiment
+  - limma
+
+after_success:
+  ## coverage
+  - travis_wait 60 Rscript -e "covr::codecov()"
+  - R CMD BiocCheck .
+
+on_failure:
+  - "./travis-tool.sh dump_logs"
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
