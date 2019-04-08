@@ -71,8 +71,10 @@ Given target and background dataframes or matrices, \code{cPCA}
   {Abid et al.}.
 }
 \examples{
-cPCA(target = toy_df[, 2:31],
-     background = background_df)
+cPCA(
+  target = toy_df[, 2:31],
+  background = background_df
+)
 }
 \author{
 Philippe Boileau, \email{philippe_Boileau@berkeley.edu}

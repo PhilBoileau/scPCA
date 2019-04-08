@@ -52,113 +52,140 @@
 #'
 #' @export
 #'
+#' @importFrom stats var
 #' @importFrom kernlab specc as.kernelMatrix
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
-#' cPCA(target = toy_df[, 2:31],
-#'      background = background_df)
+#' cPCA(
+#'   target = toy_df[, 2:31],
+#'   background = background_df
+#' )
 cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
                  contrasts, start = NULL, end = NULL, num_contrasts = NULL,
-                 num_medoids){
+                 num_medoids) {
 
   # make sure that all parameters are input properly
-  if(!(class(target) %in% c("tbl_df", "tbl", "spec_tbl_df",
-                            "data.frame", "matrix"))){
+  if (!(class(target) %in% c(
+    "tbl_df", "tbl", "spec_tbl_df",
+    "data.frame", "matrix"
+  ))) {
     stop("Is your target data in the proper format? Check the documentation.")
-  } else if(!(class(background) %in%
-              c("tbl_df", "tbl", "spec_tbl_df", "data.frame", "matrix")) ||
-            ncol(target) != ncol(background)){
-    stop(paste("Is your background data in the proper format?",
-               "Check the documentation."))
-  } else if(class(num_eigen) != "numeric" || length(num_eigen) != 1 ||
-            num_eigen < 1 || num_eigen > ncol(target) || num_eigen%%1 != 0){
-    stop(paste("The num_eigen parameter must be a non-negative integer",
-               "betwieen 1 and the number of columns in the target data."))
-  } else if(!missing(contrasts) &&
-            (class(contrasts) != "numeric" || length(contrasts) < 1 ||
-             contrasts >= 0)){
+  } else if (!(class(background) %in%
+    c("tbl_df", "tbl", "spec_tbl_df", "data.frame", "matrix")) ||
+    ncol(target) != ncol(background)) {
+    stop(paste(
+      "Is your background data in the proper format?",
+      "Check the documentation."
+    ))
+  } else if (class(num_eigen) != "numeric" || length(num_eigen) != 1 ||
+    num_eigen < 1 || num_eigen > ncol(target) || num_eigen %% 1 != 0) {
+    stop(paste(
+      "The num_eigen parameter must be a non-negative integer",
+      "betwieen 1 and the number of columns in the target data."
+    ))
+  } else if (!missing(contrasts) &&
+    (class(contrasts) != "numeric" || length(contrasts) < 1 ||
+      contrasts >= 0)) {
     stop("The contrasts parameter must be a non-negative numeric vector.")
-  } else if(!is.null(start) && start <= 0){
+  } else if (!is.null(start) && start <= 0) {
     stop("The start parameter must be NULL or a positive real value.")
-  } else if(!is.null(end) && end <= start){
-    stop(paste("The end parameter must be NULL or a positive real value larger",
-                "than the start parameter."))
-  } else if(!is.null(num_contrasts) &&
-            (num_contrasts < 2 || num_contrasts%%1 != 0)){
+  } else if (!is.null(end) && end <= start) {
+    stop(paste(
+      "The end parameter must be NULL or a positive real value larger",
+      "than the start parameter."
+    ))
+  } else if (!is.null(num_contrasts) &&
+    (num_contrasts < 2 || num_contrasts %% 1 != 0)) {
     stop("The num_contrasts parameter must be NULL or an integer larger than 1.")
-  } else if(!missing(num_medoids) && num_medoids <= 0){
-    stop(paste("The num_medoids parameter must be a positive integer that is",
-               "smaller than the number of contrastive parameters."))
-  } else if(center != TRUE && center != FALSE){
+  } else if (!missing(num_medoids) && num_medoids <= 0) {
+    stop(paste(
+      "The num_medoids parameter must be a positive integer that is",
+      "smaller than the number of contrastive parameters."
+    ))
+  } else if (center != TRUE && center != FALSE) {
     stop("The center parameter should be set to TRUE or FALSE.")
   }
 
-  if(center && scale){
+  if (center && scale) {
     target <- scale(target, center = TRUE, scale = TRUE)
     background <- scale(background, center = TRUE, scale = TRUE)
-  } else if(center == TRUE && scale == FALSE){
+  } else if (center == TRUE && scale == FALSE) {
     target <- scale(target, center = TRUE, scale = FALSE)
     background <- scale(background, center = TRUE, scale = FALSE)
-  } else if(center == FALSE && scale == TRUE){
+  } else if (center == FALSE && scale == TRUE) {
     target <- scale(target, center = FALSE, scale = TRUE)
     background <- scale(background, center = FALSE, scale = TRUE)
   }
 
   # calculate the empirical covariance matrices, correct scalling factor
   len_target <- nrow(target)
-  c_target <- (len_target-1)/len_target*var(target)
+  c_target <- (len_target - 1) / len_target * stats::var(target)
   len_background <- nrow(background)
-  c_background <- (len_background-1)/len_background*var(background)
+  c_background <- (len_background - 1) / len_background * stats::var(background)
 
   # determine the range of contrast parameters to use
-  if(!is.null(start) && !is.null(end) && !is.null(num_contrasts)){
+  if (!is.null(start) && !is.null(end) && !is.null(num_contrasts)) {
     contrasts <- exp(seq(log(start), log(end), length.out = num_contrasts))
   } else {
     contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
   }
 
   # perform cPCA on the contrasted covariance matrices, get list of contrasts
-  c_contrasts <- lapply(contrasts, function(x){c_target - x*c_background})
+  c_contrasts <- lapply(contrasts, function(x) {
+    c_target - x * c_background
+  })
 
   # set length of contrasts vector and number of medoids to consider.
   num_contrasts <- length(c_contrasts)
-  if(missing(num_medoids) && num_contrasts >= 5)
+  if (missing(num_medoids) && num_contrasts >= 5) {
     num_medoids <- round(num_contrasts / 5)
-  else if(missing(num_medoids))
+  } else if (missing(num_medoids)) {
     num_medoids <- 1
+  }
 
   # for each contrasted covariance matrix, compute the eigenvectors
-  loadings_mat <- lapply(1:num_contrasts,
-                        function(x){
-                          eigen(c_contrasts[[x]],
-                                symmetric = TRUE)$vectors[, 1:num_eigen]
-                        })
+  loadings_mat <- lapply(
+    1:num_contrasts,
+    function(x) {
+      eigen(c_contrasts[[x]],
+        symmetric = TRUE
+      )$vectors[, 1:num_eigen]
+    }
+  )
 
   # for each loadings matrix, project target onto constrastive subspace
-  spaces <- lapply(1:num_contrasts,
-                   function(x){
-                     as.matrix(target) %*% loadings_mat[[x]]
-                   })
+  spaces <- lapply(
+    1:num_contrasts,
+    function(x) {
+      as.matrix(target) %*% loadings_mat[[x]]
+    }
+  )
 
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(1:num_contrasts,
-                       function(x){
-                         qr.Q(qr(spaces[[x]]))
-                       })
+  qr_decomps <- lapply(
+    1:num_contrasts,
+    function(x) {
+      qr.Q(qr(spaces[[x]]))
+    }
+  )
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(1:(num_contrasts-1),
-                     function(i){
-                       sapply((i+1):num_contrasts,
-                              function(j){
-                                Q_i <- qr_decomps[[i]]
-                                Q_j <- qr_decomps[[j]]
-                                d <- svd(x = t(Q_i)%*%Q_j, nu = 0, nv = 0)$d
-                                return(d[1]*d[2])
-                              })
-                     })
+  aff_vect <- sapply(
+    1:(num_contrasts - 1),
+    function(i) {
+      sapply(
+        (i + 1):num_contrasts,
+        function(j) {
+          Q_i <- qr_decomps[[i]]
+          Q_j <- qr_decomps[[j]]
+          d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
+          return(d[1] * d[2])
+        }
+      )
+    }
+  )
   aff_mat <- diag(x = 0.5, nrow = num_contrasts)
   aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
   aff_mat <- t(aff_mat)
@@ -170,17 +197,21 @@ cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
 
   # perfrom spectral clustering using the affinity matrix
   spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-                               centers = num_medoids)
+    centers = num_medoids
+  )
 
   # identify the alpha medoids of the spectral clustering
-  contrast_medoids <- sapply(1:num_medoids,
-                             function(x){
-                               sub_index <- which(spec_clust == x)
-                               sub_aff_mat <- as.matrix(
-                                 aff_mat[sub_index, sub_index])
-                               aff_sums <- colSums(sub_aff_mat)
-                               return(contrasts[sub_index[which.max(aff_sums)]])
-                             })
+  contrast_medoids <- sapply(
+    1:num_medoids,
+    function(x) {
+      sub_index <- which(spec_clust == x)
+      sub_aff_mat <- as.matrix(
+        aff_mat[sub_index, sub_index]
+      )
+      aff_sums <- colSums(sub_aff_mat)
+      return(contrasts[sub_index[which.max(aff_sums)]])
+    }
+  )
 
   # create the lists of contrastive parameter medoids, loadings and projections
   contrast_medoids <- contrast_medoids[order(contrast_medoids)]
@@ -189,8 +220,9 @@ cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
   med_spaces <- spaces[med_index]
 
   # return the alpha medoids with associated loadings and low-dim rep of target
-  return(list(contrast_medoids,
-              med_loadings_mat,
-              med_spaces))
-
+  return(list(
+    contrast_medoids,
+    med_loadings_mat,
+    med_spaces
+  ))
 }

@@ -29,6 +29,8 @@ Imports:
     stats,
     methods,
     assertthat,
+    elasticnet,
+    kernlab,
     S4Vectors,
     BiocGenerics,
     BiocParallel,
