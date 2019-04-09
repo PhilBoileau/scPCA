@@ -5,8 +5,7 @@
 #'   target data for a given number of eigenvectors, a vector of real valued
 #'   contrast parameters and a vector of penalty terms. For more information on
 #'   the contrastice PCA method, which this method is an extension of, see
-#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}
-#'   {Abid et al.}.
+#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}{Abid et al.}.
 #'
 #' @param target The target data. Either a numeric dataframe or a matrix with
 #'   observations as rows and features as columns.

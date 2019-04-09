@@ -4,8 +4,7 @@
 #'   will perform the contrastive principal component analysis of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. For more information on this method, see
-#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}
-#'   {Abid et al.}.
+#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}{Abid et al.}.
 #'
 #' @param target The target data. Either a numeric dataframe or a matrix with
 #'   observations as rows and features as columns.
