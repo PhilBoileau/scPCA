@@ -1,20 +1,50 @@
 Package: scPCA
 Title: Sparse Contrastive Principal Component Analysis
-Version: 0.0.0.9000
-Authors@R: 
+Version: 0.0.1
+Authors@R: c(
     person(given = "Philippe",
            family = "Boileau",
-           role = c("aut", "cre"),
-           email = "philippe_boileau@berkeley.edu")
+           role = c("aut", "cre", "cph"),
+           email = "philippe_boileau@berkeley.edu"),
+    person(given = "Nima",
+           family = "Hejazi",
+           role = "ctb",
+           email = "nh@nimahejazi.org",
+           comment = c(ORCID = "0000-0002-7127-2789"))
+   )
+Maintainer: Philippe Boileau <philippe_boileau@berkeley.edu>
+Author: Philippe Boileau[aut, cre, cph], Nima Hejazi [ctb]
 Description: This package contains the necessary tools to perform the sparse
-             contrastive principal component analysis (scPCA) of 
-             high-dimensional data. scPCA combines the interpretability and
-             stability of penalized PCA with the contrastive PCA's ability to
-             create low-dimensional representations of data that summarize
-             high-dimensional structure of interest.
+    contrastive principal component analysis (scPCA) of high-dimensional data.
+    scPCA combines the interpretability and stability of penalized PCA with the
+    ability of contrastive PCA to create low-dimensional representations of data
+    that summarize the high-dimensional structure of interest.
+Depends: R (>= 3.4)
 License: MIT + file LICENSE
+URL: https://github.com/PhilBoileau/scPCA
+BugReports: https://github.com/PhilBoileau/scPCA/issues
 Encoding: UTF-8
 LazyData: true
-Suggests: 
-    testthat
+Imports:
+    stats,
+    methods,
+    assertthat,
+    elasticnet,
+    kernlab,
+    S4Vectors,
+    BiocGenerics,
+    BiocParallel,
+    SummarizedExperiment
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown,
+    BiocStyle
+VignetteBuilder: knitr
 RoxygenNote: 6.1.1
+biocViews:
+    GeneExpression,
+    DifferentialExpression,
+    Sequencing,
+    Microarray,
+    RNASeq

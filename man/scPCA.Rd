@@ -75,8 +75,10 @@ Given target and background dataframes or matrices, \code{scPCA}
   {Abid et al.}.
 }
 \examples{
-scPCA(target = toy_df[, 2:31],
-     background = background_df)
+scPCA(
+  target = toy_df[, 2:31],
+  background = background_df
+)
 }
 \author{
 Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
