@@ -2,6 +2,7 @@
 
 export(cPCA)
 export(scPCA)
+import(assertthat)
 importFrom(elasticnet,spca)
 importFrom(kernlab,as.kernelMatrix)
 importFrom(kernlab,specc)
