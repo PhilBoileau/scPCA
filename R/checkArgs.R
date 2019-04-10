@@ -3,7 +3,7 @@
 #' @description Checks whether or not the all arguments in cPCA and scPCA
 #' functions are input properly.
 #'
-#' @param which_func The function whose arguments are being checked. Either
+#' @param func The function whose arguments are being checked. Either
 #' @param target Target data
 #' @param background Background data
 #' @param center Indicates whether target and background should be centered.
@@ -18,8 +18,7 @@
 #' @return Whether all argument conditions are satisfied
 #'
 checkArgs <- function(func, target, background, center, scale,
-                      num_eigen, contrasts, penalties, num_contrasts,
-                      num_medoids){
+                      num_eigen, contrasts, penalties, num_medoids){
 
   assert_that(is.string(func))
   assert_that(func %in% c("cPCA", "scPCA"))
@@ -51,23 +50,25 @@ checkArgs <- function(func, target, background, center, scale,
   if(see_if(!missing(contrasts))){
     assert_that(length(contrasts) > 0)
     assert_that(is.numeric(contrasts))
-    assert_that(contrasts > 0)
+    assert_that(all(contrasts > 0))
   }
 
   # check the num_medoids argument
-  assert_that(is.count(num_medoids))
-  assert_that(num_medoids <= contrasts)
+  if(see_if(!missing(num_medoids))){
+    assert_that(is.count(num_medoids))
+    if(see_if(!missing(contrasts))){
+      assert_that(num_medoids < length(contrasts))
+    }
+  }
 
   # if checking scPCA, check additional arguments
   if(func == "scPCA"){
-    # check the number of medoids
-    assert_that(num_medoids <= length(contrasts)*length(penalties))
 
     # check penalty terms
     if(see_if(!missing(penalties))){
       assert_that(length(penalties) > 0)
       assert_that(is.numeric(penalties))
-      assert_that(penalties > 0)
+      assert_that(all(penalties >= 0))
     }
   }
 

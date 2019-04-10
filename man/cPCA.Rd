@@ -5,8 +5,7 @@
 \title{Constrastive Principal Component Analysis}
 \usage{
 cPCA(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
-  contrasts, start = NULL, end = NULL, num_contrasts = NULL,
-  num_medoids)
+  contrasts, num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -28,33 +27,13 @@ target data. Default is 2.}
 
 \item{contrasts}{The numeric vector of the contrastive parameters. Each
 element must be a unique non-negative real number. Defaults to 40
-logarithmically spaced values between 0.1 and 1000 when \code{start},
-\code{end} and \code{num_contrasts} parameters are \code{NULL}.
-Alternatively, see \code{start}, \code{end} and \code{num_contrasts}
-parameters.}
-
-\item{start}{The starting value in the sequence of contrast parameters. Use
-\code{start}, \code{end} and \code{num_contrasts} parameters to create the
-sequence of contrast parameters instead of an explicit vector passed to
-\code{contrasts}. Defaults to \code{NULL}. Otherwise, must be an element of
-the positive reals.}
-
-\item{end}{The ending value in the log sequence of contrast parameters. Use
-\code{start}, \code{end} and \code{num_contrasts} parameters to create the
-sequence of contrast parameters instead of an explicit vector passed to
-\code{contrasts}. Defaults to \code{NULL}. Otherwise, must be an element of
-the positive reals.}
-
-\item{num_contrasts}{The number of elements in the log sequence of contrast
-parameters. Use \code{start}, \code{end} and \code{num_contrasts} parameters
-to create the log sequence of contrast parameters instead of an explicit
-vector passed to \code{contrasts}. Defaults to \code{NULL}. Otherswise, must
-be an integer larger than 1.}
+logarithmically spaced values between 0.1 and 1000.}
 
 \item{num_medoids}{The number of medoids to select during the spectral
 clustering of the constrastive subspaces. Defaults to
-\code{round(num_contrasts/5)} if there are at least 5 contrastive
-parameters, 1 otherwise.}
+\code{round(length(contrasts)/5)} if there are at least 5 contrastive
+parameters, otherwise \code{length(contrasts)-1}. If there is a single
+contrastive parameter, then \code{num_medoids} should not be defined.}
 }
 \value{
 A list containing the vector of contrast parameters that were

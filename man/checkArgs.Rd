@@ -5,9 +5,11 @@
 \title{Check Arguments in cPCA and scPCA Functions}
 \usage{
 checkArgs(func, target, background, center, scale, num_eigen, contrasts,
-  penalties, num_contrasts, num_medoids)
+  penalties, num_medoids)
 }
 \arguments{
+\item{func}{The function whose arguments are being checked. Either}
+
 \item{target}{Target data}
 
 \item{background}{Background data}
@@ -23,8 +25,6 @@ checkArgs(func, target, background, center, scale, num_eigen, contrasts,
 \item{penalties}{The vector of penalty terms}
 
 \item{num_medoids}{The number of medoids to find during spectral clustering.}
-
-\item{which_func}{The function whose arguments are being checked. Either}
 }
 \value{
 Whether all argument conditions are satisfied
