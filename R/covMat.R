@@ -12,12 +12,9 @@
 #'
 #' @return the covariance matrix of the data.
 #'
-#' @importFrom stats var
+#' @importFrom stats cov
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
-#'
-#' @examples
-#' covMat(toy_df[, 2:31])
 covMat <- function(data, center = TRUE, scale = TRUE){
 
   # center the data matrix if required
@@ -38,7 +35,7 @@ covMat <- function(data, center = TRUE, scale = TRUE){
   }
 
   # compute the covariance matrix of the data
-  cov_mat <- cov(data)
+  cov_mat <- stats::cov(data)
 
   return(cov_mat)
 }
