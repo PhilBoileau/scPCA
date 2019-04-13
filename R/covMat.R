@@ -17,6 +17,7 @@
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
+#' covMat(toy_df[, 2:31])
 covMat <- function(data, center = TRUE, scale = TRUE){
 
   # center the data matrix if required
@@ -28,7 +29,7 @@ covMat <- function(data, center = TRUE, scale = TRUE){
   if(scale){
 
     # identify columns with zero variance
-    no_var_idx <- which(sapply(pt_1_bkg_df, var) == 0)
+    no_var_idx <- which(sapply(data, var) == 0)
 
     # scale the data and replace the columns with no variation by zero vectors
     data <- scale(data, center = FALSE, scale = TRUE)
