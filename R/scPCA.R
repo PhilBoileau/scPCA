@@ -39,7 +39,6 @@
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom elasticnet spca
-#' @importFrom stats var
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
@@ -55,22 +54,8 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   checkArgs(func = "scPCA", target, background, center, scale, num_eigen,
             contrasts, penalties, num_medoids)
 
-  if (center && scale) {
-    target <- scale(target, center = TRUE, scale = TRUE)
-    background <- scale(background, center = TRUE, scale = TRUE)
-  } else if (center == TRUE && scale == FALSE) {
-    target <- scale(target, center = TRUE, scale = FALSE)
-    background <- scale(background, center = TRUE, scale = FALSE)
-  } else if (center == FALSE && scale == TRUE) {
-    target <- scale(target, center = FALSE, scale = TRUE)
-    background <- scale(background, center = FALSE, scale = TRUE)
-  }
-
-  # calculate the empirical covariance matrices, correct scalling factor
-  len_target <- nrow(target)
-  c_target <- (len_target - 1) / len_target * stats::var(target)
-  len_background <- nrow(background)
-  c_background <- (len_background - 1) / len_background * stats::var(background)
+  c_target <- covMat(target, center = center, scale = scale)
+  c_background <- covMat(background, center = center, scale = scale)
 
   # determine the range of contrast parameters to use
   if (missing(contrasts)) {
