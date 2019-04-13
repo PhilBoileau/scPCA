@@ -17,9 +17,12 @@
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 covMat <- function(data, center = TRUE, scale = TRUE){
 
+  # convert data to a dataframe
+  data <- as.data.frame(data)
+
   # center the data matrix if required
   if(center)
-    data <- scale(data, center = TRUE, scale = FALSE)
+    data <- as.data.frame(scale(data, center = TRUE, scale = FALSE))
 
   # scale the matrix if required
   # if there are constant columns, replace NAs by 0s
