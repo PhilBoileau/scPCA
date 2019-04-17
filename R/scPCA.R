@@ -48,7 +48,10 @@
 #'   background = background_df
 #' )
 scPCA <- function(target, background, center = TRUE, scale = TRUE,
-                  num_eigen = 2, contrasts, penalties, num_medoids) {
+                  num_eigen = 2,
+                  contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
+                  penalties = seq(0, 0.5, length.out = 11),
+                  num_medoids) {
 
   # make sure that all parameters are input properly
   checkArgs(func = "scPCA", target, background, center, scale, num_eigen,
@@ -56,16 +59,6 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
 
   c_target <- covMat(target, center = center, scale = scale)
   c_background <- covMat(background, center = center, scale = scale)
-
-  # determine the range of contrast parameters to use
-  if (missing(contrasts)) {
-    contrasts <- exp(seq(log(0.1), log(1000), length.out = 40))
-  }
-
-  # determine the range of penalty terms to use
-  if (missing(penalties)) {
-    penalties <- seq(0, 0.5, length.out = 11)
-  }
 
   # perform cPCA on the contrasted covariance matrices, get list of contrasts
   c_contrasts <- lapply(contrasts, function(x) {
@@ -88,7 +81,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   # for each contrasted covariance matrix, compute the eigenvectors using
   # the penalization term
   loadings_mat <- lapply(
-    1:num_contrasts,
+    seq_len(num_contrasts),
     function(x) {
       lapply(
         penalties,
@@ -115,7 +108,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
 
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- lapply(
-    1:(num_contrasts * num_penal),
+    seq_len(num_contrasts * num_penal),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
     }
@@ -130,11 +123,11 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   num_spaces <- length(spaces)
 
   # check if spectral clustering is necessary
-  if(num_spaces > 2){
+  if (num_spaces > 2) {
 
     # produce the QR decomposition of these projections, extract Q
     qr_decomps <- lapply(
-      1:num_spaces,
+      seq_len(num_spaces),
       function(x) {
         qr.Q(qr(spaces[[x]]))
       }
@@ -142,7 +135,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
 
     # populate affinity matrix for spectral clustering using the principal angles
     aff_vect <- sapply(
-      1:(num_spaces - 1),
+      seq_len(num_spaces - 1),
       function(i) {
         sapply(
           (i + 1):num_spaces,
@@ -172,7 +165,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
 
     # identify the alpha medoids of the spectral clustering
     contrast_medoids <- sapply(
-      1:num_medoids,
+      seq_len(num_medoids),
       function(x) {
         sub_index <- which(spec_clust == x)
         sub_aff_mat <- as.matrix(
