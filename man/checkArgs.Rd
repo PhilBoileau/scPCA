@@ -2,14 +2,12 @@
 % Please edit documentation in R/checkArgs.R
 \name{checkArgs}
 \alias{checkArgs}
-\title{Check Arguments in cPCA and scPCA Functions}
+\title{Check Arguments in scPCA Function}
 \usage{
-checkArgs(func, target, background, center, scale, num_eigen, contrasts,
+checkArgs(target, background, center, scale, num_eigen, contrasts,
   penalties, num_medoids)
 }
 \arguments{
-\item{func}{The function whose arguments are being checked. Either}
-
 \item{target}{Target data}
 
 \item{background}{Background data}
@@ -30,6 +28,9 @@ checkArgs(func, target, background, center, scale, num_eigen, contrasts,
 Whether all argument conditions are satisfied
 }
 \description{
-Checks whether or not the all arguments in cPCA and scPCA
+Checks whether or not the all arguments in the scPCA
 functions are input properly.
+}
+\author{
+Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
 }
