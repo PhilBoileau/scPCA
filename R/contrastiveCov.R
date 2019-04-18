@@ -2,7 +2,7 @@
 #'
 #' @description Compute the list of contrastive covariance matrices.
 #'
-#' @param target_df The target data set
+#' @param target The target data set
 #' @param background The bacground data set
 #' @param contrasts The vector of contrastive parameters
 #' @param center Whether the data sets' columns should be centered

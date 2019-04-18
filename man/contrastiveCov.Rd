@@ -7,6 +7,8 @@
 contrastiveCov(target, background, contrasts, center, scale)
 }
 \arguments{
+\item{target}{The target data set}
+
 \item{background}{The bacground data set}
 
 \item{contrasts}{The vector of contrastive parameters}
@@ -15,8 +17,6 @@ contrastiveCov(target, background, contrasts, center, scale)
 
 \item{scale}{Whetehr the data sets' columns should be scaled to have variance
 1}
-
-\item{target_df}{The target data set}
 }
 \value{
 A list of contrastive covariance matrices. Each element has an

@@ -38,7 +38,6 @@
 #' @export
 #'
 #' @importFrom kernlab specc as.kernelMatrix
-#' @importFrom elasticnet spca
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
@@ -69,62 +68,20 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
     num_medoids <- num_contrasts
   }
 
-  # create the grid of contrast and penalty paramters
-  param_grid <- expand.grid(penalties, contrasts)
-  colnames(param_grid) <- c("lambda", "alpha")
+  # for each contrasted covariance matrix, compute components and projections
+  c_proj <- projGridCP(target, center, scale, c_contrasts, contrasts,
+                       penalties, num_eigen)
 
-  # for each contrasted covariance matrix, compute the eigenvectors using
-  # the penalization term
-  loadings_mat <- lapply(
-    seq_len(num_contrasts),
-    function(x) {
-      lapply(
-        penalties,
-        function(y) {
-          if (y == 0) {
-            eigen(c_contrasts[[x]],
-              symmetric = TRUE
-            )$vectors[, 1:num_eigen]
-          } else {
-            elasticnet::spca(c_contrasts[[x]],
-              K = num_eigen,
-              para = rep(y, num_eigen),
-              type = "Gram",
-              sparse = "penalty"
-            )$loadings
-          }
-        }
-      )
-    }
-  )
-
-  # unlist the nested list into a single list
-  loadings_mat <- unlist(loadings_mat, recursive = FALSE)
-
-  # for each loadings matrix, project target onto constrastive subspace
-  spaces <- lapply(
-    seq_len(num_contrasts * num_penal),
-    function(x) {
-      as.matrix(target) %*% loadings_mat[[x]]
-    }
-  )
-
-  # remove all spaces projected to the 0 vector, update parameter grid, loadings
-  param_grid <- param_grid[which(!duplicated(spaces)), ]
-  loadings_mat <- loadings_mat[which(!duplicated(spaces))]
-  spaces <- unique(spaces)
-
-  # get the number of unique spaces
-  num_spaces <- length(spaces)
+  num_spaces <- length(c_proj$spaces)
 
   # check if spectral clustering is necessary
-  if (num_spaces > 2) {
+  if (num_spaces > 2 && num_medoids > 1) {
 
     # produce the QR decomposition of these projections, extract Q
     qr_decomps <- lapply(
       seq_len(num_spaces),
       function(x) {
-        qr.Q(qr(spaces[[x]]))
+        qr.Q(qr(c_proj$spaces[[x]]))
       }
     )
 
@@ -168,7 +125,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
         )
         aff_sums <- colSums(sub_aff_mat)
         return(
-          param_grid[sub_index[which.max(aff_sums)], ]
+          c_proj$param_grid[sub_index[which.max(aff_sums)], ]
         )
       }
     )
@@ -187,17 +144,17 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
     ), ]
 
     # get the index of the paramaters chosen as medoids
-    combo <- rbind(param_grid, contrast_medoids)
+    combo <- rbind(c_proj$param_grid, contrast_medoids)
     rownames(combo) <- seq(1, nrow(combo))
     med_index <- as.numeric(
       rownames(combo[duplicated(combo, fromLast = TRUE), , drop = TRUE])
     )
-    med_loadings_mat <- loadings_mat[med_index]
-    med_spaces <- spaces[med_index]
+    med_loadings_mat <- c_proj$loadings_mat[med_index]
+    med_spaces <- c_proj$spaces[med_index]
   } else {
-    contrast_medoids <- param_grid
-    med_loadings_mat <- loadings_mat
-    med_spaces <- spaces
+    contrast_medoids <- c_proj$param_grid
+    med_loadings_mat <- c_proj$loadings_mat
+    med_spaces <- c_proj$spaces
   }
 
   # return the alpha medoids with associated loadings and low-dim rep of target
