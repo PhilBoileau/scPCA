@@ -56,9 +56,7 @@ checkArgs <- function(func, target, background, center, scale,
   # check the num_medoids argument
   if(see_if(!missing(num_medoids))){
     assert_that(is.count(num_medoids))
-    if(see_if(!missing(contrasts))){
-      assert_that(num_medoids < length(contrasts))
-    }
+    assert_that(num_medoids < length(contrasts)*length(penalties))
   }
 
   # if checking scPCA, check additional arguments
