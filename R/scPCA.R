@@ -57,13 +57,8 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   checkArgs(func = "scPCA", target, background, center, scale, num_eigen,
             contrasts, penalties, num_medoids)
 
-  c_target <- covMat(target, center = center, scale = scale)
-  c_background <- covMat(background, center = center, scale = scale)
-
-  # perform cPCA on the contrasted covariance matrices, get list of contrasts
-  c_contrasts <- lapply(contrasts, function(x) {
-    c_target - x * c_background
-  })
+  # get the contrastive covariance matrices
+  c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
 
   # set length of contrasts and penalty vectors and number of medoids
   num_contrasts <- length(c_contrasts)

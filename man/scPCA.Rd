@@ -5,7 +5,8 @@
 \title{Sparse Constrastive Principal Component Analysis}
 \usage{
 scPCA(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
-  contrasts, penalties, num_medoids)
+  contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
+  penalties = seq(0, 0.5, length.out = 11), num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
