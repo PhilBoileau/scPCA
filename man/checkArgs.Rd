@@ -31,3 +31,6 @@ Whether all argument conditions are satisfied
 Checks whether or not the all arguments in the scPCA
 functions are input properly.
 }
+\author{
+Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+}

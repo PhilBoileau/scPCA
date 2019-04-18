@@ -9,6 +9,8 @@
 #' @param scale Whetehr the data sets' columns should be scaled to have variance
 #'   1
 #'
+#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#'
 #' @return A list of contrastive covariance matrices. Each element has an
 #'   associated contrastive parameter in the \code{contrasts} vector.
 contrastiveCov <- function(target, background, contrasts, center, scale){

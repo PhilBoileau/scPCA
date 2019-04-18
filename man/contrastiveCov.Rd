@@ -25,3 +25,6 @@ A list of contrastive covariance matrices. Each element has an
 \description{
 Compute the list of contrastive covariance matrices.
 }
+\author{
+Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+}

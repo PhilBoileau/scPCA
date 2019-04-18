@@ -32,3 +32,6 @@ Project the target data into the contrastive subspaces defined
   by the unique combinations of the contrast parameters and the penalty
   terms. All loading matrices that are kernels are dropped.
 }
+\author{
+Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+}

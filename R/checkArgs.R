@@ -14,6 +14,8 @@
 #'
 #' @import assertthat
 #'
+#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#'
 #' @return Whether all argument conditions are satisfied
 #'
 checkArgs <- function(target, background, center, scale,

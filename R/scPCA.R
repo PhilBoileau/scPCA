@@ -37,8 +37,6 @@
 #'
 #' @export
 #'
-#' @importFrom kernlab specc as.kernelMatrix
-#'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 #' @examples
@@ -53,7 +51,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
                   num_medoids) {
 
   # make sure that all parameters are input properly
-  checkArgs(func = "scPCA", target, background, center, scale, num_eigen,
+  checkArgs(target, background, center, scale, num_eigen,
             contrasts, penalties, num_medoids)
 
   # get the contrastive covariance matrices
@@ -77,90 +75,16 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   # check if spectral clustering is necessary
   if (num_spaces > 2 && num_medoids > 1) {
 
-    # produce the QR decomposition of these projections, extract Q
-    qr_decomps <- lapply(
-      seq_len(num_spaces),
-      function(x) {
-        qr.Q(qr(c_proj$spaces[[x]]))
-      }
-    )
+    results <- specClustSelection(c_proj, num_medoids)
 
-    # populate affinity matrix for spectral clustering using the principal angles
-    aff_vect <- sapply(
-      seq_len(num_spaces - 1),
-      function(i) {
-        sapply(
-          (i + 1):num_spaces,
-          function(j) {
-            Q_i <- qr_decomps[[i]]
-            Q_j <- qr_decomps[[j]]
-            d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
-            return(d[1] * d[2])
-          }
-        )
-      }
-    )
-    aff_mat <- diag(x = 0.5, nrow = num_spaces)
-    aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
-    aff_mat <- t(aff_mat)
-    # fix any computation errors, see numpy.nan_to_num
-    aff_mat[is.nan(aff_mat)] <- 0
-    aff_mat[is.na(aff_mat)] <- 0
-    aff_mat[is.infinite(aff_mat)] <- 1
-    aff_mat <- t(aff_mat) + aff_mat
-
-    # perfrom spectral clustering using the affinity matrix
-    spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-      centers = num_medoids,
-      iterations = 10000
-    )
-
-    # identify the alpha medoids of the spectral clustering
-    contrast_medoids <- sapply(
-      seq_len(num_medoids),
-      function(x) {
-        sub_index <- which(spec_clust == x)
-        sub_aff_mat <- as.matrix(
-          aff_mat[sub_index, sub_index]
-        )
-        aff_sums <- colSums(sub_aff_mat)
-        return(
-          c_proj$param_grid[sub_index[which.max(aff_sums)], ]
-        )
-      }
-    )
-
-    # fix formating
-    contrast_medoids <- matrix(unlist(contrast_medoids),
-      nrow = num_medoids,
-      byrow = TRUE
-    )
-    colnames(contrast_medoids) <- c("lambda", "alpha")
-
-    # create the lists of contrastive parameter medoids, loadings and projections
-    contrast_medoids <- contrast_medoids[order(
-      contrast_medoids[, 2],
-      contrast_medoids[, 1]
-    ), ]
-
-    # get the index of the paramaters chosen as medoids
-    combo <- rbind(c_proj$param_grid, contrast_medoids)
-    rownames(combo) <- seq(1, nrow(combo))
-    med_index <- as.numeric(
-      rownames(combo[duplicated(combo, fromLast = TRUE), , drop = TRUE])
-    )
-    med_loadings_mat <- c_proj$loadings_mat[med_index]
-    med_spaces <- c_proj$spaces[med_index]
   } else {
-    contrast_medoids <- c_proj$param_grid
-    med_loadings_mat <- c_proj$loadings_mat
-    med_spaces <- c_proj$spaces
+    results <- list(
+      medoids_params = c_proj$param_grid,
+      med_loadings_mat = c_proj$loadings_mat,
+      med_spaces = c_proj$spaces
+    )
   }
 
   # return the alpha medoids with associated loadings and low-dim rep of target
-  return(list(
-    contrast_medoids,
-    med_loadings_mat,
-    med_spaces
-  ))
+  return(results)
 }

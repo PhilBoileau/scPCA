@@ -14,6 +14,8 @@
 #'
 #' @importFrom elasticnet spca
 #'
+#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#'
 #' @return A named list containing the loadings matrices, the projections of
 #'   the target data into the spaces that they define and the grid of
 #'   parameters.
