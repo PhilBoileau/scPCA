@@ -1,0 +1,171 @@
+---
+title: "Sparse contrastive principal components analysis"
+author: "Philippe Boileau, Nima Hejazi, William Krinsman"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document
+bibliography: vignette-refs.bib
+vignette: >
+  %\VignetteIndexEntry{Sparse contrastive principal components analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+```{r setup, echo=FALSE}
+library(here)
+library(tidyverse)
+library(devtools)
+#library(scPCA)
+devtools::load_all()
+library(elasticnet)
+library(ggpubr)
+library(naniar)
+library(SingleCellExperiment)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Data pre-processing and exploratory data analysis and are two important steps in
+the data science life-cycle. As datasets become larger and the signal weaker,
+their importance increases. Thus, methods that are capable of extracting the
+signal from such datasets is badly needed. Often, these steps rely on 
+dimensionality reduction techniques to isolate pertinent information in data.
+However, many of the most commonly-used methods fail to reduce the dimensions of
+these large and noisy datasets successfully.
+
+Principal component analysis (PCA) is one such method. Although popular for its
+interpretable results and ease of implementation, PCA's performance on 
+high-dimensional often leaves much to be desired. Its results on these large
+datasets have been found to be unstable, and it is often unable to identify
+variation that is contextually meaningfull.
+
+Fortunately, modifications of PCA have been developed to remedy these issues.
+Namely, sparse PCA (sPCA) was created to increase the stability of the principal
+component loadings and variable scores in high dimensions, and constrastive PCA
+(cPCA) was proposed as a method for capturing relevant information in the 
+high-dimensional data.
+
+Although sPCA and cPCA have proven useful in resolving individual shortcomings
+of PCA, neither is capable of tackling the issues of stability and relavance
+simultaneously. The goal of this research project is to determine whether a
+combination of these methods, dubbed sparse constrastive PCA (scPCA), can
+accomplish this task.
+
+---
+
+# Comparing PCA, sPCA, cPCA and scPCA
+
+## PCA
+
+```{r PCA_sim}
+set.seed(14)
+
+# perform PCA
+pca_sim <- prcomp(toy_df[, 1:30])
+
+# plot the 2D rep using first 2 components
+df <- data.frame("PC1" = pca_sim$x[, 1],
+                 "PC2" = pca_sim$x[, 2],
+                 "label" = as.character(toy_df[, 31]))
+ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
+  ggtitle("PCA on Simulated Data") +
+  geom_point(alpha = 0.5) +
+  theme_minimal()
+```
+
+## Sparse PCA
+
+```{r sPCA_sim}
+# perform sPCA on toy_df for a range of L1 penalty terms
+penalties <- exp(seq(log(10), log(1000), length.out = 6))
+df_ls <- lapply(penalties, function(penalty) {
+  spca_sim_p <- spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
+                     type = "predictor", sparse = "penalty")$loadings
+  spca_sim_p <- as.matrix(toy_df[, 1:30]) %*% spca_sim_p
+  spca_out <- list("sPC1" = spca_sim_p[, 1],
+                   "sPC2" = spca_sim_p[, 2],
+                   "penalty" = round(rep(penalty, nrow(toy_df))),
+                   "label"  = as.character(toy_df[, 31])) %>%
+    as_tibble()
+  return(spca_out)
+})
+df <- bind_rows(df_ls)
+
+# plot the results of sPCA
+ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("sPCA on Simulated Data for Varying L1 Penalty Terms") +
+  facet_wrap(~ penalty, nrow = 2) +
+  theme_minimal()
+```
+
+## Contrastive PCA
+
+```{r cPCA_sim}
+# run cPCA for using 8 logarithmically seperated contrastive param values
+cpca_sim <- scPCA::cPCA(toy_df[, 1:30], background_df, center = TRUE,
+                        scale = FALSE)
+
+# create a dataframe to be plotted
+cpca_sim[[3]] <- lapply(seq_along(cpca_sim[[3]]), function(iter) {
+  return(as.data.frame(cpca_sim[[3]][[iter]]))
+})
+df <- bind_rows(cpca_sim[[3]])
+df <- data.frame(
+  "cPC1" = df$V1,
+  "cPC2" = df$V2,
+  "label" = as.character(rep(toy_df$label, length(cpca_sim[[3]]))),
+  "contrast" = round(rep(cpca_sim[[1]], each = 400), 3)
+)
+
+# plot the results
+ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~contrast, nrow = 2) +
+  ggtitle("cPCA on Simulated Data for Varying Contrastive Parameters") +
+  theme_minimal()
+```
+
+## Sparse and Contrastive PCA
+
+```{r scPCA_sim, fig.height=8}
+# use scPCA on simulated data
+scpca_sim <- scPCA::scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
+                          scale = FALSE)
+
+# create a data frame for plotting
+scpca_sim[[3]] <- lapply(seq_along(scpca_sim[[3]]), function(iter) {
+  return(as.data.frame(scpca_sim[[3]][[iter]]))
+})
+df <- bind_rows(scpca_sim[[3]])
+df <- data.frame(
+  "PC1" = df$PC1,
+  "PC2" = df$PC2,
+  "V1" = df$V1,
+  "V2" = df$V2,
+  "label" = as.character(rep(toy_df$label, length(scpca_sim[[3]]))),
+  "contrast" = round(rep(scpca_sim[[1]][, 2], each = 400), 3),
+  "lambda" = rep(scpca_sim[[1]][, 1], each = 400)
+)
+df <- df %>%
+        mutate(params = paste0("c=", contrast, ", L1=", lambda),
+               scPC1 = if_else(is.na(PC1), V1, PC1),
+               scPC2 = if_else(is.na(PC2), V2, PC2)) %>%
+        select(-PC1, -V1, -PC2, -V2)
+
+# plot the results
+ggplot(df, aes(x = scPC1, y = scPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~params, nrow = 5, scale = "free_y") +
+  ggtitle("scPCA on Simulated Data for Varying Parameters") +
+  theme_minimal()
+```
+
+---
+
+## Session Information
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

@@ -74,9 +74,7 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
 
   # check if spectral clustering is necessary
   if (num_spaces > 2 && num_medoids > 1) {
-
     results <- specClustSelection(c_proj, num_medoids)
-
   } else {
     results <- list(
       medoids_params = c_proj$param_grid,

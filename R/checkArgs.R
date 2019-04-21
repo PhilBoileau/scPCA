@@ -58,11 +58,10 @@ checkArgs <- function(target, background, center, scale,
   }
 
     # check penalty terms
-  if(see_if(!missing(penalties))){
+  if(see_if(!is.null(penalties))){
     assert_that(length(penalties) > 0)
     assert_that(is.numeric(penalties))
     assert_that(all(penalties >= 0))
   }
-
 }
 

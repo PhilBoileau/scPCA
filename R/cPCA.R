@@ -44,10 +44,11 @@
 #'   background = background_df
 #' )
 cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
-                 contrasts, num_medoids) {
+                 contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
+                 num_medoids) {
 
   # make sure that all parameters are input properly
-  checkArgs(func = "cPCA", target, background, center, scale, num_eigen,
+  checkArgs(target, background, center, scale, num_eigen,
             contrasts, penalties = NULL, num_medoids)
 
   c_target <- covMat(target, center = center, scale = scale)
