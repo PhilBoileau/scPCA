@@ -13,7 +13,7 @@
 #'
 #' @return A list of contrastive covariance matrices. Each element has an
 #'   associated contrastive parameter in the \code{contrasts} vector.
-contrastiveCov <- function(target, background, contrasts, center, scale){
+contrastiveCov <- function(target, background, contrasts, center, scale) {
 
   # get the covariance matrices of th target and background
   c_target <- covMat(target, center = center, scale = scale)

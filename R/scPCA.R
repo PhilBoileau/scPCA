@@ -51,8 +51,10 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
                   num_medoids) {
 
   # make sure that all parameters are input properly
-  checkArgs(target, background, center, scale, num_eigen,
-            contrasts, penalties, num_medoids)
+  checkArgs(
+    target, background, center, scale, num_eigen,
+    contrasts, penalties, num_medoids
+  )
 
   # get the contrastive covariance matrices
   c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
@@ -67,8 +69,10 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   }
 
   # for each contrasted covariance matrix, compute components and projections
-  c_proj <- projGridCP(target, center, scale, c_contrasts, contrasts,
-                       penalties, num_eigen)
+  c_proj <- projGridCP(
+    target, center, scale, c_contrasts, contrasts,
+    penalties, num_eigen
+  )
 
   num_spaces <- length(c_proj$spaces)
 

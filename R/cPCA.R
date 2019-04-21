@@ -49,7 +49,9 @@ cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
 
   # make sure that all parameters are input properly
   checkArgs(target, background, center, scale, num_eigen,
-            contrasts, penalties = NULL, num_medoids)
+    contrasts,
+    penalties = NULL, num_medoids
+  )
 
   c_target <- covMat(target, center = center, scale = scale)
   c_background <- covMat(background, center = center, scale = scale)
@@ -92,7 +94,7 @@ cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
 
 
   # only perform this step if there is more than one contrastive parameter
-  if(num_contrasts > 2){
+  if (num_contrasts > 2) {
     # produce the QR decomposition of these projections, extract Q
     qr_decomps <- lapply(
       1:num_contrasts,
@@ -148,7 +150,6 @@ cPCA <- function(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
     med_index <- which(contrasts %in% contrast_medoids)
     med_loadings_mat <- loadings_mat[med_index]
     med_spaces <- spaces[med_index]
-
   } else {
     contrast_medoids <- contrasts
     med_loadings_mat <- loadings_mat

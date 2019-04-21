@@ -19,19 +19,19 @@
 #' @return Whether all argument conditions are satisfied
 #'
 checkArgs <- function(target, background, center, scale,
-                      num_eigen, contrasts, penalties, num_medoids){
+                      num_eigen, contrasts, penalties, num_medoids) {
 
   # assert that the target and background data frames are of the right class
   assert_that(class(target) == "tbl_df" ||
-              class(target) == "tbl" ||
-              class(target) == "spec_tbl_df" ||
-              class(target) == "data.frame" ||
-              class(target) == "matrix")
+    class(target) == "tbl" ||
+    class(target) == "spec_tbl_df" ||
+    class(target) == "data.frame" ||
+    class(target) == "matrix")
   assert_that(class(background) == "tbl_df" ||
-              class(background) == "tbl" ||
-              class(background) == "spec_tbl_df" ||
-              class(background) == "data.frame" ||
-              class(background) == "matrix")
+    class(background) == "tbl" ||
+    class(background) == "spec_tbl_df" ||
+    class(background) == "data.frame" ||
+    class(background) == "matrix")
 
   # assert that target and background have the same number of variables
   assert_that(ncol(target) == ncol(background))
@@ -45,23 +45,22 @@ checkArgs <- function(target, background, center, scale,
   assert_that(num_eigen <= ncol(target))
 
   # check the contrastive parameters
-  if(see_if(!missing(contrasts))){
+  if (see_if(!missing(contrasts))) {
     assert_that(length(contrasts) > 0)
     assert_that(is.numeric(contrasts))
     assert_that(all(contrasts > 0))
   }
 
   # check the num_medoids argument
-  if(see_if(!missing(num_medoids))){
+  if (see_if(!missing(num_medoids))) {
     assert_that(is.count(num_medoids))
-    assert_that(num_medoids < length(contrasts)*length(penalties))
+    assert_that(num_medoids < length(contrasts) * length(penalties))
   }
 
-    # check penalty terms
-  if(see_if(!is.null(penalties))){
+  # check penalty terms
+  if (see_if(!is.null(penalties))) {
     assert_that(length(penalties) > 0)
     assert_that(is.numeric(penalties))
     assert_that(all(penalties >= 0))
   }
 }
-

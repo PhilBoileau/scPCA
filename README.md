@@ -1,45 +1,106 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-scPCA
-=====
 
-The goal of scPCA is to ...
+# R/`scPCA`
 
-Installation
-------------
+[![Travis-CI Build
+Status](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)](https://travis-ci.org/PhilBoileau/scPCA)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/PhilBoileau/scPCA?branch=master&svg=true)](https://ci.appveyor.com/project/PhilBoileau/scPCA/)
+[![Coverage
+Status](https://img.shields.io/codecov/c/github/PhilBoileau/scPCA/master.svg)](https://codecov.io/github/PhilBoileau/scPCA?branch=master)
+[![Project Status: WIP – Initial development is in progress, but there
+has not yet been a stable, usable release suitable for the
+public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![BioC
+status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
+[![Bioc
+Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
+[![Bioc
+Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
+[![MIT
+license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-You can install the released version of scPCA from [CRAN](https://CRAN.R-project.org) with:
+> Sparse and contrastive principal components analysis for computational
+> biology
+
+**Authors:** [Philippe Boileau](https://github.com/PhilBoileau), [Nima
+Hejazi](https://nimahejazi.org) and [William
+Krinsman](https://github.com/krinsman)
+
+-----
+
+## What’s `scPCA`?
+
+The `scPCA` R package facilitates
+
+-----
+
+## Installation
+
+For standard use, install from
+[Bioconductor](https://bioconductor.org/packages/scPCA) using
+[`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
 
 ``` r
-install.packages("scPCA")
+if (!requireNamespace("BiocManager", quietly=TRUE)) {
+  install.packages("BiocManager")
+}
+BiocManager::install("scPCA")
 ```
 
-Example
--------
-
-This is a basic example which shows you how to solve a common problem:
+To contribute, install the bleeding-edge *development version* from
+GitHub via
+[`devtools`](https://www.rstudio.com/products/rpackages/devtools/):
 
 ``` r
-## basic example code
+devtools::install_github("PhilBoileau/scPCA")
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Current and prior [Bioconductor](https://bioconductor.org) releases are
+available under branches with numbers prefixed by “RELEASE\_”. For
+example, to install the version of this package available via
+Bioconductor 4.0, use
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_4_0")
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
+-----
 
-You can also embed plots, for example:
+## Example
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+For details on how to best use the `scPCA` R package, please consult the
+most recent [package
+vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html)
+available through the [Bioconductor
+project](https://bioconductor.org/packages/scPCA).
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+-----
+
+## Issues
+
+If you encounter any bugs or have any specific feature requests, please
+[file an issue](https://github.com/PhilBoileau/scPCA/issues).
+
+-----
+
+## Contributions
+
+Contributions are very welcome. Interested contributors should consult
+our [contribution
+guidelines](https://github.com/PhilBoileau/scPCA/blob/master/CONTRIBUTING.md)
+prior to submitting a pull request.
+
+-----
+
+## License
+
+© 2019 [Philippe Boileau](https://github.com/PhilBoileau)
+
+The contents of this repository are distributed under the MIT license.
+See file `LICENSE` for details.
+
+-----
+
+## References

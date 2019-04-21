@@ -12,7 +12,7 @@
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
-specClustSelection <- function(c_proj, num_medoids){
+specClustSelection <- function(c_proj, num_medoids) {
 
   # get the number of spaces that are projected onto
   num_spaces <- length(c_proj$spaces)
@@ -51,8 +51,8 @@ specClustSelection <- function(c_proj, num_medoids){
 
   # perfrom spectral clustering using the affinity matrix
   spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-                               centers = num_medoids,
-                               iterations = 10000
+    centers = num_medoids,
+    iterations = 10000
   )
 
   # identify the alpha medoids of the spectral clustering
@@ -72,8 +72,8 @@ specClustSelection <- function(c_proj, num_medoids){
 
   # fix formating
   contrast_medoids <- matrix(unlist(contrast_medoids),
-                             nrow = num_medoids,
-                             byrow = TRUE
+    nrow = num_medoids,
+    byrow = TRUE
   )
   colnames(contrast_medoids) <- c("lambda", "alpha")
 
@@ -97,5 +97,4 @@ specClustSelection <- function(c_proj, num_medoids){
     med_loadings_mat = med_loadings_mat,
     med_spaces = med_spaces
   ))
-
 }
