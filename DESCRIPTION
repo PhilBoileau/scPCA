@@ -39,7 +39,11 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    BiocStyle
+    BiocStyle,
+    ggplot2,
+    dplyr,
+    tidyverse,
+    here
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 biocViews:

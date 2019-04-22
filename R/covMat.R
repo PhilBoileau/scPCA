@@ -12,7 +12,7 @@
 #'
 #' @return the covariance matrix of the data.
 #'
-#' @importFrom stats cov
+#' @importFrom stats cov var
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 covMat <- function(data, center = TRUE, scale = TRUE) {
@@ -30,7 +30,7 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
   if (scale) {
 
     # identify columns with zero variance
-    no_var_idx <- which(sapply(data, var) == 0)
+    no_var_idx <- which(sapply(data, stats::var) == 0)
 
     # scale the data and replace the columns with no variation by zero vectors
     data <- scale(data, center = FALSE, scale = TRUE)

@@ -1,6 +1,6 @@
 ---
 title: "Sparse contrastive principal components analysis"
-author: "Philippe Boileau, Nima Hejazi, William Krinsman"
+author: "Philippe Boileau"
 date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
@@ -16,13 +16,9 @@ vignette: >
 ```{r setup, echo=FALSE}
 library(here)
 library(tidyverse)
-library(devtools)
 #library(scPCA)
 devtools::load_all()
 library(elasticnet)
-library(ggpubr)
-library(naniar)
-library(SingleCellExperiment)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -68,10 +64,11 @@ pca_sim <- prcomp(toy_df[, 1:30])
 df <- data.frame("PC1" = pca_sim$x[, 1],
                  "PC2" = pca_sim$x[, 2],
                  "label" = as.character(toy_df[, 31]))
-ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
+p_pca <- ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
   ggtitle("PCA on Simulated Data") +
   geom_point(alpha = 0.5) +
   theme_minimal()
+p_pca
 ```
 
 ## Sparse PCA
@@ -93,11 +90,12 @@ df_ls <- lapply(penalties, function(penalty) {
 df <- bind_rows(df_ls)
 
 # plot the results of sPCA
-ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
+p_spca <- ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
   geom_point(alpha = 0.5) +
   ggtitle("sPCA on Simulated Data for Varying L1 Penalty Terms") +
   facet_wrap(~ penalty, nrow = 2) +
   theme_minimal()
+p_spca
 ```
 
 ## Contrastive PCA
@@ -111,20 +109,21 @@ cpca_sim <- scPCA::cPCA(toy_df[, 1:30], background_df, center = TRUE,
 cpca_sim[[3]] <- lapply(seq_along(cpca_sim[[3]]), function(iter) {
   return(as.data.frame(cpca_sim[[3]][[iter]]))
 })
-df <- bind_rows(cpca_sim[[3]])
-df <- data.frame(
-  "cPC1" = df$V1,
-  "cPC2" = df$V2,
-  "label" = as.character(rep(toy_df$label, length(cpca_sim[[3]]))),
-  "contrast" = round(rep(cpca_sim[[1]], each = 400), 3)
-)
+df <- bind_rows(cpca_sim[[3]]) %>%
+  mutate(
+    cPC1 = V1,
+    cPC2 = V2,
+    label = as.character(rep(toy_df$label, length(cpca_sim[[3]]))),
+    contrast = round(rep(cpca_sim[[1]], each = 400), 3)
+  )
 
 # plot the results
-ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
+p_cpca <- ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~contrast, nrow = 2) +
   ggtitle("cPCA on Simulated Data for Varying Contrastive Parameters") +
   theme_minimal()
+p_cpca
 ```
 
 ## Sparse and Contrastive PCA
@@ -138,28 +137,24 @@ scpca_sim <- scPCA::scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
 scpca_sim[[3]] <- lapply(seq_along(scpca_sim[[3]]), function(iter) {
   return(as.data.frame(scpca_sim[[3]][[iter]]))
 })
-df <- bind_rows(scpca_sim[[3]])
-df <- data.frame(
-  "PC1" = df$PC1,
-  "PC2" = df$PC2,
-  "V1" = df$V1,
-  "V2" = df$V2,
-  "label" = as.character(rep(toy_df$label, length(scpca_sim[[3]]))),
-  "contrast" = round(rep(scpca_sim[[1]][, 2], each = 400), 3),
-  "lambda" = rep(scpca_sim[[1]][, 1], each = 400)
-)
-df <- df %>%
-        mutate(params = paste0("c=", contrast, ", L1=", lambda),
-               scPC1 = if_else(is.na(PC1), V1, PC1),
-               scPC2 = if_else(is.na(PC2), V2, PC2)) %>%
-        select(-PC1, -V1, -PC2, -V2)
+df <- bind_rows(scpca_sim[[3]]) %>%
+  mutate(
+    label = as.character(rep(toy_df$label, length(scpca_sim[[3]]))),
+    contrast = round(rep(scpca_sim[[1]][, 2], each = 400), 3),
+    lambda = rep(scpca_sim[[1]][, 1], each = 400),
+    params = paste0("c=", contrast, ", L1=", lambda),
+    scPC1 = if_else(is.na(PC1), V1, PC1),
+    scPC2 = if_else(is.na(PC2), V2, PC2)
+  ) %>%
+  select(-PC1, -V1, -PC2, -V2)
 
 # plot the results
-ggplot(df, aes(x = scPC1, y = scPC2, colour = label)) +
+p_scpca <- ggplot(df, aes(x = scPC1, y = scPC2, colour = label)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~params, nrow = 5, scale = "free_y") +
   ggtitle("scPCA on Simulated Data for Varying Parameters") +
   theme_minimal()
+p_scpca
 ```
 
 ---
