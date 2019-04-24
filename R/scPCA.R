@@ -5,8 +5,7 @@
 #'   target data for a given number of eigenvectors, a vector of real valued
 #'   contrast parameters and a vector of penalty terms. For more information on
 #'   the contrastice PCA method, which this method is an extension of, see
-#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}{Abid et
-#'   al.}.
+#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}{Abid et al.}.
 #'
 #' @param target The target data. Either a numeric dataframe or a matrix with
 #'   observations as rows and features as columns.
@@ -52,10 +51,8 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
                   num_medoids) {
 
   # make sure that all parameters are input properly
-  checkArgs(
-    target, background, center, scale, num_eigen,
-    contrasts, penalties, num_medoids
-  )
+  checkArgs(target, background, center, scale, num_eigen,
+            contrasts, penalties, num_medoids)
 
   # get the contrastive covariance matrices
   c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
@@ -70,23 +67,23 @@ scPCA <- function(target, background, center = TRUE, scale = TRUE,
   }
 
   # for each contrasted covariance matrix, compute components and projections
-  c_proj <- projGridCP(
-    target, center, scale, c_contrasts, contrasts,
-    penalties, num_eigen
-  )
+  c_proj <- projGridCP(target, center, scale, c_contrasts, contrasts,
+                       penalties, num_eigen)
+
   num_spaces <- length(c_proj$spaces)
 
   # check if spectral clustering is necessary
   if (num_spaces > 2 && num_medoids > 1) {
     results <- specClustSelection(c_proj, num_medoids)
+
   } else {
     results <- list(
-      medoids_params = c_proj$param_grid,
-      med_loadings_mat = c_proj$loadings_mat,
-      med_spaces = c_proj$spaces
+      params = c_proj$param_grid,
+      loadings_mat = c_proj$loadings_mat,
+      spaces = c_proj$spaces
     )
   }
 
-  # return alpha medoids with associated loadings + low-dim rep of target
+  # return the alpha medoids with associated loadings and low-dim rep of target
   return(results)
 }
