@@ -5,11 +5,13 @@
 #'
 #' @param target The target data set.
 #' @param center Whether the data sets' columns should be centered.
+#' @param scale Whether the data sets' columns should be scaled.
 #' @param c_contrasts List of of contrastive covariances.
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
 #' @param num_eigen The number of contrastive principal components to compute.
 #' @param centers The number of centers to use in the clustering algorithm.
+#' @param iter_max The maxe number of iterations in kmeans.
 #' @param ... Additional arguments to pass to the cluster algorithm and the
 #'   objective function.
 #'
@@ -20,8 +22,8 @@
 #' @imortFrom stats kmeans
 #' @importFrom cluster silhouette
 
-fitContrast <- function(target, center = TRUE, c_contrasts, contrasts,
-                        num_eigen, centers, ...){
+fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
+                        contrasts, num_eigen, centers, iter_max = 100, ...){
 
   num_contrasts <- length(contrasts)
 
@@ -63,19 +65,21 @@ fitContrast <- function(target, center = TRUE, c_contrasts, contrasts,
   ave_sil_widths <- lapply(
     norm_subspaces,
     function(subspace) {
-      kmeans_res <- kmeans(subspace, centers = centers, ...)
-      sil_width <- silhouette(kmeans_res$cluster, dist(subspace))$sil_width
+      kmeans_res <- stats::kmeans(subspace, centers = centers, iter.max,
+                                  list(...))
+      sil_width <- cluster::silhouette(kmeans_res$cluster,
+                                       dist(subspace))[, 3]
       mean(sil_width)
     }
   )
 
   # select the best contrastive parameter, return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
-  min_idx <- which.min(unlist(sil_width))
+  max_idx <- which.max(unlist(ave_sil_widths))
   return(list(
-    c_cov = c_contrasts[[min_idx]],
-    contrast = contrasts[min_idx],
-    loading_mat = loadings_mat[[min_idx]],
-    subspaces[[min_idx]]
+    c_cov = c_contrasts[[max_idx]],
+    contrast = contrasts[max_idx],
+    loading_mat = loadings_mat[[max_idx]],
+    proj = subspaces[[max_idx]]
   ))
 }
