@@ -1,7 +1,7 @@
 ---
 output:
   rmarkdown::github_document
-bibliography: "README-refs.bib"
+bibliography: "inst/REFERENCES.bib"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 [![Bioc Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-> Sparse and contrastive principal components analysis for computational biology
+> Sparse and Contrastive Principal Components Analysis for Computational Biology
 
 __Author:__ [Philippe Boileau](https://github.com/PhilBoileau)
 
@@ -34,6 +34,7 @@ __Author:__ [Philippe Boileau](https://github.com/PhilBoileau)
 ## What's `scPCA`?
 
 The `scPCA` R package facilitates
+@abid2018exploring
 
 ---
 

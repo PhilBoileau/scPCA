@@ -4,9 +4,8 @@
 #'   will perform the sparse contrastive principal component analysis of the
 #'   target data for a given number of eigenvectors, a vector of real valued
 #'   contrast parameters and a vector of penalty terms. For more information on
-#'   the contrastice PCA method, which this method is an extension of, see
-#'   \href{https://www.nature.com/articles/s41467-018-04608-8#ref-CR29}{Abid et al.}.
-#'
+#'   the contrastice PCA method, which this method is an extension of, consult
+#'   \insertRef{abid2017contrastive}{scPCA}.
 #' @param target The target data. Either a numeric dataframe or a matrix with
 #'   observations as rows and features as columns.
 #' @param background The background data. Either a numeric dataframe or a matrix
@@ -35,6 +34,8 @@
 #'   eigenvector matrices associated with each of these pairs and the list
 #'   of reduced-dimension target data.
 #'
+#' @importFrom Rdpack reprompt
+#'
 #' @export
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
@@ -44,6 +45,7 @@
 #'   target = toy_df[, 2:31],
 #'   background = background_df
 #' )
+#'
 scPCA <- function(target, background, center = TRUE, scale = TRUE,
                   num_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),

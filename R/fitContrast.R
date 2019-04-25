@@ -4,23 +4,25 @@
 #'   contrastive parameter based on k-means and average silhouette width.
 #'
 #' @param target The target data set.
-#' @param center Whether the data sets' columns should be centered.
-#' @param scale Whether the data sets' columns should be scaled.
+#' @param center A \code{logical} indicating whether the data sets' columns
+#'  should be centered so as to have mean zero.
+#' @param scale A \code{logical} indicating whether the data sets' columns
+#'  should be re-scaled to have unit variance.
 #' @param c_contrasts List of of contrastive covariances.
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
 #' @param num_eigen The number of contrastive principal components to compute.
 #' @param centers The number of centers to use in the clustering algorithm.
-#' @param ... Additional arguments to pass to the cluster algorithm and the
+#' @param ... Additional arguments to pass to the clustering algorithm and the
 #'   objective function.
 #'
 #' @return Returns the optimal covariance matrix, contrastive parameter,
-#'   loadings and projection of the target data based on the kmeans results and
-#'   the average silhouette width
+#'   loadings and projection of the target data based on the results of
+#'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
-#' @imortFrom stats kmeans
+#' @importFrom stats kmeans
 #' @importFrom cluster silhouette
-
+#'
 fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
                         contrasts, num_eigen, centers, iter_max = 100, ...){
 
@@ -32,7 +34,7 @@ fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
     function(x) {
         eigen(c_contrasts[[x]],
               symmetric = TRUE
-        )$vectors[, 1:num_eigen]
+        )$vectors[, seq_len(num_eigen)]
       }
     )
 
@@ -60,7 +62,7 @@ fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
     }
   )
 
-  # get the objective function results for each space based on the clust alg
+  # get the objective function results for each space from clustering algorithm
   ave_sil_widths <- lapply(
     norm_subspaces,
     function(subspace) {
@@ -72,7 +74,7 @@ fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
     }
   )
 
-  # select the best contrastive parameter, return it's covariance matrix,
+  # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
   max_idx <- which.max(unlist(ave_sil_widths))
   return(list(

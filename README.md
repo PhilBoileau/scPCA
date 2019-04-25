@@ -24,15 +24,13 @@ license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://openso
 > Sparse and contrastive principal components analysis for computational
 > biology
 
-**Authors:** [Philippe Boileau](https://github.com/PhilBoileau), [Nima
-Hejazi](https://nimahejazi.org) and [William
-Krinsman](https://github.com/krinsman)
+**Author:** [Philippe Boileau](https://github.com/PhilBoileau)
 
 -----
 
 ## What’s `scPCA`?
 
-The `scPCA` R package facilitates
+The `scPCA` R package facilitates Abid et al. (2018)
 
 -----
 
@@ -104,3 +102,16 @@ See file `LICENSE` for details.
 -----
 
 ## References
+
+<div id="refs" class="references">
+
+<div id="ref-abid2018exploring">
+
+Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
+“Exploring Patterns Enriched in a Dataset with Contrastive Principal
+Component Analysis.” *Nature Communications* 9 (1). Nature Publishing
+Group: 2134.
+
+</div>
+
+</div>

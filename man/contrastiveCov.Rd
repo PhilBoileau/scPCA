@@ -7,16 +7,17 @@
 contrastiveCov(target, background, contrasts, center, scale)
 }
 \arguments{
-\item{target}{The target data set}
+\item{target}{The target data set.}
 
-\item{background}{The bacground data set}
+\item{background}{The background data set.}
 
-\item{contrasts}{The vector of contrastive parameters}
+\item{contrasts}{The vector of contrastive parameters.}
 
-\item{center}{Whether the data sets' columns should be centered}
+\item{center}{A \code{logical} indicating whether the data sets' columns
+should be centered so as to have mean zero.}
 
-\item{scale}{Whetehr the data sets' columns should be scaled to have variance
-1}
+\item{scale}{A \code{logical} indicating whether the data sets' columns
+should be re-scaled to have unit variance.}
 }
 \value{
 A list of contrastive covariance matrices. Each element has an
