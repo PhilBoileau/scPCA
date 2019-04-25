@@ -11,7 +11,6 @@
 #'   contrastive covariances,
 #' @param num_eigen The number of contrastive principal components to compute.
 #' @param centers The number of centers to use in the clustering algorithm.
-#' @param iter_max The maxe number of iterations in kmeans.
 #' @param ... Additional arguments to pass to the cluster algorithm and the
 #'   objective function.
 #'
@@ -65,7 +64,7 @@ fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
   ave_sil_widths <- lapply(
     norm_subspaces,
     function(subspace) {
-      kmeans_res <- stats::kmeans(subspace, centers = centers, iter.max,
+      kmeans_res <- stats::kmeans(subspace, centers = centers,
                                   list(...))
       sil_width <- cluster::silhouette(kmeans_res$cluster,
                                        dist(subspace))[, 3]
