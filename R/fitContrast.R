@@ -12,7 +12,10 @@
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
 #' @param num_eigen The number of contrastive principal components to compute.
-#' @param centers The number of centers to use in the clustering algorithm.
+#' @param clust_method A \code{character} specifying the clustering method to
+#'  use for choosing the optimal constrastive parameter. Currently, this is
+#'  limited to either k-means or partitioning around medoids (PAM).
+#' @param n_centers The number of n_centers to use in the clustering algorithm.
 #' @param ... Additional arguments to pass to the clustering algorithm and the
 #'   objective function.
 #'
@@ -21,11 +24,14 @@
 #'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
 #' @importFrom stats kmeans
-#' @importFrom cluster silhouette
+#' @importFrom cluster pam silhouette
 #'
-fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
-                        contrasts, num_eigen, centers, iter_max = 100, ...){
-
+fitContrast <- function(target, center = TRUE, scale = TRUE,
+                        c_contrasts, contrasts, num_eigen,
+                        clust_method = c("kmeans", "pam"),
+                        n_centers, iter_max = 100, ...){
+  # preliminaries
+  clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
 
   # get the loadings matrix of each contrastive covariance matrix
@@ -66,10 +72,12 @@ fitContrast <- function(target, center = TRUE, scale = TRUE, c_contrasts,
   ave_sil_widths <- lapply(
     norm_subspaces,
     function(subspace) {
-      kmeans_res <- stats::kmeans(subspace, centers = centers,
-                                  list(...))
-      sil_width <- cluster::silhouette(kmeans_res$cluster,
-                                       dist(subspace))[, 3]
+      if (clust_method == "pam") {
+        clust_res <- cluster::pam(x = subspace, k = n_centers)
+      } else if (clust_method == "kmeans") {
+        clust_res <- stats::kmeans(x = subspace, centers = n_centers, list(...))
+      }
+      sil_width <- cluster::silhouette(clust_res$cluster, dist(subspace))[, 3]
       mean(sil_width)
     }
   )

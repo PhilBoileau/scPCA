@@ -15,7 +15,8 @@ vignette: >
 
 ```{r setup, echo=FALSE}
 library(here)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 #library(scPCA)
 devtools::load_all()
 library(elasticnet)
@@ -25,13 +26,13 @@ knitr::opts_chunk$set(echo = FALSE)
 Data pre-processing and exploratory data analysis and are two important steps in
 the data science life-cycle. As datasets become larger and the signal weaker,
 their importance increases. Thus, methods that are capable of extracting the
-signal from such datasets is badly needed. Often, these steps rely on 
+signal from such datasets is badly needed. Often, these steps rely on
 dimensionality reduction techniques to isolate pertinent information in data.
 However, many of the most commonly-used methods fail to reduce the dimensions of
 these large and noisy datasets successfully.
 
 Principal component analysis (PCA) is one such method. Although popular for its
-interpretable results and ease of implementation, PCA's performance on 
+interpretable results and ease of implementation, PCA's performance on
 high-dimensional often leaves much to be desired. Its results on these large
 datasets have been found to be unstable, and it is often unable to identify
 variation that is contextually meaningfull.
@@ -39,7 +40,7 @@ variation that is contextually meaningfull.
 Fortunately, modifications of PCA have been developed to remedy these issues.
 Namely, sparse PCA (sPCA) was created to increase the stability of the principal
 component loadings and variable scores in high dimensions, and constrastive PCA
-(cPCA) was proposed as a method for capturing relevant information in the 
+(cPCA) was proposed as a method for capturing relevant information in the
 high-dimensional data.
 
 Although sPCA and cPCA have proven useful in resolving individual shortcomings
@@ -55,7 +56,8 @@ accomplish this task.
 ## PCA
 
 ```{r PCA_sim}
-set.seed(14)
+# set seed for reproducibility
+set.seed(1742)
 
 # perform PCA
 pca_sim <- prcomp(toy_df[, 1:30])
@@ -98,12 +100,11 @@ p_spca <- ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
 p_spca
 ```
 
-## Contrastive PCA
+## Contrastive PCA (cPCA)
 
 ```{r cPCA_sim}
 # run cPCA for using 8 logarithmically seperated contrastive param values
-cpca_sim <- scPCA::cPCA(toy_df[, 1:30], background_df, center = TRUE,
-                        scale = FALSE)
+cpca_sim <- cPCA(toy_df[, 1:30], background_df, center = TRUE, scale = FALSE)
 
 # create a dataframe to be plotted
 cpca_sim[[3]] <- lapply(seq_along(cpca_sim[[3]]), function(iter) {
@@ -126,12 +127,12 @@ p_cpca <- ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
 p_cpca
 ```
 
-## Sparse and Contrastive PCA
+## Sparse and Contrastive PCA (scPCA)
 
 ```{r scPCA_sim, fig.height=8}
 # use scPCA on simulated data
-scpca_sim <- scPCA::scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
-                          scale = FALSE)
+scpca_sim <- scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
+                   scale = FALSE)
 
 # create a data frame for plotting
 scpca_sim[[3]] <- lapply(seq_along(scpca_sim[[3]]), function(iter) {
@@ -159,8 +160,90 @@ p_scpca
 
 ---
 
+## Bioconductor Integration with `SingleCellExperiment`
+
+We now turn to discussing how the tools in the `scPCA` package can be used more
+readily with data structures common in computational biology by examining an
+integration with the `SingleCellExperiment` container class. For our example, we
+will use the `allen` data from the `scRNAseq` package, just as was done to
+demonstrate use of the `SingleCellExperiment` container in the corresponding
+vignette.
+
+To start, let's load the required packages and create a simple
+`SingleCellExperiment` instance, including information about spike-ins:
+
+```{r sce_setup, message=FALSE}
+library(scRNAseq)
+library(SingleCellExperiment)
+
+# load data and set to SCE
+data(allen)
+sce <- as(allen, "SingleCellExperiment")
+```
+
+While interesting, the `allen` data set is rather large. To proceed, we use only
+a small subset of the data, limited to the 1000 genes with the highest variance,
+after log-transforming the raw counts:
+
+```{r make_sce_sub, message=FALSE}
+# rank genes by variance
+n_genes <- 1000
+vars <- assay(sce) %>%
+  log1p %>%
+  rowVars
+names(vars) <- rownames(sce)
+vars <- sort(vars, decreasing = TRUE)
+
+# subset SCE to n_genes with highest variance
+sce_sub <- sce[names(vars[seq_len(n_genes)]),]
+sce_sub
+```
+
+In order to use either contrastive PCA or its sparse variant, it is necessary to
+have a background data set. Absent such a version of the `allen` data, we will
+use the `r n_genes` genes with the lowest variance as the background:
+
+```{r make_sce_background, message=FALSE}
+# background SCE based on low variance genes (after removing zero counts)
+vars_nz <- vars[vars > 0]
+vars_low <- vars[(length(vars_nz) - n_genes + 1):length(vars_nz)]
+sce_background <- sce[names(vars_low), ]
+```
+
+Due to the flexibility of the `SingleCellExperiment` class, we can obtain PCA,
+cPCA, and scPCA representations of the reduced `allen` data, storing these in
+ `SingleCellExperiment` object using the `reducedDims` method.
+
+```{r perform_dimred, message=FALSE}
+# first, PCA
+pca_data <- prcomp(t(log1p(assay(sce_sub))))
+
+# next, cPCA
+cpca_data <- cPCA(t(log1p(assay(sce_sub))),
+                  t(log1p(assay(sce_background))),
+                  center = TRUE, scale = FALSE)
+
+# finally, scPCA
+scpca_data <- scPCA(t(log1p(assay(sce_sub))),
+                    t(log1p(assay(sce_background))),
+                    num_medoids = 20,
+                    scale = FALSE)
+
+# store new representations in the SingleCellExperiment object
+reducedDims(sce_sub) <- SimpleList(PCA = pca_data$x, cPCA = cpca_data$Y,
+                                   scPCA = ...)
+sce_sub
+```
+
+---
+
 ## Session Information
 
-```{r sessionInfo, echo=FALSE}
+```{r session_info, echo=FALSE}
 sessionInfo()
 ```
+
+---
+
+## References
+
