@@ -5,7 +5,7 @@
 \title{Check Arguments in scPCA Function}
 \usage{
 checkArgs(target, background, center, scale, num_eigen, contrasts,
-  penalties, num_medoids)
+  penalties)
 }
 \arguments{
 \item{target}{Target data}
@@ -21,8 +21,6 @@ checkArgs(target, background, center, scale, num_eigen, contrasts,
 \item{contrasts}{The vector of contrasts parameters}
 
 \item{penalties}{The vector of penalty terms}
-
-\item{num_medoids}{The number of medoids to find during spectral clustering.}
 }
 \value{
 Whether all argument conditions are satisfied

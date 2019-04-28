@@ -5,7 +5,8 @@
 \title{Identify the Optimal Contrastive Parameter}
 \usage{
 fitContrast(target, center = TRUE, scale = TRUE, c_contrasts,
-  contrasts, num_eigen, centers, iter_max = 100, ...)
+  contrasts, num_eigen, clust_method = c("kmeans", "pam"), n_centers,
+  ...)
 }
 \arguments{
 \item{target}{The target data set.}
@@ -23,12 +24,24 @@ contrastive covariances,}
 
 \item{num_eigen}{The number of contrastive principal components to compute.}
 
-\item{centers}{The number of centers to use in the clustering algorithm.}
+\item{clust_method}{A \code{character} specifying the clustering method to
+use for choosing the optimal constrastive parameter. Currently, this is
+limited to either k-means or partitioning around medoids (PAM).}
+
+\item{n_centers}{The number of n_centers to use in the clustering algorithm.}
 
 \item{...}{Additional arguments to pass to the clustering algorithm and the
 objective function.}
 }
 \value{
+A list similar to that output by \code{\link[stats]{prcomp}}:
+  \itemize{
+    \item rotation - the matrix of variable loadings
+    \item x - the rotated data, centred and scaled, if requested, data
+    multiplied by the rotation matrix
+    \item c_cov - the covariance matrix of the optimal contrastive parameter
+    \item contrast - the optimal contrastive parameter
+  }
 Returns the optimal covariance matrix, contrastive parameter,
   loadings and projection of the target data based on the results of
   evaluating a clustering algorithm based on average silhouette width metric.
@@ -36,4 +49,7 @@ Returns the optimal covariance matrix, contrastive parameter,
 \description{
 This function is used to automatically select the optimal
   contrastive parameter based on k-means and average silhouette width.
+}
+\author{
+Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
 }

@@ -19,17 +19,27 @@
 #' @param ... Additional arguments to pass to the clustering algorithm and the
 #'   objective function.
 #'
-#' @return Returns the optimal covariance matrix, contrastive parameter,
+#' @return A list similar to that output by \code{\link[stats]{prcomp}}:
+#'   \itemize{
+#'     \item rotation - the matrix of variable loadings
+#'     \item x - the rotated data, centred and scaled, if requested, data
+#'     multiplied by the rotation matrix
+#'     \item c_cov - the covariance matrix of the optimal contrastive parameter
+#'     \item contrast - the optimal contrastive parameter
+#'   }
+#' Returns the optimal covariance matrix, contrastive parameter,
 #'   loadings and projection of the target data based on the results of
 #'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
 #' @importFrom stats kmeans
 #' @importFrom cluster pam silhouette
 #'
+#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#'
 fitContrast <- function(target, center = TRUE, scale = TRUE,
                         c_contrasts, contrasts, num_eigen,
                         clust_method = c("kmeans", "pam"),
-                        n_centers, iter_max = 100, ...){
+                        n_centers, ...){
   # preliminaries
   clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
@@ -86,9 +96,9 @@ fitContrast <- function(target, center = TRUE, scale = TRUE,
   # contrastive parameter, loadings and projection of the target data
   max_idx <- which.max(unlist(ave_sil_widths))
   return(list(
+    rotation = loadings_mat[[max_idx]],
+    x = subspaces[[max_idx]],
     c_cov = c_contrasts[[max_idx]],
-    contrast = contrasts[max_idx],
-    loading_mat = loadings_mat[[max_idx]],
-    proj = subspaces[[max_idx]]
+    contrast = contrasts[max_idx]
   ))
 }

@@ -10,7 +10,6 @@
 #' @param num_eigen The number of eigen vectors to compute.
 #' @param contrasts The vector of contrasts parameters
 #' @param penalties The vector of penalty terms
-#' @param num_medoids The number of medoids to find during spectral clustering.
 #'
 #' @import assertthat
 #'
@@ -19,7 +18,7 @@
 #' @return Whether all argument conditions are satisfied
 #'
 checkArgs <- function(target, background, center, scale,
-                      num_eigen, contrasts, penalties, num_medoids) {
+                      num_eigen, contrasts, penalties) {
 
   # assert that the target and background data frames are of the right class
   assert_that(class(target) == "tbl_df" ||
@@ -49,12 +48,6 @@ checkArgs <- function(target, background, center, scale,
     assert_that(length(contrasts) > 0)
     assert_that(is.numeric(contrasts))
     assert_that(all(contrasts > 0))
-  }
-
-  # check the num_medoids argument
-  if (see_if(!missing(num_medoids))) {
-    assert_that(is.count(num_medoids))
-    assert_that(num_medoids < length(contrasts) * length(penalties))
   }
 
   # check penalty terms

@@ -4,9 +4,11 @@
 \alias{scPCA}
 \title{Sparse Constrastive Principal Component Analysis}
 \usage{
-scPCA(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
-  contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
-  penalties = seq(0, 0.5, length.out = 11), num_medoids)
+scPCA(target, background, center = TRUE, scale = FALSE,
+  num_eigen = 2, contrasts = exp(seq(log(0.1), log(1000), length.out =
+  40)), penalties = seq(1.2, sqrt(ncol(target)), len = 6),
+  clust_method = "kmeans", n_centers, n_folds = 5,
+  sumabsvs_choice = "best", n_iter = 20, ...)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -20,7 +22,7 @@ must match the number of features in the target data.}
 columns' centered. Defaults to \code{TRUE}.}
 
 \item{scale}{Whether the target and background data should have their
-columns' scaled. Defaults to \code{TRUE}.}
+columns' scaled. Defaults to \code{FALSE}.}
 
 \item{num_eigen}{The number of contrastive principal components to compute.
 Must be a non-negative integer between 1 and the number of columns in the
@@ -33,30 +35,53 @@ logarithmically spaced values between 0.1 and 1000.}
 \item{penalties}{The numeric vector of penatly terms for the L1 pernalty on
 the loadings. Defaults to 11 equidistant values between  0 and 0.5.}
 
-\item{num_medoids}{The number of medoids to select during the spectral
-clustering of the constrastive subspaces. Defaults to
-\code{round(length(contrasts)/5)} if there are at least 5 contrastive
-parameters, otherwise \code{length(contrasts)-1}. If there is a single
-contrastive parameter, then \code{num_medoids} should not be defined.}
+\item{clust_method}{A \code{character} specifying the clustering method to
+use for choosing the optimal constrastive parameter. Currently, this is
+limited to either k-means or partitioning around medoids (PAM). The default
+is k-means.}
+
+\item{n_centers}{The number of centers to use in the clustering algorithm.}
+
+\item{n_folds}{The number of folds in the cross-validation step used to
+find the optimal penalty term for sparse PCA. Defaults to 5.}
+
+\item{sumabsvs_choice}{The choice of optimal L1 penalty term to use during
+the fitting of sparse PCA after performing the CV step. Either
+use the optimal penalty term (\code{"best"}) or the penalty inducing the
+most sparcity that is within 1 standard error of the smallest CV error
+(\code{"sparsest"}). Defaults to \code{"best"}.}
+
+\item{n_iter}{The number of iterations of the SPC algorightm. Defaults to 20.}
+
+\item{...}{Additional arguments to pass to the clustering algorithm used to
+identify the optimal contrastive parameter}
 }
 \value{
-A list containing the vector of contrast and penalty parameter pairs
-  that were selected as medoids by spectral clustering, the list of
-  eigenvector matrices associated with each of these pairs and the list
-  of reduced-dimension target data.
+A list containing the following components:
+  \itemize{
+    \item rotation - the matrix of variable loadings
+    \item x - the rotated data, centred and scaled, if requested, data
+    multiplied by the rotation matrix
+    \item contrast - the optimal contrastive parameter used for cPCA
+    \item penalty - the optimal L1 penalty term used for sparce PCA
+    \item center - whether the target dataset was centered
+    \item scale - whether the target dataset was scaled
+  }
 }
 \description{
 Given target and background dataframes or matrices, \code{scPCA}
-  will perform the sparse contrastive principal component analysis of the
-  target data for a given number of eigenvectors, a vector of real valued
+  will perform the sparse contrastive principal component analysis (PCA) of
+  the target data for a given number of eigenvectors, a vector of real valued
   contrast parameters and a vector of penalty terms. For more information on
   the contrastice PCA method, which this method is an extension of, consult
-  \insertRef{abid2017contrastive}{scPCA}.
+  \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
+  \insertRed{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
 }
 \examples{
 scPCA(
-  target = toy_df[, 2:31],
-  background = background_df
+  target = toy_df[, 1:30],
+  background = background_df,
+  n_centers = 4
 )
 
 }
