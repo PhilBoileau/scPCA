@@ -88,8 +88,9 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 
   # find the optimal L1 penalty term based on the CV-MSE of the first loading
   v_init <- svd(opt_cont$c_cov, nu = 0, nv = 1)$v
-  cv_out <- PMA::SPC.cv(x = opt_cont$c_cov, sumabsvs = penalties, n_folds = 5,
-                        trace = FALSE, center = FALSE, v = v_init)
+  cv_out <- PMA::SPC.cv(x = opt_cont$c_cov, sumabsvs = penalties,
+                        nfolds = n_folds, trace = FALSE, center = FALSE,
+                        v = v_init)
 
   # determine which penalty value to use
   if(sumabsvs_choice == "best") {
@@ -99,9 +100,9 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   }
 
   # perform sparce PCA using the selected penalty term
-  scpca_out <- PMA::SPC(opt_cov$c_cov, sumabsv = sumabsvs_choice, K = num_eigen,
-                        trace = FALSE, v_init, niter = n_iter, center = FALSE,
-                        compute.pve = FALSE)
+  scpca_out <- PMA::SPC(opt_cont$c_cov, sumabsv = penalty, K = num_eigen,
+                        trace = FALSE, v = v_init, niter = n_iter,
+                        center = FALSE, compute.pve = FALSE)
 
   # create the list of results to output
   scpca <- list(
