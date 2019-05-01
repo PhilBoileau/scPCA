@@ -1,7 +1,8 @@
 #' Cross-Validation Scheme for SPC on Target Data
 #'
 #' @details This function is a modified version of the \code{\link[PMA]{SPC.cv}}
-#'   function.
+#'   function. The cross-validation procedure is described in
+#'   \insertRef{WittenPMD2009}{scPCA}.
 #'
 #' @param target The target data set.
 #' @param c_rotation The optimal contrastive rotation of the target data.
@@ -44,10 +45,30 @@ cvSPC <- function(target, c_rotation, cov_mat, penalties, n_eigen, n_iter,
       sapply(
         penalties,
         function(p){
-          res <- SPC(cov_mat, sumabsvs = p, niter = n_iter, v = v,
+          res <- SPC(cov_mat, sumabsv = p, niter = n_iter, v = v,
                      trace = FALSE, center = FALSE, K = n_eigen)
           c_rotation_hat <- as.matrix(target) %*% res$v
           sum(((c_rotation_hat - c_rotation)[rm_idx])^2)
         })
     })
+
+  # turn cv_err_ls into a matrix for easy searching
+  cv_err_mat <- matrix(unlist(cv_err_ls),
+                       nrow = n_folds,
+                       byrow = TRUE)
+  cv_risk <- apply(cv_err_mat, 2, mean)
+  cv_sd <- apply(cv_err_mat, 2, sd)/sqrt(n_folds)
+
+  # select the optimal penalty term (if there are ties, select smallest)
+  best <- penalties[which.min(cv_risk)]
+  # select the smallest penalty term 1 sd away from the optimal one
+  best1se <- penalties[min(which(cv_risk < min(cv_risk) +
+                                   cv_sd[which.min(cv_risk)]))]
+
+  return(
+    list(
+      best = best,
+      best1se = best1se
+    )
+  )
 }
