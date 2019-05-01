@@ -11,6 +11,7 @@
 #' @param c_contrasts List of of contrastive covariances.
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
+#' @param penalties Vector of penalty parameters.
 #' @param num_eigen The number of contrastive principal components to compute.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
@@ -32,38 +33,69 @@
 #'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
 #' @importFrom stats kmeans
+#' @importFrom elasticnet spca
 #' @importFrom cluster pam silhouette
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 fitContrast <- function(target, center = TRUE, scale = TRUE,
-                        c_contrasts, contrasts, num_eigen,
+                        c_contrasts, contrasts, penalties, num_eigen,
                         clust_method = c("kmeans", "pam"),
                         n_centers, ...){
   # preliminaries
   clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
+  num_penal <- length(penalties)
 
-  # get the loadings matrix of each contrastive covariance matrix
+  # create the grid of contrast and penalty paramters
+  param_grid <- expand.grid(penalties, contrasts)
+  colnames(param_grid) <- c("lambda", "alpha")
+
+  # create the loadings matrices
   loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
-        eigen(c_contrasts[[x]],
-              symmetric = TRUE
-        )$vectors[, seq_len(num_eigen)]
-      }
-    )
+      lapply(
+        penalties,
+        function(y) {
+          if (y == 0) {
+            res <- eigen(c_contrasts[[x]],
+                         symmetric = TRUE
+                         )$vectors[, 1:num_eigen]
+          } else {
+            res <- elasticnet::spca(c_contrasts[[x]],
+                                    K = num_eigen,
+                                    para = rep(y, num_eigen),
+                                    type = "Gram",
+                                    sparse = "penalty"
+                                   )$loadings
+          }
+          colnames(res) <- paste0("V", as.character(seq(1, num_eigen)))
+          return(res)
+        }
+      )
+    }
+  )
+
+  # unlist the nested list into a single list
+  loadings_mat <- unlist(loadings_mat, recursive = FALSE)
 
   # center and scale the target data
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
   subspaces <- lapply(
-    seq_len(num_contrasts),
+    seq_len(num_contrasts * num_penal),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
     }
   )
+
+  # remove all duplicated spaces
+  kernal_idx <- which(!duplicated(subspaces))
+  param_grid <- param_grid[kernal_idx, ]
+  loadings_mat <- loadings_mat[kernal_idx]
+  subspaces <- unique(subspaces)
 
   # rescale all spaces to the unit hyperplane. now objective functions based
   # on metric spaces can be used
@@ -98,7 +130,7 @@ fitContrast <- function(target, center = TRUE, scale = TRUE,
   return(list(
     rotation = loadings_mat[[max_idx]],
     x = subspaces[[max_idx]],
-    c_cov = c_contrasts[[max_idx]],
-    contrast = contrasts[max_idx]
+    contrast = param_grid[max_idx, 2],
+    penalty = param_grid[max_idx, 1]
   ))
 }
