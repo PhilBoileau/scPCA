@@ -4,12 +4,12 @@
 \alias{cvSPC}
 \title{Cross-Validation Scheme for SPC on Target Data}
 \usage{
-cvSPC(target, c_rotation, cov_mat, penalties, n_eigen, n_iter, n_folds, v)
+cvSPC(target, c_proj, cov_mat, penalties, n_eigen, n_iter, n_folds, v)
 }
 \arguments{
 \item{target}{The target data set.}
 
-\item{c_rotation}{The optimal contrastive rotation of the target data.}
+\item{c_proj}{The optimal contrastive projection of the target data.}
 
 \item{cov_mat}{The optimal contrastive covariance matrix.}
 
@@ -36,5 +36,6 @@ Cross-Validation Scheme for SPC on Target Data
 }
 \details{
 This function is a modified version of the \code{\link[PMA]{SPC.cv}}
-  function.
+  function. The cross-validation procedure is described in
+  \insertRef{WittenPMD2009}{scPCA}.
 }

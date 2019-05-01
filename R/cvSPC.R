@@ -5,7 +5,7 @@
 #'   \insertRef{WittenPMD2009}{scPCA}.
 #'
 #' @param target The target data set.
-#' @param c_rotation The optimal contrastive rotation of the target data.
+#' @param c_proj The optimal contrastive projection of the target data.
 #' @param cov_mat The optimal contrastive covariance matrix.
 #' @param penalties The vector of penalties for the SPC.
 #' @param n_eigen The number of components to calculate.
@@ -22,14 +22,14 @@
 #'     \item best1se - The sparsest penalty within 1 standard error of CV MSE
 #'   }
 #'
-cvSPC <- function(target, c_rotation, cov_mat, penalties, n_eigen, n_iter,
+cvSPC <- function(target, c_proj, cov_mat, penalties, n_eigen, n_iter,
                   n_folds, v){
 
   # identify the percent to remove
   percent_rm <- min(0.25, 1/n_folds)
 
   # matrix of random numbers, used to identify which entry to mask in each fold
-  rand_mat <- matrix(runif(nrow(c_rotation)*n_eigen), ncol = n_eigen)
+  rand_mat <- matrix(runif(nrow(c_proj)*n_eigen), ncol = n_eigen)
 
   # initialize the matrix to contain the cv errors
   cv_err_mat <- matrix(NA, nrow = n_folds, ncol = length(penalties))
@@ -40,15 +40,15 @@ cvSPC <- function(target, c_rotation, cov_mat, penalties, n_eigen, n_iter,
     function(x){
       rm_idx <- ((x - 1) * percent_rm < rand_mat) &
                   (rand_mat < x * percent_rm)
-      c_rotation_rm <- c_rotation
-      c_rotation_rm[rm_idx] <- NA
+      c_proj_rm <- c_proj
+      c_proj_rm[rm_idx] <- NA
       sapply(
         penalties,
         function(p){
           res <- SPC(cov_mat, sumabsv = p, niter = n_iter, v = v,
                      trace = FALSE, center = FALSE, K = n_eigen)
-          c_rotation_hat <- as.matrix(target) %*% res$v
-          sum(((c_rotation_hat - c_rotation)[rm_idx])^2)
+          c_proj_hat <- as.matrix(target) %*% res$v
+          sum(((c_proj_hat - c_proj)[rm_idx])^2)
         })
     })
 

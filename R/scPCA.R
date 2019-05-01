@@ -6,7 +6,7 @@
 #'   contrast parameters and a vector of penalty terms. For more information on
 #'   the contrastice PCA method, which this method is an extension of, consult
 #'   \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
-#'   \insertRed{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
+#'   \insertRef{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
 #'
 #' @param target The target data. Either a numeric dataframe or a matrix with
 #'   observations as rows and features as columns.
@@ -86,17 +86,19 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                           contrasts, num_eigen, clust_method,
                           n_centers, ...)
 
+  # center and scale the target data
+  target <- scale(target, center, scale)
+
   # find the optimal L1 penalty term based on the CV-MSE of the first loading
   v_init <- svd(opt_cont$c_cov, nu = 0, nv = 1)$v
-  cv_out <- PMA::SPC.cv(x = opt_cont$c_cov, sumabsvs = penalties,
-                        nfolds = n_folds, trace = FALSE, center = FALSE,
-                        v = v_init)
+  cv_out <- cvSPC(target, opt_cont$x, opt_cont$c_cov, penalties, num_eigen,
+                  n_iter, n_folds, v_init)
 
   # determine which penalty value to use
   if(sumabsvs_choice == "best") {
-    penalty <- cv_out$bestsumabsv
+    penalty <- cv_out$best
   } else {
-    penalty <- cv_out$bestsumabsv1se
+    penalty <- cv_out$best1se
   }
 
   # perform sparce PCA using the selected penalty term
@@ -107,7 +109,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   # create the list of results to output
   scpca <- list(
     rotation = scpca_out$v,
-    x = as.matrix(scale(target, center, scale)) %*% scpca_out$v,
+    x = as.matrix(target) %*% scpca_out$v,
     contrast = opt_cont$contrast,
     penalty = penalty,
     center = center,

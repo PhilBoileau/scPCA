@@ -75,7 +75,7 @@ Given target and background dataframes or matrices, \code{scPCA}
   contrast parameters and a vector of penalty terms. For more information on
   the contrastice PCA method, which this method is an extension of, consult
   \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
-  \insertRed{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
+  \insertRef{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
 }
 \examples{
 scPCA(
