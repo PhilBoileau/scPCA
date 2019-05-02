@@ -32,13 +32,13 @@
 #'   loadings and projection of the target data based on the results of
 #'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
-#' @importFrom stats kmeans
 #' @importFrom elasticnet spca
+#' @importFrom stats kmeans
 #' @importFrom cluster pam silhouette
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
-fitContrast <- function(target, center = TRUE, scale = TRUE,
+fitContrast <- function(target, center, scale,
                         c_contrasts, contrasts, penalties, num_eigen,
                         clust_method = c("kmeans", "pam"),
                         n_centers, ...){
@@ -49,7 +49,6 @@ fitContrast <- function(target, center = TRUE, scale = TRUE,
 
   # create the grid of contrast and penalty paramters
   param_grid <- expand.grid(penalties, contrasts)
-  colnames(param_grid) <- c("lambda", "alpha")
 
   # create the loadings matrices
   loadings_mat <- lapply(
@@ -110,14 +109,21 @@ fitContrast <- function(target, center = TRUE, scale = TRUE,
     }
   )
 
+  # remove all subspaces that had loading vectors consisting solely of zeros
+  nz_load_idx <- which(sapply(norm_subspaces, function(s) sum(is.na(s))) == 0)
+  norm_subspaces <- norm_subspaces[nz_load_idx]
+  subspaces <- subspaces[nz_load_idx]
+  param_grid <- param_grid[nz_load_idx, ]
+  loadings_mat <- loadings_mat[nz_load_idx]
+
   # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- lapply(
+  ave_sil_widths <- sapply(
     norm_subspaces,
     function(subspace) {
       if (clust_method == "pam") {
         clust_res <- cluster::pam(x = subspace, k = n_centers)
       } else if (clust_method == "kmeans") {
-        clust_res <- stats::kmeans(x = subspace, centers = n_centers, list(...))
+        clust_res <- stats::kmeans(x = subspace, centers = n_centers)
       }
       sil_width <- cluster::silhouette(clust_res$cluster, dist(subspace))[, 3]
       mean(sil_width)
@@ -126,11 +132,13 @@ fitContrast <- function(target, center = TRUE, scale = TRUE,
 
   # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
-  max_idx <- which.max(unlist(ave_sil_widths))
-  return(list(
-    rotation = loadings_mat[[max_idx]],
-    x = subspaces[[max_idx]],
-    contrast = param_grid[max_idx, 2],
-    penalty = param_grid[max_idx, 1]
-  ))
+  max_idx <- which.max(ave_sil_widths)
+  return(
+    list(
+      rotation = loadings_mat[[max_idx]],
+      x = subspaces[[max_idx]],
+      contrast = param_grid[max_idx, 2],
+      penalty = param_grid[max_idx, 1]
+    )
+  )
 }
