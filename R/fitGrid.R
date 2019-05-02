@@ -38,7 +38,7 @@
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
-fitContrast <- function(target, center, scale,
+fitGrid <- function(target, center, scale,
                         c_contrasts, contrasts, penalties, num_eigen,
                         clust_method = c("kmeans", "pam"),
                         n_centers, ...){

@@ -30,16 +30,6 @@
 #'  limited to either k-means or partitioning around medoids (PAM). The default
 #'  is k-means.
 #' @param n_centers The number of centers to use in the clustering algorithm.
-#' @param n_folds The number of folds in the cross-validation step used to
-#'   find the optimal penalty term for sparse PCA. Defaults to 5.
-#' @param sumabsvs_choice The choice of optimal L1 penalty term to use during
-#'  the fitting of sparse PCA after performing the CV step. Either
-#'  use the optimal penalty term (\code{"best"}) or the penalty inducing the
-#'  most sparcity that is within 1 standard error of the smallest CV error
-#'  (\code{"sparsest"}). Defaults to \code{"best"}.
-#' @param n_iter The number of iterations of the SPC algorightm. Defaults to 20.
-#' @param ... Additional arguments to pass to the clustering algorithm used to
-#'   identify the optimal contrastive parameter
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -53,7 +43,6 @@
 #'   }
 #'
 #' @importFrom Rdpack reprompt
-#' @importFrom PMA SPC SPC.cv
 #'
 #' @export
 #'
@@ -69,9 +58,8 @@
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   num_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
-                  penalties = seq(1.2, sqrt(ncol(target)), len=6),
-                  clust_method = "kmeans", n_centers, n_folds = 5,
-                  sumabsvs_choice = "best", n_iter = 20, ...) {
+                  penalties = seq(0.05, 1, length.out = 19),
+                  clust_method = "kmeans", n_centers) {
 
   # make sure that all parameters are input properly
   checkArgs(target, background, center, scale, num_eigen,
@@ -82,36 +70,16 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 
   # find the optimal contrastive parameter and return its associated covariance
   # matrix, loading vector and rotation of the target data
-  opt_cont <- fitContrast(target, center, scale, c_contrasts,
-                          contrasts, num_eigen, clust_method,
-                          n_centers, ...)
-
-  # center and scale the target data
-  target <- scale(target, center, scale)
-
-  # find the optimal L1 penalty term based on the CV-MSE of the first loading
-  v_init <- svd(opt_cont$c_cov, nu = 0, nv = 1)$v
-  cv_out <- cvSPC(target, opt_cont$x, opt_cont$c_cov, penalties, num_eigen,
-                  n_iter, n_folds, v_init)
-
-  # determine which penalty value to use
-  if(sumabsvs_choice == "best") {
-    penalty <- cv_out$best
-  } else {
-    penalty <- cv_out$best1se
-  }
-
-  # perform sparce PCA using the selected penalty term
-  scpca_out <- PMA::SPC(opt_cont$c_cov, sumabsv = penalty, K = num_eigen,
-                        trace = FALSE, v = v_init, niter = n_iter,
-                        center = FALSE, compute.pve = FALSE)
+  opt_params <- fitGrid(target, center, scale,
+                        c_contrasts, contrasts, penalties, num_eigen,
+                        clust_method = c("kmeans", "pam"), n_centers)
 
   # create the list of results to output
   scpca <- list(
-    rotation = scpca_out$v,
-    x = as.matrix(target) %*% scpca_out$v,
-    contrast = opt_cont$contrast,
-    penalty = penalty,
+    rotation = opt_params$rotation,
+    x = opt_params$x,
+    contrast = opt_params$contrast,
+    penalty = opt_params$penalty,
     center = center,
     scale = scale
   )

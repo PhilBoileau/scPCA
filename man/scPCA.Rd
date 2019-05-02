@@ -6,9 +6,8 @@
 \usage{
 scPCA(target, background, center = TRUE, scale = FALSE,
   num_eigen = 2, contrasts = exp(seq(log(0.1), log(1000), length.out =
-  40)), penalties = seq(1.2, sqrt(ncol(target)), len = 6),
-  clust_method = "kmeans", n_centers, n_folds = 5,
-  sumabsvs_choice = "best", n_iter = 20, ...)
+  40)), penalties = seq(0.05, 1, length.out = 19),
+  clust_method = "kmeans", n_centers)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -41,20 +40,6 @@ limited to either k-means or partitioning around medoids (PAM). The default
 is k-means.}
 
 \item{n_centers}{The number of centers to use in the clustering algorithm.}
-
-\item{n_folds}{The number of folds in the cross-validation step used to
-find the optimal penalty term for sparse PCA. Defaults to 5.}
-
-\item{sumabsvs_choice}{The choice of optimal L1 penalty term to use during
-the fitting of sparse PCA after performing the CV step. Either
-use the optimal penalty term (\code{"best"}) or the penalty inducing the
-most sparcity that is within 1 standard error of the smallest CV error
-(\code{"sparsest"}). Defaults to \code{"best"}.}
-
-\item{n_iter}{The number of iterations of the SPC algorightm. Defaults to 20.}
-
-\item{...}{Additional arguments to pass to the clustering algorithm used to
-identify the optimal contrastive parameter}
 }
 \value{
 A list containing the following components:
