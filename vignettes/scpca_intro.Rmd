@@ -1,0 +1,249 @@
+---
+title: "Sparse contrastive principal components analysis"
+author: "Philippe Boileau"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document
+bibliography: vignette-refs.bib
+vignette: >
+  %\VignetteIndexEntry{Sparse contrastive principal components analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+```{r setup, echo=FALSE}
+library(here)
+library(dplyr)
+library(ggplot2)
+#library(scPCA)
+devtools::load_all()
+library(elasticnet)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Data pre-processing and exploratory data analysis and are two important steps in
+the data science life-cycle. As datasets become larger and the signal weaker,
+their importance increases. Thus, methods that are capable of extracting the
+signal from such datasets is badly needed. Often, these steps rely on
+dimensionality reduction techniques to isolate pertinent information in data.
+However, many of the most commonly-used methods fail to reduce the dimensions of
+these large and noisy datasets successfully.
+
+Principal component analysis (PCA) is one such method. Although popular for its
+interpretable results and ease of implementation, PCA's performance on
+high-dimensional often leaves much to be desired. Its results on these large
+datasets have been found to be unstable, and it is often unable to identify
+variation that is contextually meaningfull.
+
+Fortunately, modifications of PCA have been developed to remedy these issues.
+Namely, sparse PCA (sPCA) was created to increase the stability of the principal
+component loadings and variable scores in high dimensions, and constrastive PCA
+(cPCA) was proposed as a method for capturing relevant information in the
+high-dimensional data.
+
+Although sPCA and cPCA have proven useful in resolving individual shortcomings
+of PCA, neither is capable of tackling the issues of stability and relavance
+simultaneously. The goal of this research project is to determine whether a
+combination of these methods, dubbed sparse constrastive PCA (scPCA), can
+accomplish this task.
+
+---
+
+# Comparing PCA, sPCA, cPCA and scPCA
+
+## PCA
+
+```{r PCA_sim}
+# set seed for reproducibility
+set.seed(1742)
+
+# perform PCA
+pca_sim <- prcomp(toy_df[, 1:30])
+
+# plot the 2D rep using first 2 components
+df <- data.frame("PC1" = pca_sim$x[, 1],
+                 "PC2" = pca_sim$x[, 2],
+                 "label" = as.character(toy_df[, 31]))
+p_pca <- ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
+  ggtitle("PCA on Simulated Data") +
+  geom_point(alpha = 0.5) +
+  theme_minimal()
+p_pca
+```
+
+## Sparse PCA
+
+```{r sPCA_sim}
+# perform sPCA on toy_df for a range of L1 penalty terms
+penalties <- exp(seq(log(10), log(1000), length.out = 6))
+df_ls <- lapply(penalties, function(penalty) {
+  spca_sim_p <- spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
+                     type = "predictor", sparse = "penalty")$loadings
+  spca_sim_p <- as.matrix(toy_df[, 1:30]) %*% spca_sim_p
+  spca_out <- list("sPC1" = spca_sim_p[, 1],
+                   "sPC2" = spca_sim_p[, 2],
+                   "penalty" = round(rep(penalty, nrow(toy_df))),
+                   "label"  = as.character(toy_df[, 31])) %>%
+    as_tibble()
+  return(spca_out)
+})
+df <- bind_rows(df_ls)
+
+# plot the results of sPCA
+p_spca <- ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("sPCA on Simulated Data for Varying L1 Penalty Terms") +
+  facet_wrap(~ penalty, nrow = 2) +
+  theme_minimal()
+p_spca
+```
+
+## Contrastive PCA (cPCA)
+
+```{r cPCA_sim}
+# run cPCA for using 8 logarithmically seperated contrastive param values
+cpca_sim <- cPCA(toy_df[, 1:30], background_df, center = TRUE, scale = FALSE)
+
+# create a dataframe to be plotted
+cpca_sim[[3]] <- lapply(seq_along(cpca_sim[[3]]), function(iter) {
+  return(as.data.frame(cpca_sim[[3]][[iter]]))
+})
+df <- bind_rows(cpca_sim[[3]]) %>%
+  mutate(
+    cPC1 = V1,
+    cPC2 = V2,
+    label = as.character(rep(toy_df$label, length(cpca_sim[[3]]))),
+    contrast = round(rep(cpca_sim[[1]], each = 400), 3)
+  )
+
+# plot the results
+p_cpca <- ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~contrast, nrow = 2) +
+  ggtitle("cPCA on Simulated Data for Varying Contrastive Parameters") +
+  theme_minimal()
+p_cpca
+```
+
+## Sparse and Contrastive PCA (scPCA)
+
+```{r scPCA_sim, fig.height=8}
+# use scPCA on simulated data
+scpca_sim <- scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
+                   scale = FALSE)
+
+# create a data frame for plotting
+scpca_sim[[3]] <- lapply(seq_along(scpca_sim[[3]]), function(iter) {
+  return(as.data.frame(scpca_sim[[3]][[iter]]))
+})
+df <- bind_rows(scpca_sim[[3]]) %>%
+  mutate(
+    label = as.character(rep(toy_df$label, length(scpca_sim[[3]]))),
+    contrast = round(rep(scpca_sim[[1]][, 2], each = 400), 3),
+    lambda = rep(scpca_sim[[1]][, 1], each = 400),
+    params = paste0("c=", contrast, ", L1=", lambda),
+    scPC1 = if_else(is.na(PC1), V1, PC1),
+    scPC2 = if_else(is.na(PC2), V2, PC2)
+  ) %>%
+  select(-PC1, -V1, -PC2, -V2)
+
+# plot the results
+p_scpca <- ggplot(df, aes(x = scPC1, y = scPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~params, nrow = 5, scale = "free_y") +
+  ggtitle("scPCA on Simulated Data for Varying Parameters") +
+  theme_minimal()
+p_scpca
+```
+
+---
+
+## Bioconductor Integration with `SingleCellExperiment`
+
+We now turn to discussing how the tools in the `scPCA` package can be used more
+readily with data structures common in computational biology by examining an
+integration with the `SingleCellExperiment` container class. For our example, we
+will use the `allen` data from the `scRNAseq` package, just as was done to
+demonstrate use of the `SingleCellExperiment` container in the corresponding
+vignette.
+
+To start, let's load the required packages and create a simple
+`SingleCellExperiment` instance, including information about spike-ins:
+
+```{r sce_setup, message=FALSE}
+library(scRNAseq)
+library(SingleCellExperiment)
+
+# load data and set to SCE
+data(allen)
+sce <- as(allen, "SingleCellExperiment")
+```
+
+While interesting, the `allen` data set is rather large. To proceed, we use only
+a small subset of the data, limited to the 1000 genes with the highest variance,
+after log-transforming the raw counts:
+
+```{r make_sce_sub, message=FALSE}
+# rank genes by variance
+n_genes <- 1000
+vars <- assay(sce) %>%
+  log1p %>%
+  rowVars
+names(vars) <- rownames(sce)
+vars <- sort(vars, decreasing = TRUE)
+
+# subset SCE to n_genes with highest variance
+sce_sub <- sce[names(vars[seq_len(n_genes)]),]
+sce_sub
+```
+
+In order to use either contrastive PCA or its sparse variant, it is necessary to
+have a background data set. Absent such a version of the `allen` data, we will
+use the `r n_genes` genes with the lowest variance as the background:
+
+```{r make_sce_background, message=FALSE}
+# background SCE based on low variance genes (after removing zero counts)
+vars_nz <- vars[vars > 0]
+vars_low <- vars[(length(vars_nz) - n_genes + 1):length(vars_nz)]
+sce_background <- sce[names(vars_low), ]
+```
+
+Due to the flexibility of the `SingleCellExperiment` class, we can obtain PCA,
+cPCA, and scPCA representations of the reduced `allen` data, storing these in
+ `SingleCellExperiment` object using the `reducedDims` method.
+
+```{r perform_dimred, message=FALSE}
+# first, PCA
+pca_data <- prcomp(t(log1p(assay(sce_sub))))
+
+# next, cPCA
+cpca_data <- cPCA(t(log1p(assay(sce_sub))),
+                  t(log1p(assay(sce_background))),
+                  center = TRUE, scale = FALSE)
+
+# finally, scPCA
+scpca_data <- scPCA(t(log1p(assay(sce_sub))),
+                    t(log1p(assay(sce_background))),
+                    num_medoids = 20,
+                    scale = FALSE)
+
+# store new representations in the SingleCellExperiment object
+reducedDims(sce_sub) <- SimpleList(PCA = pca_data$x, cPCA = cpca_data$Y,
+                                   scPCA = ...)
+sce_sub
+```
+
+---
+
+## Session Information
+
+```{r session_info, echo=FALSE}
+sessionInfo()
+```
+
+---
+
+## References
+

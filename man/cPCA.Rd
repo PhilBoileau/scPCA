@@ -5,7 +5,8 @@
 \title{Constrastive Principal Component Analysis}
 \usage{
 cPCA(target, background, center = TRUE, scale = TRUE, num_eigen = 2,
-  contrasts, num_medoids)
+  contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
+  num_medoids)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with

@@ -1,4 +1,4 @@
 library(testthat)
 library(scPCA)
 
-#test_check("scPCA")
+# test_check("scPCA")

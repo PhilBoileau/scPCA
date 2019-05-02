@@ -20,11 +20,6 @@ Description: This package contains the necessary tools to perform the sparse
     ability of contrastive PCA to create low-dimensional representations of data
     that summarize the high-dimensional structure of interest.
 Depends: R (>= 3.4)
-License: MIT + file LICENSE
-URL: https://github.com/PhilBoileau/scPCA
-BugReports: https://github.com/PhilBoileau/scPCA/issues
-Encoding: UTF-8
-LazyData: true
 Imports:
     stats,
     methods,
@@ -34,14 +29,27 @@ Imports:
     S4Vectors,
     BiocGenerics,
     BiocParallel,
-    SummarizedExperiment
+    SummarizedExperiment,
+    SingleCellExperiment,
+    Rdpack
 Suggests:
     testthat,
     knitr,
     rmarkdown,
-    BiocStyle
+    BiocStyle,
+    ggplot2,
+    dplyr,
+    tidyr,
+    stringr,
+    here
+License: MIT + file LICENSE
+URL: https://github.com/PhilBoileau/scPCA
+BugReports: https://github.com/PhilBoileau/scPCA/issues
+Encoding: UTF-8
+LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
+RdMacros: Rdpack
 biocViews:
     GeneExpression,
     DifferentialExpression,

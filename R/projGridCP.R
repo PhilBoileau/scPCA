@@ -20,8 +20,7 @@
 #'   the target data into the spaces that they define and the grid of
 #'   parameters.
 projGridCP <- function(target, center, scale, c_contrasts, contrasts,
-                       penalties, num_eigen){
-
+                       penalties, num_eigen) {
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
 
@@ -38,14 +37,14 @@ projGridCP <- function(target, center, scale, c_contrasts, contrasts,
         function(y) {
           if (y == 0) {
             eigen(c_contrasts[[x]],
-                  symmetric = TRUE
+              symmetric = TRUE
             )$vectors[, 1:num_eigen]
           } else {
             elasticnet::spca(c_contrasts[[x]],
-                             K = num_eigen,
-                             para = rep(y, num_eigen),
-                             type = "Gram",
-                             sparse = "penalty"
+              K = num_eigen,
+              para = rep(y, num_eigen),
+              type = "Gram",
+              sparse = "penalty"
             )$loadings
           }
         }
@@ -78,5 +77,4 @@ projGridCP <- function(target, center, scale, c_contrasts, contrasts,
     loadings_mat = loadings_mat,
     spaces = spaces
   ))
-
 }

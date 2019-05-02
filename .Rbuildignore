@@ -10,6 +10,5 @@
 ^README\.Rmd$
 ^README\.html$
 ^README-.*\.png$
-^README-refs\.bib$
 ^LICENSE\.md$
 ^docs$
