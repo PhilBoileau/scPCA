@@ -1,7 +1,8 @@
-#' Identify the Optimal Contrastive Parameter
+#' Identify the Optimal Contrastive and Penalty Parameters
 #'
 #' @description This function is used to automatically select the optimal
-#'   contrastive parameter based on k-means and average silhouette width.
+#'   contrastive parameter and L1 penalty term for scPCA based on a clustering
+#'   algorithm and average silhouette width.
 #'
 #' @param target The target data set.
 #' @param center A \code{logical} indicating whether the data sets' columns
@@ -12,25 +13,22 @@
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
 #' @param penalties Vector of penalty parameters.
-#' @param num_eigen The number of contrastive principal components to compute.
+#' @param n_eigen The number of contrastive principal components to compute.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
 #'  limited to either k-means or partitioning around medoids (PAM).
 #' @param n_centers The number of n_centers to use in the clustering algorithm.
-#' @param ... Additional arguments to pass to the clustering algorithm and the
-#'   objective function.
+#' @param max_iters The maximum number of iterations to use in k-means
+#'   clustering. Defaults to 10.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
 #'     \item rotation - the matrix of variable loadings
 #'     \item x - the rotated data, centred and scaled, if requested, data
 #'     multiplied by the rotation matrix
-#'     \item c_cov - the covariance matrix of the optimal contrastive parameter
 #'     \item contrast - the optimal contrastive parameter
+#'     \item penalty - the optimal L1 penalty term
 #'   }
-#' Returns the optimal covariance matrix, contrastive parameter,
-#'   loadings and projection of the target data based on the results of
-#'   evaluating a clustering algorithm based on average silhouette width metric.
 #'
 #' @importFrom elasticnet spca
 #' @importFrom stats kmeans
@@ -39,9 +37,9 @@
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
 #'
 fitGrid <- function(target, center, scale,
-                        c_contrasts, contrasts, penalties, num_eigen,
-                        clust_method = c("kmeans", "pam"),
-                        n_centers, ...){
+                    c_contrasts, contrasts, penalties, n_eigen,
+                    clust_method = c("kmeans", "pam"),
+                    n_centers, max_iters = 10){
   # preliminaries
   clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
@@ -60,16 +58,16 @@ fitGrid <- function(target, center, scale,
           if (y == 0) {
             res <- eigen(c_contrasts[[x]],
                          symmetric = TRUE
-                         )$vectors[, 1:num_eigen]
+                         )$vectors[, 1:n_eigen]
           } else {
             res <- elasticnet::spca(c_contrasts[[x]],
-                                    K = num_eigen,
-                                    para = rep(y, num_eigen),
+                                    K = n_eigen,
+                                    para = rep(y, n_eigen),
                                     type = "Gram",
                                     sparse = "penalty"
                                    )$loadings
           }
-          colnames(res) <- paste0("V", as.character(seq(1, num_eigen)))
+          colnames(res) <- paste0("V", as.character(seq(1, n_eigen)))
           return(res)
         }
       )
@@ -78,6 +76,8 @@ fitGrid <- function(target, center, scale,
 
   # unlist the nested list into a single list
   loadings_mat <- unlist(loadings_mat, recursive = FALSE)
+
+
 
   # center and scale the target data
   target <- scale(target, center, scale)
@@ -123,7 +123,8 @@ fitGrid <- function(target, center, scale,
       if (clust_method == "pam") {
         clust_res <- cluster::pam(x = subspace, k = n_centers)
       } else if (clust_method == "kmeans") {
-        clust_res <- stats::kmeans(x = subspace, centers = n_centers)
+        clust_res <- stats::kmeans(x = subspace, centers = n_centers,
+                                   iter.max = max_iters)
       }
       sil_width <- cluster::silhouette(clust_res$cluster, dist(subspace))[, 3]
       mean(sil_width)

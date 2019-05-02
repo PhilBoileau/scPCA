@@ -4,10 +4,10 @@
 \alias{scPCA}
 \title{Sparse Constrastive Principal Component Analysis}
 \usage{
-scPCA(target, background, center = TRUE, scale = FALSE,
-  num_eigen = 2, contrasts = exp(seq(log(0.1), log(1000), length.out =
-  40)), penalties = seq(0.05, 1, length.out = 19),
-  clust_method = "kmeans", n_centers)
+scPCA(target, background, center = TRUE, scale = FALSE, n_eigen = 2,
+  contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
+  penalties = seq(0.05, 1, length.out = 20), clust_method = "kmeans",
+  n_centers, max_iters = 10)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -23,16 +23,15 @@ columns' centered. Defaults to \code{TRUE}.}
 \item{scale}{Whether the target and background data should have their
 columns' scaled. Defaults to \code{FALSE}.}
 
-\item{num_eigen}{The number of contrastive principal components to compute.
-Must be a non-negative integer between 1 and the number of columns in the
-target data. Default is 2.}
+\item{n_eigen}{The number of sparse contrastive components to compute.
+Default is 2.}
 
 \item{contrasts}{The numeric vector of the contrastive parameters. Each
 element must be a unique non-negative real number. Defaults to 40
 logarithmically spaced values between 0.1 and 1000.}
 
 \item{penalties}{The numeric vector of penatly terms for the L1 pernalty on
-the loadings. Defaults to 11 equidistant values between  0 and 0.5.}
+the loadings. Defaults to 20 equidistant values between  0.05 and 1.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
@@ -40,6 +39,9 @@ limited to either k-means or partitioning around medoids (PAM). The default
 is k-means.}
 
 \item{n_centers}{The number of centers to use in the clustering algorithm.}
+
+\item{max_iters}{The maximum number of iterations to use in k-means.
+clustering. Defaults to 10.}
 }
 \value{
 A list containing the following components:
@@ -55,17 +57,19 @@ A list containing the following components:
 }
 \description{
 Given target and background dataframes or matrices, \code{scPCA}
-  will perform the sparse contrastive principal component analysis (PCA) of
+  will perform the sparse contrastive principal component analysis (scPCA) of
   the target data for a given number of eigenvectors, a vector of real valued
   contrast parameters and a vector of penalty terms. For more information on
   the contrastice PCA method, which this method is an extension of, consult
   \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
-  \insertRef{WittenPMD2009}{scPCA}'s penalized matrix decomposition method.
+  the method described in \insertRef{Zou2006}.
 }
 \examples{
 scPCA(
   target = toy_df[, 1:30],
   background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+  penalties = seq(0.1, 1, length.out = 9),
   n_centers = 4
 )
 

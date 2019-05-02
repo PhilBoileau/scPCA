@@ -2,10 +2,10 @@
 % Please edit documentation in R/fitGrid.R
 \name{fitGrid}
 \alias{fitGrid}
-\title{Identify the Optimal Contrastive Parameter}
+\title{Identify the Optimal Contrastive and Penalty Parameters}
 \usage{
-fitGrid(target, center, scale, c_contrasts, contrasts, penalties,
-  num_eigen, clust_method = c("kmeans", "pam"), n_centers, ...)
+fitGrid(target, center, scale, c_contrasts, contrasts, penalties, n_eigen,
+  clust_method = c("kmeans", "pam"), n_centers, max_iters = 10)
 }
 \arguments{
 \item{target}{The target data set.}
@@ -23,7 +23,7 @@ contrastive covariances,}
 
 \item{penalties}{Vector of penalty parameters.}
 
-\item{num_eigen}{The number of contrastive principal components to compute.}
+\item{n_eigen}{The number of contrastive principal components to compute.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
@@ -31,8 +31,8 @@ limited to either k-means or partitioning around medoids (PAM).}
 
 \item{n_centers}{The number of n_centers to use in the clustering algorithm.}
 
-\item{...}{Additional arguments to pass to the clustering algorithm and the
-objective function.}
+\item{max_iters}{The maximum number of iterations to use in k-means
+clustering. Defaults to 10.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:
@@ -40,16 +40,14 @@ A list similar to that output by \code{\link[stats]{prcomp}}:
     \item rotation - the matrix of variable loadings
     \item x - the rotated data, centred and scaled, if requested, data
     multiplied by the rotation matrix
-    \item c_cov - the covariance matrix of the optimal contrastive parameter
     \item contrast - the optimal contrastive parameter
+    \item penalty - the optimal L1 penalty term
   }
-Returns the optimal covariance matrix, contrastive parameter,
-  loadings and projection of the target data based on the results of
-  evaluating a clustering algorithm based on average silhouette width metric.
 }
 \description{
 This function is used to automatically select the optimal
-  contrastive parameter based on k-means and average silhouette width.
+  contrastive parameter and L1 penalty term for scPCA based on a clustering
+  algorithm and average silhouette width.
 }
 \author{
 Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
