@@ -62,7 +62,7 @@ Given target and background dataframes or matrices, \code{scPCA}
   contrast parameters and a vector of penalty terms. For more information on
   the contrastice PCA method, which this method is an extension of, consult
   \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
-  the method described in \insertRef{Zou2006}.
+  the method described in \insertRef{Zou2006}{scPCA}.
 }
 \examples{
 scPCA(

@@ -31,7 +31,7 @@
 #'   }
 #'
 #' @importFrom elasticnet spca
-#' @importFrom stats kmeans
+#' @importFrom stats kmeans dist
 #' @importFrom cluster pam silhouette
 #'
 #' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
@@ -126,7 +126,8 @@ fitGrid <- function(target, center, scale,
         clust_res <- stats::kmeans(x = subspace, centers = n_centers,
                                    iter.max = max_iters)
       }
-      sil_width <- cluster::silhouette(clust_res$cluster, dist(subspace))[, 3]
+      sil_width <- cluster::silhouette(clust_res$cluster,
+                                       stats::dist(subspace))[, 3]
       mean(sil_width)
     }
   )

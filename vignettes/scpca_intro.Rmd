@@ -63,9 +63,19 @@ variables as the target data set.
 
 The target data was simulated as follows:
 
+* Each of the first 10 variables was drawn from $N(0, 10)$
+* For group 1 and 2, variables 11 through 20 were drawn from $N(0, 1)$
+* For group 3 and 4, variables 11 through 20 were drawn from $N(3, 1)$
+* For group 1 and 3, variables 21 though 30 were drawn from $N(-3, 1)$
+* For group 2 and 4, variables 21 though 30 were drawn from $N(0, 1)$
+
 The background data was simulated as follows:
 
-A similar simulation scheme is provided in **Abid et al. (2018)**.
+* The first 10 variables were drawn from $N(0, 10)$
+* Variables 11 through 20 were drawn from $N(0, 3)$
+* Variables 21 through 30 were drawn from $N(0, 1)$ 
+
+A similar simulation scheme is provided in \cite{abid2018exploring}.
 
 ## PCA
 
@@ -236,7 +246,7 @@ vignette.
 To start, let's load the required packages and create a simple
 `SingleCellExperiment` instance, including information about spike-ins:
 
-```{r sce_setup, message=FALSE}
+```{r sce_setup, message=FALSE, eval=FALSE}
 library(scRNAseq)
 library(SingleCellExperiment)
 
@@ -249,7 +259,7 @@ While interesting, the `allen` data set is rather large. To proceed, we use only
 a small subset of the data, limited to the 1000 genes with the highest variance,
 after log-transforming the raw counts:
 
-```{r make_sce_sub, message=FALSE}
+```{r make_sce_sub, message=FALSE, eval=FALSE}
 # rank genes by variance
 n_genes <- 1000
 vars <- assay(sce) %>%
@@ -265,9 +275,9 @@ sce_sub
 
 In order to use either contrastive PCA or its sparse variant, it is necessary to
 have a background data set. Absent such a version of the `allen` data, we will
-use the `r n_genes` genes with the lowest variance as the background:
+use the `n_genes` genes with the lowest variance as the background:
 
-```{r make_sce_background, message=FALSE}
+```{r make_sce_background, message=FALSE, eval=FALSE}
 # background SCE based on low variance genes (after removing zero counts)
 vars_nz <- vars[vars > 0]
 vars_low <- vars[(length(vars_nz) - n_genes + 1):length(vars_nz)]
@@ -278,7 +288,7 @@ Due to the flexibility of the `SingleCellExperiment` class, we can obtain PCA,
 cPCA, and scPCA representations of the reduced `allen` data, storing these in
  `SingleCellExperiment` object using the `reducedDims` method.
 
-```{r perform_dimred, message=FALSE}
+```{r perform_dimred, message=FALSE, eval=FALSE}
 # first, PCA
 pca_data <- prcomp(t(log1p(assay(sce_sub))))
 

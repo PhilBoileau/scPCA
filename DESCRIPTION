@@ -14,18 +14,18 @@ Authors@R: c(
    )
 Maintainer: Philippe Boileau <philippe_boileau@berkeley.edu>
 Author: Philippe Boileau[aut, cre, cph], Nima Hejazi [ctb]
-Description: This package contains the necessary tools to perform the sparse
+Description: This package contains the necessary tools to perform sparse
     contrastive principal component analysis (scPCA) of high-dimensional data.
-    scPCA combines the interpretability and stability of penalized PCA with the
-    ability of contrastive PCA to create low-dimensional representations of data
-    that summarize the high-dimensional structure of interest.
+    scPCA combines the interpretability and stability of sparse PCA with the
+    ability of contrastive PCA to capture the variation of interest in a data
+    set.
 Depends: R (>= 3.4)
 Imports:
     stats,
     methods,
     assertthat,
     elasticnet,
-    kernlab,
+    cluster,
     S4Vectors,
     BiocGenerics,
     BiocParallel,
@@ -41,7 +41,8 @@ Suggests:
     dplyr,
     tidyr,
     stringr,
-    here
+    here,
+    ggpubr
 License: MIT + file LICENSE
 URL: https://github.com/PhilBoileau/scPCA
 BugReports: https://github.com/PhilBoileau/scPCA/issues
