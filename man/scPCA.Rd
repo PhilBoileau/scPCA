@@ -65,6 +65,16 @@ Given target and background dataframes or matrices, \code{scPCA}
   the method described in \insertRef{Zou2006}{scPCA}.
 }
 \examples{
+# perform cPCA on the simulated data set
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+  penalties = 0,
+  n_centers = 4
+)
+
+# perform scPCA on the simulated data set
 scPCA(
   target = toy_df[, 1:30],
   background = background_df,
