@@ -17,6 +17,7 @@ vignette: >
 library(here)
 library(dplyr)
 library(ggplot2)
+library(ggpubr)
 #library(scPCA)
 devtools::load_all()
 library(elasticnet)
@@ -51,9 +52,27 @@ accomplish this task.
 
 ---
 
-# Comparing PCA, sPCA, cPCA and scPCA
+# Comparing PCA, SPCA, cPCA and scPCA
+
+A brief comparion of PCA, SPCA, cPCA and scPCA is provided below. All four
+methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
+observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each 
+observation is classified as belonging to one of four classes. This label is
+known is known a priori. A background data set comprised of the same number of
+variables as the target data set.
+
+The target data was simulated as follows:
+
+The background data was simulated as follows:
+
+A similar simulation scheme is provided in **Abid et al. (2018)**.
 
 ## PCA
+
+First, PCA is applied to the target data. As we can see from the figure, PCA is
+incapable of creating a lower dimensional representation of the target data
+that captures the variation of interest (i.e. the four groups). In fact, no pair
+of principal components among the first twelve were able to.
 
 ```{r PCA_sim}
 # set seed for reproducibility
@@ -75,6 +94,10 @@ p_pca
 
 ## Sparse PCA
 
+Much like PCA, the leading components of SPCA - for varying amounts of
+sparsity - are incapable of splitting the observations into four distinct
+groups.
+
 ```{r sPCA_sim}
 # perform sPCA on toy_df for a range of L1 penalty terms
 penalties <- exp(seq(log(10), log(1000), length.out = 6))
@@ -82,8 +105,8 @@ df_ls <- lapply(penalties, function(penalty) {
   spca_sim_p <- spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
                      type = "predictor", sparse = "penalty")$loadings
   spca_sim_p <- as.matrix(toy_df[, 1:30]) %*% spca_sim_p
-  spca_out <- list("sPC1" = spca_sim_p[, 1],
-                   "sPC2" = spca_sim_p[, 2],
+  spca_out <- list("SPC1" = spca_sim_p[, 1],
+                   "SPC2" = spca_sim_p[, 2],
                    "penalty" = round(rep(penalty, nrow(toy_df))),
                    "label"  = as.character(toy_df[, 31])) %>%
     as_tibble()
@@ -92,9 +115,9 @@ df_ls <- lapply(penalties, function(penalty) {
 df <- bind_rows(df_ls)
 
 # plot the results of sPCA
-p_spca <- ggplot(df, aes(x = sPC1, y = sPC2, colour = label)) +
+p_spca <- ggplot(df, aes(x = SPC1, y = SPC2, colour = label)) +
   geom_point(alpha = 0.5) +
-  ggtitle("sPCA on Simulated Data for Varying L1 Penalty Terms") +
+  ggtitle("SPCA on Simulated Data for Varying L1 Penalty Terms") +
   facet_wrap(~ penalty, nrow = 2) +
   theme_minimal()
 p_spca
@@ -102,61 +125,102 @@ p_spca
 
 ## Contrastive PCA (cPCA)
 
+The first two contrastive principal components of cPCA successfully captured
+the variation of interest in the data with the help of the background data set.
+
 ```{r cPCA_sim}
-# run cPCA for using 8 logarithmically seperated contrastive param values
-cpca_sim <- cPCA(toy_df[, 1:30], background_df, center = TRUE, scale = FALSE)
+# run cPCA for using 40 logarithmically seperated contrastive param values
+cpca_sim <- scPCA(target = toy_df[, 1:30],
+                  background = background_df,
+                  penalties = 0,
+                  n_centers = 4)
 
 # create a dataframe to be plotted
-cpca_sim[[3]] <- lapply(seq_along(cpca_sim[[3]]), function(iter) {
-  return(as.data.frame(cpca_sim[[3]][[iter]]))
-})
-df <- bind_rows(cpca_sim[[3]]) %>%
-  mutate(
-    cPC1 = V1,
-    cPC2 = V2,
-    label = as.character(rep(toy_df$label, length(cpca_sim[[3]]))),
-    contrast = round(rep(cpca_sim[[1]], each = 400), 3)
-  )
+cpca_df <- cpca_sim$x %>%
+             as.data.frame() %>%
+             mutate(label = toy_df[, 31] %>% as.character)
+
+colnames(cpca_df) <- c("cPC1", "cPC2", "label")
 
 # plot the results
-p_cpca <- ggplot(df, aes(x = cPC1, y = cPC2, colour = label)) +
+p_cpca <- ggplot(cpca_df, aes(x = cPC1, y = cPC2, colour = label)) +
   geom_point(alpha = 0.5) +
-  facet_wrap(~contrast, nrow = 2) +
-  ggtitle("cPCA on Simulated Data for Varying Contrastive Parameters") +
+  ggtitle("cPCA of Simulated Data") +
   theme_minimal()
 p_cpca
 ```
 
 ## Sparse and Contrastive PCA (scPCA)
 
-```{r scPCA_sim, fig.height=8}
-# use scPCA on simulated data
-scpca_sim <- scPCA(toy_df[, 1:30], background_df, num_medoids = 20,
-                   scale = FALSE)
+The leading sparse contrastive components were also able to capture the
+variation of interest, though the clusters corresponding to the class labels are
+more loose than those of cPCA. However, the first and second scPC contain only
+two and three non-zero loadings, respectively. This is a significant improvement
+over cPCA, whose first and second cPCs each possess 30 non-zero loadings.
 
-# create a data frame for plotting
-scpca_sim[[3]] <- lapply(seq_along(scpca_sim[[3]]), function(iter) {
-  return(as.data.frame(scpca_sim[[3]][[iter]]))
-})
-df <- bind_rows(scpca_sim[[3]]) %>%
-  mutate(
-    label = as.character(rep(toy_df$label, length(scpca_sim[[3]]))),
-    contrast = round(rep(scpca_sim[[1]][, 2], each = 400), 3),
-    lambda = rep(scpca_sim[[1]][, 1], each = 400),
-    params = paste0("c=", contrast, ", L1=", lambda),
-    scPC1 = if_else(is.na(PC1), V1, PC1),
-    scPC2 = if_else(is.na(PC2), V2, PC2)
-  ) %>%
-  select(-PC1, -V1, -PC2, -V2)
+```{r scPCA_sim}
+# run scPCA for using 40 logarithmically seperated contrastive parameter values
+# and possible 20 L1 penalty terms
+scpca_sim <- scPCA(target = toy_df[, 1:30],
+                  background = background_df,
+                  n_centers = 4)
+
+# create a dataframe to be plotted
+scpca_df <- scpca_sim$x %>%
+             as.data.frame() %>%
+             mutate(label = toy_df[, 31] %>% as.character)
+
+colnames(scpca_df) <- c("scPC1", "scPC2", "label")
 
 # plot the results
-p_scpca <- ggplot(df, aes(x = scPC1, y = scPC2, colour = label)) +
+p_scpca <- ggplot(scpca_df, aes(x = scPC1, y = scPC2, colour = label)) +
   geom_point(alpha = 0.5) +
-  facet_wrap(~params, nrow = 5, scale = "free_y") +
-  ggtitle("scPCA on Simulated Data for Varying Parameters") +
   theme_minimal()
 p_scpca
+
+
+# create the loadings comparison plot
+load_diff_df <- bind_rows(
+  cpca_sim$rotation %>% as.data.frame,
+  scpca_sim$rotation %>% as.data.frame) %>%
+  mutate(
+    sparse = c(rep("0", 30), rep("1", 30)),
+    coef = rep(1:30, 2)
+  )
+
+colnames(load_diff_df) <- c("comp1", "comp2", "sparse", "coef")
+
+p1 <- load_diff_df %>% ggplot(aes(y = comp1, x = coef, fill = sparse)) +
+  geom_bar(stat = "identity") +
+  xlab("") +
+  ylab("") +
+  ylim(-1, 1) +
+  ggtitle("First Component") +
+  scale_fill_discrete(name = "Method",
+                      labels = c("cPCA", "scPCA"))+
+  theme_minimal()
+
+p2 <- load_diff_df %>% ggplot(aes(y = comp2, x = coef, fill = sparse)) +
+  geom_bar(stat = "identity") +
+  xlab("") +
+  ylab("") +
+  ylim(-1, 1) +
+  ggtitle("Second Component") +
+  scale_fill_discrete(name = "Method",
+                      labels = c("cPCA", "scPCA"))+
+  theme_minimal()
+
+
+annotate_figure(
+  ggarrange(p1, p2, nrow = 1, ncol = 2,
+            common.legend = TRUE, legend = "right"),
+  top = "Non-Zero Loadings Comparison",
+  left = "Loading Values",
+  bottom = "Variable Index"
+)
 ```
+
+
 
 ---
 
