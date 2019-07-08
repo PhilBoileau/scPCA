@@ -45,7 +45,7 @@ fitGrid <- function(target, center, scale,
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
 
-  # create the grid of contrast and penalty paramters
+  # create the grid of contrast and penalty parameters
   param_grid <- expand.grid(penalties, contrasts)
 
   # create the loadings matrices
@@ -77,8 +77,6 @@ fitGrid <- function(target, center, scale,
   # unlist the nested list into a single list
   loadings_mat <- unlist(loadings_mat, recursive = FALSE)
 
-
-
   # center and scale the target data
   target <- scale(target, center, scale)
 
@@ -101,16 +99,28 @@ fitGrid <- function(target, center, scale,
   norm_subspaces <- lapply(
     subspaces,
     function(subspace) {
+      max_val <-  max(subspace[, 1])
+      min_val <- min(subspace[, 1])
       apply(subspace, 2,
             function(x){
-              (x - min(x))/(max(x) - min(x))
+              x/(max_val - min_val)
             }
       )
     }
   )
 
   # remove all subspaces that had loading vectors consisting solely of zeros
-  nz_load_idx <- which(sapply(norm_subspaces, function(s) sum(is.na(s))) == 0)
+  zero_subs <- sapply(subspaces,
+                        function(s){
+                          any(apply(s, 2, function(l) all(l < 1e-6)))
+                        })
+  zero_subs_norm <- sapply(norm_subspaces,
+                           function(ns){
+                             any(apply(ns, 2, function(l) all(l < 1e-6)))
+                          })
+
+  #nz_load_idx <- which(sapply(norm_subspaces, function(s) sum(is.na(s))) == 0)
+  nz_load_idx <- which((zero_subs + zero_subs_norm) == 0)
   norm_subspaces <- norm_subspaces[nz_load_idx]
   subspaces <- subspaces[nz_load_idx]
   param_grid <- param_grid[nz_load_idx, ]
