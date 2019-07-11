@@ -13,7 +13,7 @@
 #'
 #' @import assertthat
 #'
-#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
 #'
 #' @return Whether all argument conditions are satisfied
 #'

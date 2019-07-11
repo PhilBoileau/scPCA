@@ -34,7 +34,7 @@
 #' @importFrom stats kmeans dist
 #' @importFrom cluster pam silhouette
 #'
-#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
 #'
 fitGrid <- function(target, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
