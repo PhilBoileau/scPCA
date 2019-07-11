@@ -1,9 +1,10 @@
-#' Identify the Optimal Contrastive and Penalty Parameters
+#' Identify the Optimal Contrastive and Penalty Parameters in Parallel
 #'
 #' @description This function is used to automatically select the optimal
 #'   contrastive parameter and L1 penalty term for scPCA based on a clustering
-#'   algorithm and average silhouette width. Paralellized with the
-#'   \code{future.apply} package.
+#'   algorithm and average silhouette width. Analogous to \code{\link{fitGrid}},
+#'   but replaces all \code{lapply} calls by
+#'   \code{\link[BiocParallel]{bplapply}}.
 #'
 #' @param target The target data set.
 #' @param center A \code{logical} indicating whether the data sets' columns
@@ -32,13 +33,13 @@
 #'   }
 #'
 #' @importFrom elasticnet spca
-#' @importFrom future.apply future_lapply future_sapply
 #' @importFrom stats kmeans dist
 #' @importFrom cluster pam silhouette
+#' @importFrom BiocParallel bplapply
 #'
-#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
 #'
-future_fitGrid <- function(target, center, scale,
+bpFitGrid <- function(target, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
                     clust_method = c("kmeans", "pam"),
                     n_centers, max_iters = 10){
@@ -51,7 +52,7 @@ future_fitGrid <- function(target, center, scale,
   param_grid <- expand.grid(penalties, contrasts)
 
   # create the loadings matrices
-  loadings_mat <- future_lapply(
+  loadings_mat <- bplapply(
     seq_len(num_contrasts),
     function(x) {
       lapply(
@@ -83,7 +84,7 @@ future_fitGrid <- function(target, center, scale,
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
-  subspaces <- future_lapply(
+  subspaces <- bplapply(
     seq_len(num_contrasts * num_penal),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
@@ -98,7 +99,7 @@ future_fitGrid <- function(target, center, scale,
 
   # rescale all spaces to the unit hyperplane. now objective functions based
   # on metric spaces can be used
-  norm_subspaces <- future_lapply(
+  norm_subspaces <- bplapply(
     subspaces,
     function(subspace) {
       max_val <-  max(subspace[, 1])
@@ -112,11 +113,11 @@ future_fitGrid <- function(target, center, scale,
   )
 
   # remove all subspaces that had loading vectors consisting solely of zeros
-  zero_subs <- future_sapply(subspaces,
+  zero_subs <- sapply(subspaces,
                       function(s){
                         any(apply(s, 2, function(l) all(l < 1e-6)))
                       })
-  zero_subs_norm <- future_sapply(norm_subspaces,
+  zero_subs_norm <- sapply(norm_subspaces,
                            function(ns){
                              any(apply(ns, 2, function(l) all(l < 1e-6)))
                            })
@@ -129,7 +130,7 @@ future_fitGrid <- function(target, center, scale,
   loadings_mat <- loadings_mat[nz_load_idx]
 
   # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- future_sapply(
+  ave_sil_widths <- sapply(
     norm_subspaces,
     function(subspace) {
       if (clust_method == "pam") {
