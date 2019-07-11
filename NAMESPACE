@@ -2,6 +2,7 @@
 
 export(scPCA)
 import(assertthat)
+importFrom(BiocParallel,bplapply)
 importFrom(Rdpack,reprompt)
 importFrom(cluster,pam)
 importFrom(cluster,silhouette)

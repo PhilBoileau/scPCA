@@ -31,6 +31,8 @@
 #' @param n_centers The number of centers to use in the clustering algorithm.
 #' @param max_iters The maximum number of iterations to use in k-means.
 #'  clustering. Defaults to 10.
+#' @param parallel Boolean indicating whether parallel processing is used.
+#'   Defaults to \code{FALSE}.
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -47,7 +49,7 @@
 #'
 #' @export
 #'
-#' @author Philippe Boileau, \email{philippe_Boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
 #'
 #' @examples
 #' # perform cPCA on the simulated data set
@@ -68,26 +70,51 @@
 #'   n_centers = 4
 #' )
 #'
+#' # perform same operations in parallel
+#' scPCA(
+#'   target = toy_df[, 1:30],
+#'   background = background_df,
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+#'   penalties = 0,
+#'   n_centers = 4,
+#'   parallel = TRUE
+#' )
+#'
+#' # perform scPCA on the simulated data set
+#' scPCA(
+#'   target = toy_df[, 1:30],
+#'   background = background_df,
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+#'   penalties = seq(0.1, 1, length.out = 9),
+#'   n_centers = 4,
+#'   parallel = TRUE
+#' )
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
-                  clust_method = "kmeans", n_centers, max_iters = 10) {
+                  clust_method = "kmeans", n_centers, max_iters = 10,
+                  parallel = FALSE) {
 
-  # make sure that all parameters are input properly
   checkArgs(target, background, center, scale, n_eigen,
             contrasts, penalties)
 
-  # get the contrastive covariance matrices
-  c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
 
-  # find the optimal contrastive parameter and return its associated covariance
-  # matrix, loading vector and rotation of the target data
-  opt_params <- fitGrid(target, center, scale,
-                        c_contrasts, contrasts, penalties, n_eigen,
-                        clust_method = c("kmeans", "pam"), n_centers, max_iters)
+  if (parallel == FALSE) {
 
-  # create the list of results to output
+    c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
+    opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
+                          penalties, n_eigen, clust_method = c("kmeans", "pam"),
+                          n_centers, max_iters)
+  } else {
+    c_contrasts <- bpContrastiveCov(target, background, contrasts,
+                                    center, scale)
+    opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
+                            penalties, n_eigen,
+                            clust_method = c("kmeans", "pam"), n_centers,
+                            max_iters)
+  }
+
   scpca <- list(
     rotation = opt_params$rotation,
     x = opt_params$x,
@@ -96,6 +123,4 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     center = center,
     scale = scale
   )
-
-  return(scpca)
 }

@@ -7,7 +7,7 @@
 scPCA(target, background, center = TRUE, scale = FALSE, n_eigen = 2,
   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
   penalties = seq(0.05, 1, length.out = 20), clust_method = "kmeans",
-  n_centers, max_iters = 10)
+  n_centers, max_iters = 10, parallel = FALSE)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -42,6 +42,9 @@ is k-means.}
 
 \item{max_iters}{The maximum number of iterations to use in k-means.
 clustering. Defaults to 10.}
+
+\item{parallel}{Boolean indicating whether parallel processing is used.
+Defaults to \code{FALSE}.}
 }
 \value{
 A list containing the following components:
@@ -83,7 +86,26 @@ scPCA(
   n_centers = 4
 )
 
+# perform same operations in parallel
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+  penalties = 0,
+  n_centers = 4,
+  parallel = TRUE
+)
+
+# perform scPCA on the simulated data set
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+  penalties = seq(0.1, 1, length.out = 9),
+  n_centers = 4,
+  parallel = TRUE
+)
 }
 \author{
-Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 }
