@@ -24,5 +24,5 @@ the covariance matrix of the data.
   row and column in the covariance matrix are zero vectors.
 }
 \author{
-Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 }

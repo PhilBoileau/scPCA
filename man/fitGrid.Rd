@@ -50,5 +50,5 @@ This function is used to automatically select the optimal
   algorithm and average silhouette width.
 }
 \author{
-Philippe Boileau, \email{philippe_Boileau@berkeley.edu}
+Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 }
