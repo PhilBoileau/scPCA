@@ -29,9 +29,11 @@ Imports:
     S4Vectors,
     BiocGenerics,
     BiocParallel,
+    future.apply,
     SummarizedExperiment,
     SingleCellExperiment,
-    Rdpack
+    Rdpack,
+    devtools
 Suggests:
     testthat,
     knitr,
@@ -42,7 +44,8 @@ Suggests:
     tidyr,
     stringr,
     here,
-    ggpubr
+    ggpubr,
+    future
 License: MIT + file LICENSE
 URL: https://github.com/PhilBoileau/scPCA
 BugReports: https://github.com/PhilBoileau/scPCA/issues
