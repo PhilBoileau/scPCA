@@ -130,7 +130,7 @@ bpFitGrid <- function(target, center, scale,
   loadings_mat <- loadings_mat[nz_load_idx]
 
   # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- sapply(
+  ave_sil_widths <- bplapply(
     norm_subspaces,
     function(subspace) {
       if (clust_method == "pam") {
@@ -144,6 +144,7 @@ bpFitGrid <- function(target, center, scale,
       mean(sil_width)
     }
   )
+  ave_sil_widths <- unlist(ave_sil_widths)
 
   # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
