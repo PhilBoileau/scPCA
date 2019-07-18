@@ -52,7 +52,7 @@ bpFitGrid <- function(target, center, scale,
   param_grid <- expand.grid(penalties, contrasts)
 
   # create the loadings matrices
-  loadings_mat <- bplapply(
+  loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
       lapply(
@@ -84,7 +84,7 @@ bpFitGrid <- function(target, center, scale,
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
-  subspaces <- bplapply(
+  subspaces <- lapply(
     seq_len(num_contrasts * num_penal),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
@@ -99,7 +99,7 @@ bpFitGrid <- function(target, center, scale,
 
   # rescale all spaces to the unit hyperplane. now objective functions based
   # on metric spaces can be used
-  norm_subspaces <- bplapply(
+  norm_subspaces <- lapply(
     subspaces,
     function(subspace) {
       max_val <-  max(subspace[, 1])
