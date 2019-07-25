@@ -25,12 +25,16 @@ checkArgs <- function(target, background, center, scale,
     class(target) == "tbl" ||
     class(target) == "spec_tbl_df" ||
     class(target) == "data.frame" ||
-    class(target) == "matrix")
+    class(target) == "matrix" ||
+    class(background) == "dgeMatrix" ||
+    class(target) == "dgCMatrix")
   assert_that(class(background) == "tbl_df" ||
     class(background) == "tbl" ||
     class(background) == "spec_tbl_df" ||
     class(background) == "data.frame" ||
-    class(background) == "matrix")
+    class(background) == "matrix" ||
+    class(background) == "dgeMatrix" ||
+    class(background) == "dgCMatrix")
 
   # assert that target and background have the same number of variables
   assert_that(ncol(target) == ncol(background))
