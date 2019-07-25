@@ -4,7 +4,7 @@
 #'   will perform the sparse contrastive principal component analysis (scPCA) of
 #'   the target data for a given number of eigenvectors, a vector of real valued
 #'   contrast parameters and a vector of penalty terms. For more information on
-#'   the contrastice PCA method, which this method is an extension of, consult
+#'   the contrastive PCA method, which this method is an extension of, consult
 #'   \insertRef{abid2017contrastive}{scPCA}. Sparce PCA is performed using
 #'   the method described in \insertRef{Zou2006}{scPCA}.
 #'
@@ -37,10 +37,10 @@
 #' @return A list containing the following components:
 #'   \itemize{
 #'     \item rotation - the matrix of variable loadings
-#'     \item x - the rotated data, centred and scaled, if requested, data
-#'     multiplied by the rotation matrix
-#'     \item contrast - the optimal contrastive parameter used for cPCA
-#'     \item penalty - the optimal L1 penalty term used for sparce PCA
+#'     \item x - the rotated data, centred and scaled if requested, multiplied
+#'     by the rotation matrix
+#'     \item contrast - the optimal contrastive parameter
+#'     \item penalty - the optimal L1 penalty term
 #'     \item center - whether the target dataset was centered
 #'     \item scale - whether the target dataset was scaled
 #'   }

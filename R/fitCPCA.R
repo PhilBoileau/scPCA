@@ -1,3 +1,31 @@
+#' Contrastive Principal Component Analysis
+#'
+#' @description Given target and background dataframes or matrices, \code{cPCA}
+#'   will perform contrastive principal component analysis (cPCA) of the target
+#'   data for a given number of eigenvectors and a vector of real valued
+#'   contrast parameters. This is identical to the implementation of cPCA
+#'   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}.
+#'
+#' @param target The target data set.
+#' @param center A \code{logical} indicating whether the data sets' columns
+#'  should be centered so as to have mean zero.
+#' @param scale A \code{logical} indicating whether the data sets' columns
+#'  should be re-scaled to have unit variance.
+#' @param c_contrasts List of of contrastive covariances.
+#' @param contrasts Vector of contrastive parameter values used to compute the
+#'   contrastive covariances,
+#' @param n_eigen The number of contrastive principal components to compute.
+#' @param num_medoids The number of medoids to consider. Defaults to 8.
+#'
+#' @return A list of lists containing the cPCA results for each contrastive
+#'   parameter deemed to be a medoid.
+#'   \itemize{
+#'     \item rotation - the list of matrices of variable loadings
+#'     \item x - the list of rotated data, centred and scaled if requested,
+#'     multiplied by the rotation matrix
+#'     \item contrast - the list of contrastive parameters
+#'     \item penalty - set to zero, since the loadings are not penalized in cPCA
+#'   }
 cPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
                  n_eigen, num_medoids = 8){
 

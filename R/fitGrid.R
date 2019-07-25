@@ -11,7 +11,7 @@
 #'  should be re-scaled to have unit variance.
 #' @param c_contrasts List of of contrastive covariances.
 #' @param contrasts Vector of contrastive parameter values used to compute the
-#'   contrastive covariances,
+#'   contrastive covariances.
 #' @param penalties Vector of penalty parameters.
 #' @param n_eigen The number of contrastive principal components to compute.
 #' @param clust_method A \code{character} specifying the clustering method to
