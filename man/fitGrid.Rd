@@ -19,7 +19,7 @@ should be re-scaled to have unit variance.}
 \item{c_contrasts}{List of of contrastive covariances.}
 
 \item{contrasts}{Vector of contrastive parameter values used to compute the
-contrastive covariances,}
+contrastive covariances.}
 
 \item{penalties}{Vector of penalty parameters.}
 
