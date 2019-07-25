@@ -99,6 +99,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   checkArgs(target, background, center, scale, n_eigen,
             contrasts, penalties)
 
+  target <- coerceMatrix(target)
+  background <- coerceMatrix(background)
 
   if (parallel == FALSE) {
 
@@ -107,6 +109,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                           penalties, n_eigen, clust_method = c("kmeans", "pam"),
                           n_centers, max_iters)
   } else {
+
     c_contrasts <- bpContrastiveCov(target, background, contrasts,
                                     center, scale)
     opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
