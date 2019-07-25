@@ -132,10 +132,16 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 
     c_contrasts <- bpContrastiveCov(target, background, contrasts,
                                     center, scale)
-    opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
-                            penalties, n_eigen,
-                            clust_method = c("kmeans", "pam"), n_centers,
-                            max_iters)
+
+    if (n_centers == 1) {
+      opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
+                              n_eigen, num_medoids = 8)
+    } else {
+      opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
+                              penalties, n_eigen,
+                              clust_method = c("kmeans", "pam"), n_centers,
+                              max_iters)
+    }
   }
 
   scpca <- list(

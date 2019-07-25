@@ -1,10 +1,12 @@
-#' Contrastive Principal Component Analysis
+#' Contrastive Principal Component Analysis in Parallel
 #'
 #' @description Given target and background dataframes or matrices, \code{cPCA}
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}.
+#'   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}. Analogous
+#'   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
+#'   \code{\link[BiocParallel]{bplapply}}.
 #'
 #' @param target The target data set.
 #' @param center A \code{logical} indicating whether the data sets' columns
@@ -18,6 +20,7 @@
 #' @param num_medoids The number of medoids to consider.
 #'
 #' @importFrom kernlab specc as.kernelMatrix
+#' @importFrom BiocParallel bplapply
 #'
 #' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
 #'
@@ -30,26 +33,26 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
-fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
+bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                     num_medoids){
 
   # preliminaries
   num_contrasts <- length(contrasts)
 
   # for each contrasted covariance matrix, compute the eigenvectors
-  loadings_mat <- lapply(
+  loadings_mat <- bplapply(
     seq_len(num_contrasts),
     function(x) {
       res <- eigen(c_contrasts[[x]],
-             symmetric = TRUE)$vectors[, seq_len(n_eigen)]
-     }
-   )
+                   symmetric = TRUE)$vectors[, seq_len(n_eigen)]
+    }
+  )
 
   # center and scale the target data
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
-  spaces <- lapply(
+  spaces <- bplapply(
     seq_len(num_contrasts),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
@@ -57,7 +60,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(
+  qr_decomps <- bplapply(
     seq_len(num_contrasts),
     function(x) {
       qr.Q(qr(spaces[[x]]))
@@ -65,7 +68,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(
+  aff_vect <- bplapply(
     seq(from = 1, to = num_contrasts - 1),
     function(i) {
       sapply(
@@ -75,7 +78,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
           Q_j <- qr_decomps[[j]]
           d <- svd(x = t(Q_i)%*%Q_j, nu = 0, nv = 0)$d
           d[1]*d[2]
-          }
+        }
       )
     }
   )
@@ -95,7 +98,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                                centers = num_medoids)
 
   # identify the alpha medoids of the spectral clustering
-  contrast_medoids <- sapply(
+  contrast_medoids <- bplapply(
     seq_len(num_medoids),
     function(x) {
       sub_index <- which(spec_clust == x)
@@ -108,6 +111,8 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       }
     }
   )
+
+  contrast_medoids <- unlist(contrast_medoids)
 
   # create the lists of contrastive parameter medoids, loadings and projections
   med_index <- which(contrasts %in% contrast_medoids)
