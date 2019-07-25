@@ -26,7 +26,7 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
-cPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
+fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
                  n_eigen, num_medoids = 8){
 
   # preliminaries
