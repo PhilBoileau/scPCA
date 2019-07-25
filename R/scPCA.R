@@ -29,8 +29,12 @@
 #'  limited to either k-means or partitioning around medoids (PAM). The default
 #'  is k-means.
 #' @param n_centers The number of centers to use in the clustering algorithm.
+#'   If set to 1, cPCA as implemented in Abid et al. is performed, regardless
+#'   of \code{penalties} argument.
 #' @param max_iters The maximum number of iterations to use in k-means.
 #'  clustering. Defaults to 10.
+#' @param num_medoids The number of medoids to consider if \code{n_centers} is
+#'   set to 1. Defaults to 8.
 #' @param parallel Boolean indicating whether parallel processing is used.
 #'   Defaults to \code{FALSE}.
 #'
@@ -70,7 +74,8 @@
 #'   n_centers = 4
 #' )
 #'
-#' # perform same operations in parallel
+#' # perform the same operations in parallel
+#' # perfom cPCA
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
@@ -80,7 +85,7 @@
 #'   parallel = TRUE
 #' )
 #'
-#' # perform scPCA on the simulated data set
+#' # perform scPCA
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
@@ -89,12 +94,21 @@
 #'   n_centers = 4,
 #'   parallel = TRUE
 #' )
+#'
+#' # cPCA as implemented in Abid et al.
+#' scPCA(
+#'   target = toy_df[, 1:30],
+#'   background = background_df,
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+#'   penalties = 0,
+#'   n_centers = 1
+#' )
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
                   clust_method = "kmeans", n_centers, max_iters = 10,
-                  parallel = FALSE) {
+                  num_medoids = 8, parallel = FALSE) {
 
   checkArgs(target, background, center, scale, n_eigen,
             contrasts, penalties)
@@ -105,9 +119,15 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   if (parallel == FALSE) {
 
     c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
-    opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
-                          penalties, n_eigen, clust_method = c("kmeans", "pam"),
-                          n_centers, max_iters)
+
+    if (n_centers == 1) {
+      opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
+                            n_eigen, num_medoids = 8)
+    } else {
+      opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
+                            penalties, n_eigen, clust_method = c("kmeans", "pam"),
+                            n_centers, max_iters)
+    }
   } else {
 
     c_contrasts <- bpContrastiveCov(target, background, contrasts,

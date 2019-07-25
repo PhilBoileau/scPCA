@@ -15,7 +15,9 @@
 #' @param contrasts Vector of contrastive parameter values used to compute the
 #'   contrastive covariances,
 #' @param n_eigen The number of contrastive principal components to compute.
-#' @param num_medoids The number of medoids to consider. Defaults to 8.
+#' @param num_medoids The number of medoids to consider.
+#'
+#' @importFrom kernlab specc as.kernelMatrix
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -26,20 +28,23 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
-fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
-                 n_eigen, num_medoids = 8){
+fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
+                    num_medoids){
 
   # preliminaries
   num_contrasts <- length(contrasts)
 
   # for each contrasted covariance matrix, compute the eigenvectors
-  loadings_mat <- lappy(
+  loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
       res <- eigen(c_contrasts[[x]],
              symmetric = TRUE)$vectors[, seq_len(n_eigen)]
      }
    )
+
+  # center and scale the target data
+  target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- lapply(
@@ -59,7 +64,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
 
   # populate affinity matrix for spectral clustering using the principal angles
   aff_vect <- sapply(
-    seq_len(num_contrasts),
+    seq(from = 1, to = num_contrasts - 1),
     function(i) {
       sapply(
         seq(from = i + 1, to = num_contrasts),
@@ -74,7 +79,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
   )
 
   aff_mat <- diag(x = 0.5, nrow = num_contrasts)
-  aff_mat[lower.tri(aff_mat, diag = FALSE)] <- aff_vect
+  aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
   aff_mat <- t(aff_mat)
 
   # fix any computation errors, see numpy.nan_to_num
@@ -93,8 +98,12 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
     function(x) {
       sub_index <- which(spec_clust == x)
       sub_aff_mat <- aff_mat[sub_index, sub_index]
-      aff_sums <- colSums(sub_aff_mat)
-      contrasts[sub_index[which.max(aff_sums)]]
+      if (is.matrix(sub_aff_mat)) {
+        aff_sums <- colSums(sub_aff_mat)
+        contrasts[sub_index[which.max(aff_sums)]]
+      } else {
+        contrasts[sub_index]
+      }
     }
   )
 
@@ -103,7 +112,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, penalties,
   list(
     rotation = loadings_mat[med_index],
     x = spaces[med_index],
-    contrast = med_index,
+    contrast = contrasts[med_index],
     penalty = rep(0, length(med_index))
   )
 }

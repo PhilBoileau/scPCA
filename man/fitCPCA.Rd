@@ -4,8 +4,8 @@
 \alias{fitCPCA}
 \title{Contrastive Principal Component Analysis}
 \usage{
-fitCPCA(target, center, scale, c_contrasts, contrasts, penalties, n_eigen,
-  num_medoids = 8)
+fitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen,
+  num_medoids)
 }
 \arguments{
 \item{target}{The target data set.}
@@ -23,7 +23,7 @@ contrastive covariances,}
 
 \item{n_eigen}{The number of contrastive principal components to compute.}
 
-\item{num_medoids}{The number of medoids to consider. Defaults to 8.}
+\item{num_medoids}{The number of medoids to consider.}
 }
 \value{
 A list of lists containing the cPCA results for each contrastive

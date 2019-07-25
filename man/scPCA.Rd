@@ -7,7 +7,7 @@
 scPCA(target, background, center = TRUE, scale = FALSE, n_eigen = 2,
   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
   penalties = seq(0.05, 1, length.out = 20), clust_method = "kmeans",
-  n_centers, max_iters = 10, parallel = FALSE)
+  n_centers, max_iters = 10, num_medoids = 8, parallel = FALSE)
 }
 \arguments{
 \item{target}{The target data. Either a numeric dataframe or a matrix with
@@ -38,10 +38,15 @@ use for choosing the optimal constrastive parameter. Currently, this is
 limited to either k-means or partitioning around medoids (PAM). The default
 is k-means.}
 
-\item{n_centers}{The number of centers to use in the clustering algorithm.}
+\item{n_centers}{The number of centers to use in the clustering algorithm.
+If set to 1, cPCA as implemented in Abid et al. is performed, regardless
+of \code{penalties} argument.}
 
 \item{max_iters}{The maximum number of iterations to use in k-means.
 clustering. Defaults to 10.}
+
+\item{num_medoids}{The number of medoids to consider if \code{n_centers} is
+set to 1. Defaults to 8.}
 
 \item{parallel}{Boolean indicating whether parallel processing is used.
 Defaults to \code{FALSE}.}
@@ -86,7 +91,8 @@ scPCA(
   n_centers = 4
 )
 
-# perform same operations in parallel
+# perform the same operations in parallel
+# perfom cPCA
 scPCA(
   target = toy_df[, 1:30],
   background = background_df,
@@ -96,7 +102,7 @@ scPCA(
   parallel = TRUE
 )
 
-# perform scPCA on the simulated data set
+# perform scPCA
 scPCA(
   target = toy_df[, 1:30],
   background = background_df,
@@ -104,6 +110,15 @@ scPCA(
   penalties = seq(0.1, 1, length.out = 9),
   n_centers = 4,
   parallel = TRUE
+)
+
+# cPCA as implemented in Abid et al.
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+  penalties = 0,
+  n_centers = 1
 )
 }
 \author{

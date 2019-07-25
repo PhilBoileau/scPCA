@@ -33,7 +33,8 @@ Imports:
     SummarizedExperiment,
     SingleCellExperiment,
     Rdpack,
-    devtools
+    devtools,
+    kernlab
 Suggests:
     testthat,
     knitr,
