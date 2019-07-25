@@ -67,8 +67,8 @@ fitGrid <- function(target, center, scale,
                                     sparse = "penalty"
                                    )$loadings
           }
-          colnames(res) <- paste0("V", as.character(seq(1, n_eigen)))
-          return(res)
+          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
+          res
         }
       )
     }
@@ -102,7 +102,7 @@ fitGrid <- function(target, center, scale,
       max_val <-  max(subspace[, 1])
       min_val <- min(subspace[, 1])
       apply(subspace, 2,
-            function(x){
+            function(x) {
               x/(max_val - min_val)
             }
       )
@@ -111,11 +111,11 @@ fitGrid <- function(target, center, scale,
 
   # remove all subspaces that had loading vectors consisting solely of zeros
   zero_subs <- sapply(subspaces,
-                        function(s){
+                        function(s) {
                           any(apply(s, 2, function(l) all(l < 1e-6)))
                         })
   zero_subs_norm <- sapply(norm_subspaces,
-                           function(ns){
+                           function(ns) {
                              any(apply(ns, 2, function(l) all(l < 1e-6)))
                           })
 
@@ -145,12 +145,10 @@ fitGrid <- function(target, center, scale,
   # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
   max_idx <- which.max(ave_sil_widths)
-  return(
-    list(
-      rotation = loadings_mat[[max_idx]],
-      x = subspaces[[max_idx]],
-      contrast = param_grid[max_idx, 2],
-      penalty = param_grid[max_idx, 1]
-    )
+  list(
+    rotation = loadings_mat[[max_idx]],
+    x = subspaces[[max_idx]],
+    contrast = param_grid[max_idx, 2],
+    penalty = param_grid[max_idx, 1]
   )
 }
