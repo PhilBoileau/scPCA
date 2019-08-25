@@ -14,7 +14,6 @@ vignette: >
 ## Introduction
 
 ```{r setup, echo=FALSE}
-library(here)
 library(dplyr)
 library(ggplot2)
 library(elasticnet)

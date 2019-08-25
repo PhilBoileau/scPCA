@@ -9,9 +9,13 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-4850-2507")),
     person(given = "Nima",
            family = "Hejazi",
-           role = "ctb",
+           role = "aut",
            email = "nh@nimahejazi.org",
-           comment = c(ORCID = "0000-0002-7127-2789"))
+           comment = c(ORCID = "0000-0002-7127-2789")),
+    person(given = "William",
+           family = "Krinsman",
+           role = "ctb",
+           email = "krinsman@berkeley.edu")
    )
 Maintainer: Philippe Boileau <philippe_boileau@berkeley.edu>
 Author: Philippe Boileau[aut, cre, cph], Nima Hejazi [ctb]
@@ -20,7 +24,7 @@ Description: This package contains the necessary tools to perform sparse
     scPCA combines the interpretability and stability of sparse PCA with the
     ability of contrastive PCA to capture the variation of interest in a data
     set.
-Depends: R (>= 3.4)
+Depends: R (>= 3.6)
 Imports:
     stats,
     methods,
@@ -33,7 +37,7 @@ Imports:
     SummarizedExperiment,
     SingleCellExperiment,
     Rdpack,
-    devtools,
+    tibble,
     kernlab
 Suggests:
     testthat,
@@ -41,11 +45,7 @@ Suggests:
     rmarkdown,
     BiocStyle,
     ggplot2,
-    dplyr,
-    tidyr,
-    stringr,
-    here,
-    ggpubr
+    dplyr
 License: MIT + file LICENSE
 URL: https://github.com/PhilBoileau/scPCA
 BugReports: https://github.com/PhilBoileau/scPCA/issues

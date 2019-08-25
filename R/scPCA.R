@@ -103,7 +103,6 @@
 #'   penalties = 0,
 #'   n_centers = 1
 #' )
-#'
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
@@ -112,8 +111,10 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   num_medoids = 8, parallel = FALSE) {
 
   # check arguments to function
-  checkArgs(target, background, center, scale, n_eigen,
-            contrasts, penalties)
+  checkArgs(
+    target, background, center, scale, n_eigen,
+    contrasts, penalties
+  )
 
   # set target and background data sets to be matrices if from Matrix package
   target <- coerceMatrix(target)
@@ -122,29 +123,39 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   # call parallelized function variants if so requested
   if (parallel == FALSE) {
     # create contrastive covariance matrices
-    c_contrasts <- contrastiveCov(target, background, contrasts, center,
-                                  scale)
+    c_contrasts <- contrastiveCov(
+      target, background, contrasts, center,
+      scale
+    )
     if (n_centers == 1) {
       opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
-                            n_eigen, num_medoids = 8)
+        n_eigen,
+        num_medoids = 8
+      )
     } else {
       opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
-                            penalties, n_eigen,
-                            clust_method = c("kmeans", "pam"),
-                            n_centers, max_iters)
+        penalties, n_eigen,
+        clust_method = c("kmeans", "pam"),
+        n_centers, max_iters
+      )
     }
   } else {
     # create contrastive covariance matrices
-    c_contrasts <- bpContrastiveCov(target, background, contrasts,
-                                    center, scale)
+    c_contrasts <- bpContrastiveCov(
+      target, background, contrasts,
+      center, scale
+    )
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
-                              n_eigen, num_medoids = 8)
+        n_eigen,
+        num_medoids = 8
+      )
     } else {
       opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
-                              penalties, n_eigen,
-                              clust_method = c("kmeans", "pam"), n_centers,
-                              max_iters)
+        penalties, n_eigen,
+        clust_method = c("kmeans", "pam"), n_centers,
+        max_iters
+      )
     }
   }
 

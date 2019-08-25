@@ -27,16 +27,18 @@ checkArgs <- function(target, background, center, scale,
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
     tibble::is_tibble(target) ||
-    is.data.frame(target) ||
-    is.matrix(target) ||
-    is(background, "dgeMatrix") ||
-    is(target, "dgCMatrix"))
+      is.data.frame(target) ||
+      is.matrix(target) ||
+      is(background, "dgeMatrix") ||
+      is(target, "dgCMatrix")
+  )
   assertthat::assert_that(
     tibble::is_tibble(background) ||
-    is.data.frame(background) ||
-    is.matrix(background) ||
-    is(background, "dgeMatrix") ||
-    is(background, "dgCMatrix"))
+      is.data.frame(background) ||
+      is.matrix(background) ||
+      is(background, "dgeMatrix") ||
+      is(background, "dgCMatrix")
+  )
 
   # assert that target and background have the same number of variables
   assertthat::assert_that(ncol(target) == ncol(background))
