@@ -60,7 +60,7 @@
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
 #'   penalties = 0,
 #'   n_centers = 4
 #' )
@@ -69,13 +69,14 @@
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
-#'   penalties = seq(0.1, 1, length.out = 9),
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+#'   penalties = seq(0.1, 1, length.out = 3),
 #'   n_centers = 4
 #' )
 #'
 #' # perform the same operations in parallel
 #' # perfom cPCA
+#' \dontrun{
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
@@ -84,8 +85,10 @@
 #'   n_centers = 4,
 #'   parallel = TRUE
 #' )
+#' }
 #'
 #' # perform scPCA
+#' \dontrun{
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
@@ -94,6 +97,7 @@
 #'   n_centers = 4,
 #'   parallel = TRUE
 #' )
+#' }
 #'
 #' # cPCA as implemented in Abid et al.
 #' scPCA(

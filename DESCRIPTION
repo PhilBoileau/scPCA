@@ -17,8 +17,6 @@ Authors@R: c(
            role = "ctb",
            email = "krinsman@berkeley.edu")
    )
-Maintainer: Philippe Boileau <philippe_boileau@berkeley.edu>
-Author: Philippe Boileau[aut, cre, cph], Nima Hejazi [ctb]
 Description: This package contains the necessary tools to perform sparse
     contrastive principal component analysis (scPCA) of high-dimensional data.
     scPCA combines the interpretability and stability of sparse PCA with the
