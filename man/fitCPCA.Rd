@@ -43,6 +43,3 @@ Given target and background dataframes or matrices, \code{cPCA}
   contrast parameters. This is identical to the implementation of cPCA
   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}.
 }
-\author{
-Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-}

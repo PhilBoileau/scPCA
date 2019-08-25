@@ -22,5 +22,6 @@ follows:
 }
 \examples{
 data(toy_df)
+
 }
 \keyword{datasets}

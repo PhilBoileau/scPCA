@@ -34,7 +34,7 @@
 #' @importFrom stats kmeans dist
 #' @importFrom cluster pam silhouette
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
+#' @export
 #'
 fitGrid <- function(target, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
@@ -111,14 +111,12 @@ fitGrid <- function(target, center, scale,
   )
 
   # remove all subspaces that had loading vectors consisting solely of zeros
-  zero_subs <- sapply(subspaces, function(s) {
+  zero_subs <- do.call(c, lapply(subspaces, function(s) {
     any(apply(s, 2, function(l) all(l < 1e-6)))
-  })
-  zero_subs_norm <- sapply(norm_subspaces, function(ns) {
+  }))
+  zero_subs_norm <- do.call(c, lapply(norm_subspaces, function(ns) {
     any(apply(ns, 2, function(l) all(l < 1e-6)))
-  })
-
-  # nz_load_idx <- which(sapply(norm_subspaces, function(s) sum(is.na(s))) == 0)
+  }))
   nz_load_idx <- which((zero_subs + zero_subs_norm) == 0)
   norm_subspaces <- norm_subspaces[nz_load_idx]
   subspaces <- subspaces[nz_load_idx]
@@ -126,7 +124,7 @@ fitGrid <- function(target, center, scale,
   loadings_mat <- loadings_mat[nz_load_idx]
 
   # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- sapply(
+  ave_sil_widths <- do.call(c, lapply(
     norm_subspaces, function(subspace) {
       if (clust_method == "pam") {
         clust_res <- cluster::pam(x = subspace, k = n_centers)
@@ -142,7 +140,7 @@ fitGrid <- function(target, center, scale,
       )[, 3]
       mean(sil_width)
     }
-  )
+  ))
 
   # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
@@ -197,7 +195,7 @@ fitGrid <- function(target, center, scale,
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
+#' @export
 #'
 bpFitGrid <- function(target, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
@@ -274,20 +272,18 @@ bpFitGrid <- function(target, center, scale,
   )
 
   # remove all subspaces that had loading vectors consisting solely of zeros
-  zero_subs <- sapply(
+  zero_subs <- do.call(c, lapply(
     subspaces,
     function(s) {
       any(apply(s, 2, function(l) all(l < 1e-6)))
     }
-  )
-  zero_subs_norm <- sapply(
+  ))
+  zero_subs_norm <- do.call(c, lapply(
     norm_subspaces,
     function(ns) {
       any(apply(ns, 2, function(l) all(l < 1e-6)))
     }
-  )
-
-  # nz_load_idx <- which(sapply(norm_subspaces, function(s) sum(is.na(s))) == 0)
+  ))
   nz_load_idx <- which((zero_subs + zero_subs_norm) == 0)
   norm_subspaces <- norm_subspaces[nz_load_idx]
   subspaces <- subspaces[nz_load_idx]

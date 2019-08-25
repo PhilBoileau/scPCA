@@ -11,13 +11,11 @@
 #' @param contrasts The vector of contrasts parameters.
 #' @param penalties The vector of penalty terms.
 #'
+#' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
 #' @importFrom tibble is_tibble
 #'
 #' @keywords internal
-#'
-#' @author Philippe Boileau (\email{philippe_boileau@berkeley.edu}), with
-#'  contributions from Nima Hejazi (\email{nh@nimahejazi.org}).
 #'
 #' @return Whether all argument conditions are satisfied
 #'

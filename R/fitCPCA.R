@@ -17,10 +17,6 @@
 #' @param n_eigen The number of contrastive principal components to compute.
 #' @param num_medoids The number of medoids to consider.
 #'
-#' @importFrom kernlab specc as.kernelMatrix
-#'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-#'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
 #'   \itemize{
@@ -30,6 +26,10 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
+#'
+#' @importFrom kernlab specc as.kernelMatrix
+#'
+#' @export
 #'
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                     num_medoids) {
@@ -66,10 +66,10 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- sapply(
+  aff_vect <- lapply(
     seq(from = 1, to = num_contrasts - 1),
     function(i) {
-      sapply(
+      do.call(c, lapply(
         seq(from = i + 1, to = num_contrasts),
         function(j) {
           Q_i <- qr_decomps[[i]]
@@ -77,7 +77,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
           d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
           d[1] * d[2]
         }
-      )
+      ))
     }
   )
 
@@ -97,7 +97,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # identify the alpha medoids of the spectral clustering
-  contrast_medoids <- sapply(
+  contrast_medoids <- do.call(c, lapply(
     seq_len(num_medoids),
     function(x) {
       sub_index <- which(spec_clust == x)
@@ -109,7 +109,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
         contrasts[sub_index]
       }
     }
-  )
+  ))
 
   # create the lists of contrastive parameter medoids, loadings and projections
   med_index <- which(contrasts %in% contrast_medoids)
@@ -197,7 +197,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   aff_vect <- BiocParallel::bplapply(
     seq(from = 1, to = num_contrasts - 1),
     function(i) {
-      sapply(
+      do.call(c, lapply(
         seq(from = i + 1, to = num_contrasts),
         function(j) {
           Q_i <- qr_decomps[[i]]
@@ -205,7 +205,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
           d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
           d[1] * d[2]
         }
-      )
+      ))
     }
   )
 

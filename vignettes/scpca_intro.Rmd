@@ -16,6 +16,7 @@ vignette: >
 ```{r setup, echo=FALSE}
 library(dplyr)
 library(ggplot2)
+library(ggpubr)
 library(elasticnet)
 library(scPCA)
 knitr::opts_chunk$set(echo = FALSE)
@@ -82,19 +83,19 @@ that captures the variation of interest (i.e. the four groups). In fact, no pair
 of principal components among the first twelve were able to.
 
 ```{r PCA_sim}
-# load data
-data(toy_df)
-
 # set seed for reproducibility
 set.seed(1742)
+
+# load data
+data(toy_df)
 
 # perform PCA
 pca_sim <- prcomp(toy_df[, 1:30])
 
 # plot the 2D rep using first 2 components
-df <- data.frame("PC1" = pca_sim$x[, 1],
-                 "PC2" = pca_sim$x[, 2],
-                 "label" = as.character(toy_df[, 31]))
+df <- as_tibble(list("PC1" = pca_sim$x[, 1],
+                     "PC2" = pca_sim$x[, 2],
+                     "label" = as.character(toy_df[, 31])))
 p_pca <- ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
   ggtitle("PCA on Simulated Data") +
   geom_point(alpha = 0.5) +
@@ -200,26 +201,27 @@ load_diff_df <- bind_rows(
   )
 colnames(load_diff_df) <- c("comp1", "comp2", "sparse", "coef")
 
-p1 <- load_diff_df %>% ggplot(aes(y = comp1, x = coef, fill = sparse)) +
+p1 <- load_diff_df %>%
+  ggplot(aes(y = comp1, x = coef, fill = sparse)) +
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
   ylim(-1, 1) +
   ggtitle("First Component") +
-  scale_fill_discrete(name = "Method",
-                      labels = c("cPCA", "scPCA"))+
+  scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()
 
-p2 <- load_diff_df %>% ggplot(aes(y = comp2, x = coef, fill = sparse)) +
+p2 <- load_diff_df %>%
+  ggplot(aes(y = comp2, x = coef, fill = sparse)) +
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
   ylim(-1, 1) +
   ggtitle("Second Component") +
-  scale_fill_discrete(name = "Method",
-                      labels = c("cPCA", "scPCA"))+
+  scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()
 
+# build full plot via ggpubr
 annotate_figure(
   ggarrange(p1, p2, nrow = 1, ncol = 2,
             common.legend = TRUE, legend = "right"),

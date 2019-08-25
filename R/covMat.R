@@ -14,7 +14,7 @@
 #'
 #' @importFrom stats cov var
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
+#' @keywords internal
 #'
 covMat <- function(data, center = TRUE, scale = TRUE) {
   # convert data to a data.frame
@@ -30,7 +30,7 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
   # NOTE: if there are constant columns, replace NAs by 0s
   if (scale) {
     # identify columns with zero variance
-    no_var_idx <- which(sapply(data, stats::var) == 0)
+    no_var_idx <- which(do.call(c, lapply(data, stats::var)) == 0)
 
     # scale the data and replace the columns with no variation by zero vectors
     data <- scale(data, center = FALSE, scale = TRUE)

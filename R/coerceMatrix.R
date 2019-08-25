@@ -5,6 +5,8 @@
 #'
 #' @param data The data to be coerced to a matrix object.
 #'
+#' @importFrom methods is
+#'
 #' @keywords internal
 #'
 #' @return A coerced matrix object.

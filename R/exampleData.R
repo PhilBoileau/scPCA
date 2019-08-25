@@ -19,9 +19,9 @@
 #'
 #' @keywords datasets
 #'
-#'
 #' @examples
 #' data(toy_df)
+#'
 "toy_df"
 
 ################################################################################
@@ -47,4 +47,5 @@
 #'
 #' @examples
 #' data(background_df)
+#'
 "background_df"

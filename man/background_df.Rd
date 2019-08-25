@@ -19,5 +19,6 @@ simulated as follows:
 }
 \examples{
 data(background_df)
+
 }
 \keyword{datasets}
