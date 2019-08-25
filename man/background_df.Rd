@@ -4,7 +4,7 @@
 \name{background_df}
 \alias{background_df}
 \title{Simulated Background Data for cPCA and scPCA}
-\format{A dataframe.}
+\format{A simple \code{data.frame}.}
 \usage{
 data(background_df)
 }

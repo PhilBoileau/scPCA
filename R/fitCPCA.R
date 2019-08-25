@@ -19,7 +19,7 @@
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -30,9 +30,9 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
+#'
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                     num_medoids){
-
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -70,12 +70,12 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
     function(i) {
       sapply(
         seq(from = i + 1, to = num_contrasts),
-        function(j){
+        function(j) {
           Q_i <- qr_decomps[[i]]
           Q_j <- qr_decomps[[j]]
           d <- svd(x = t(Q_i)%*%Q_j, nu = 0, nv = 0)$d
           d[1]*d[2]
-          }
+        }
       )
     }
   )
@@ -111,10 +111,11 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 
   # create the lists of contrastive parameter medoids, loadings and projections
   med_index <- which(contrasts %in% contrast_medoids)
-  list(
+  out <- list(
     rotation = loadings_mat[med_index],
     x = spaces[med_index],
     contrast = contrasts[med_index],
     penalty = rep(0, length(med_index))
   )
+  return(out)
 }

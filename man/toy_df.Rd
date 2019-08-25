@@ -4,7 +4,7 @@
 \name{toy_df}
 \alias{toy_df}
 \title{Simulated Target Data for cPCA and scPCA}
-\format{A dataframe.}
+\format{A simple \code{data.frame}.}
 \usage{
 data(toy_df)
 }

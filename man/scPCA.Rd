@@ -120,6 +120,7 @@ scPCA(
   penalties = 0,
   n_centers = 1
 )
+
 }
 \author{
 Philippe Boileau, \email{philippe_boileau@berkeley.edu}

@@ -53,7 +53,7 @@
 #'
 #' @export
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 #' @examples
 #' # perform cPCA on the simulated data set
@@ -103,6 +103,7 @@
 #'   penalties = 0,
 #'   n_centers = 1
 #' )
+#'
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
@@ -110,29 +111,32 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   clust_method = "kmeans", n_centers, max_iters = 10,
                   num_medoids = 8, parallel = FALSE) {
 
+  # check arguments to function
   checkArgs(target, background, center, scale, n_eigen,
             contrasts, penalties)
 
+  # set target and background data sets to be matrices if from Matrix package
   target <- coerceMatrix(target)
   background <- coerceMatrix(background)
 
+  # call parallelized function variants if so requested
   if (parallel == FALSE) {
-
-    c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
-
+    # create contrastive covariance matrices
+    c_contrasts <- contrastiveCov(target, background, contrasts, center,
+                                  scale)
     if (n_centers == 1) {
       opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
                             n_eigen, num_medoids = 8)
     } else {
       opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
-                            penalties, n_eigen, clust_method = c("kmeans", "pam"),
+                            penalties, n_eigen,
+                            clust_method = c("kmeans", "pam"),
                             n_centers, max_iters)
     }
   } else {
-
+    # create contrastive covariance matrices
     c_contrasts <- bpContrastiveCov(target, background, contrasts,
                                     center, scale)
-
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
                               n_eigen, num_medoids = 8)
@@ -144,6 +148,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     }
   }
 
+  # create output object
   scpca <- list(
     rotation = opt_params$rotation,
     x = opt_params$x,
@@ -152,4 +157,5 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     center = center,
     scale = scale
   )
+  return(scpca)
 }

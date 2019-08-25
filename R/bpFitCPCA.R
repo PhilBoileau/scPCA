@@ -22,7 +22,7 @@
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom BiocParallel bplapply
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -34,13 +34,12 @@
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                    num_medoids){
-
+                      num_medoids){
   # preliminaries
   num_contrasts <- length(contrasts)
 
   # for each contrasted covariance matrix, compute the eigenvectors
-  loadings_mat <- bplapply(
+  loadings_mat <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
       res <- eigen(c_contrasts[[x]],
@@ -52,7 +51,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
-  spaces <- bplapply(
+  spaces <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
@@ -60,7 +59,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- bplapply(
+  qr_decomps <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
       qr.Q(qr(spaces[[x]]))
@@ -68,7 +67,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- bplapply(
+  aff_vect <- BiocParallel::bplapply(
     seq(from = 1, to = num_contrasts - 1),
     function(i) {
       sapply(
@@ -98,7 +97,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                                centers = num_medoids)
 
   # identify the alpha medoids of the spectral clustering
-  contrast_medoids <- bplapply(
+  contrast_medoids <- BiocParallel::bplapply(
     seq_len(num_medoids),
     function(x) {
       sub_index <- which(spec_clust == x)
@@ -116,10 +115,11 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 
   # create the lists of contrastive parameter medoids, loadings and projections
   med_index <- which(contrasts %in% contrast_medoids)
-  list(
+  out <- list(
     rotation = loadings_mat[med_index],
     x = spaces[med_index],
     contrast = contrasts[med_index],
     penalty = rep(0, length(med_index))
   )
+  return(out)
 }

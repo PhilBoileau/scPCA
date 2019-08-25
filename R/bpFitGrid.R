@@ -37,7 +37,7 @@
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 bpFitGrid <- function(target, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
@@ -52,7 +52,7 @@ bpFitGrid <- function(target, center, scale,
   param_grid <- expand.grid(penalties, contrasts)
 
   # create the loadings matrices
-  loadings_mat <- bplapply(
+  loadings_mat <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
       lapply(
@@ -61,7 +61,7 @@ bpFitGrid <- function(target, center, scale,
           if (y == 0) {
             res <- eigen(c_contrasts[[x]],
                          symmetric = TRUE
-            )$vectors[, 1:n_eigen]
+            )$vectors[, seq_len(n_eigen)]
           } else {
             res <- elasticnet::spca(c_contrasts[[x]],
                                     K = n_eigen,
@@ -70,7 +70,7 @@ bpFitGrid <- function(target, center, scale,
                                     sparse = "penalty"
             )$loadings
           }
-          colnames(res) <- paste0("V", as.character(seq(1, n_eigen)))
+          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
           return(res)
         }
       )
@@ -84,7 +84,7 @@ bpFitGrid <- function(target, center, scale,
   target <- scale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
-  subspaces <- bplapply(
+  subspaces <- BiocParallel::bplapply(
     seq_len(num_contrasts * num_penal),
     function(x) {
       as.matrix(target) %*% loadings_mat[[x]]
@@ -99,14 +99,14 @@ bpFitGrid <- function(target, center, scale,
 
   # rescale all spaces to the unit hyperplane. now objective functions based
   # on metric spaces can be used
-  norm_subspaces <- bplapply(
+  norm_subspaces <- BiocParallel::bplapply(
     subspaces,
     function(subspace) {
       max_val <-  max(subspace[, 1])
       min_val <- min(subspace[, 1])
       apply(subspace, 2,
-            function(x){
-              x/(max_val - min_val)
+            function(x) {
+              x / (max_val - min_val)
             }
       )
     }
@@ -130,7 +130,7 @@ bpFitGrid <- function(target, center, scale,
   loadings_mat <- loadings_mat[nz_load_idx]
 
   # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- bplapply(
+  ave_sil_widths <- BiocParallel::bplapply(
     norm_subspaces,
     function(subspace) {
       if (clust_method == "pam") {
@@ -149,12 +149,11 @@ bpFitGrid <- function(target, center, scale,
   # select the best contrastive parameter, and return it's covariance matrix,
   # contrastive parameter, loadings and projection of the target data
   max_idx <- which.max(ave_sil_widths)
-  return(
-    list(
+  out <- list(
       rotation = loadings_mat[[max_idx]],
       x = subspaces[[max_idx]],
       contrast = param_grid[max_idx, 2],
       penalty = param_grid[max_idx, 1]
-    )
   )
+  return(out)
 }

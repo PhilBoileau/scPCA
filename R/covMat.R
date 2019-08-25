@@ -14,10 +14,9 @@
 #'
 #' @importFrom stats cov var
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 covMat <- function(data, center = TRUE, scale = TRUE) {
-
   # convert data to a data.frame
   # NOTE: consider replacing with DataFrame
   data <- as.data.frame(data)

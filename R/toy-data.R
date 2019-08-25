@@ -15,7 +15,7 @@
 #'
 #' @usage data(toy_df)
 #'
-#' @format A dataframe.
+#' @format A simple \code{data.frame}.
 #'
 #' @keywords datasets
 #'

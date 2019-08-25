@@ -27,7 +27,8 @@ knitr::opts_chunk$set(
 
 > Sparse and Contrastive Principal Components Analysis for Computational Biology
 
-__Author:__ [Philippe Boileau](https://github.com/PhilBoileau)
+__Authors:__ [Philippe Boileau](https://github.com/PhilBoileau),
+  [Nima Hejazi](https://nimahejazi.org), William Krinsman
 
 ---
 

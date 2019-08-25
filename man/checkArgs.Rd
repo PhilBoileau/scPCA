@@ -2,15 +2,15 @@
 % Please edit documentation in R/checkArgs.R
 \name{checkArgs}
 \alias{checkArgs}
-\title{Check Arguments in scPCA Function}
+\title{Check Arguments passed to the scPCA Function}
 \usage{
 checkArgs(target, background, center, scale, num_eigen, contrasts,
   penalties)
 }
 \arguments{
-\item{target}{Target data}
+\item{target}{Target data.}
 
-\item{background}{Background data}
+\item{background}{Background data.}
 
 \item{center}{Indicates whether target and background should be centered.}
 
@@ -18,17 +18,19 @@ checkArgs(target, background, center, scale, num_eigen, contrasts,
 
 \item{num_eigen}{The number of eigen vectors to compute.}
 
-\item{contrasts}{The vector of contrasts parameters}
+\item{contrasts}{The vector of contrasts parameters.}
 
-\item{penalties}{The vector of penalty terms}
+\item{penalties}{The vector of penalty terms.}
 }
 \value{
 Whether all argument conditions are satisfied
 }
 \description{
-Checks whether or not the all arguments in the scPCA
-functions are input properly.
+Checks whether or not the all arguments in the scPCA functions
+  are input properly.
 }
 \author{
-Philippe Boileau, \email{philippe_boileau@berkeley.edu}
+Philippe Boileau (\email{philippe_boileau@berkeley.edu}), with
+ contributions from Nima Hejazi (\email{nh@nimahejazi.org}).
 }
+\keyword{internal}

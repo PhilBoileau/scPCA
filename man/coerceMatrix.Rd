@@ -10,8 +10,10 @@ coerceMatrix(data)
 \item{data}{The data to be coerced to a matrix object.}
 }
 \value{
-returns a coerced matrix object.
+A coerced matrix object.
 }
 \description{
-Coerces an object from the Matrix class to a base matrix object.
+Coerces an object from classes in the \code{Matrix} package to
+ the base matrix class.
 }
+\keyword{internal}
