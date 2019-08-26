@@ -1,12 +1,12 @@
 ---
-title: "Sparse contrastive principal components analysis with `scPCA`"
+title: "`scPCA`: Sparse contrastive principal component analysis"
 author: "Philippe Boileau and [Nima Hejazi](https://nimahejazi.org)"
 date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
 bibliography: ../inst/REFERENCES.bib
 vignette: >
-  %\VignetteIndexEntry{Sparse contrastive principal components analysis}
+  %\VignetteIndexEntry{Sparse contrastive principal component analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
