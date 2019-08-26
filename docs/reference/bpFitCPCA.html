@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Covariance Matrices — contrastiveCov • scPCA</title>
+<title>Contrastive Principal Component Analysis in Parallel — bpFitCPCA • scPCA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,9 +31,19 @@
 
 
 
-<meta property="og:title" content="Contrastive Covariance Matrices — contrastiveCov" />
+<meta property="og:title" content="Contrastive Principal Component Analysis in Parallel — bpFitCPCA" />
 
-<meta property="og:description" content="Compute the list of contrastive covariance matrices." />
+<meta property="og:description" content="Given target and background dataframes or matrices, cPCA
+  will perform contrastive principal component analysis (cPCA) of the target
+  data for a given number of eigenvectors and a vector of real valued
+  contrast parameters. This is identical to the implementation of cPCA
+  method by Abid et al. Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
+&amp;#8220;Exploring patterns enriched in a dataset with contrastive principal
+    component analysis.&amp;#8221;
+Nature communications, 9(1), 2134.
+. Analogous
+  to fitCPCA, but replaces all lapply calls by
+  bplapply." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,18 +122,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Covariance Matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/contrastiveCov.R'><code>R/contrastiveCov.R</code></a></small>
-    <div class="hidden name"><code>contrastiveCov.Rd</code></div>
+    <h1>Contrastive Principal Component Analysis in Parallel</h1>
+    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/fitCPCA.R'><code>R/fitCPCA.R</code></a></small>
+    <div class="hidden name"><code>bpFitCPCA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute the list of contrastive covariance matrices.</p>
+    <p>Given target and background dataframes or matrices, <code>cPCA</code>
+  will perform contrastive principal component analysis (cPCA) of the target
+  data for a given number of eigenvectors and a vector of real valued
+  contrast parameters. This is identical to the implementation of cPCA
+  method by Abid et al. Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
+&#8220;Exploring patterns enriched in a dataset with contrastive principal
+    component analysis.&#8221;
+<em>Nature communications</em>, <b>9</b>(1), 2134.
+. Analogous
+  to <code><a href='fitCPCA.html'>fitCPCA</a></code>, but replaces all <code>lapply</code> calls by
+  <code><a href='https://rdrr.io/pkg/BiocParallel/man/bplapply.html'>bplapply</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>contrastiveCov</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>contrasts</span>, <span class='no'>center</span>, <span class='no'>scale</span>)</pre>
+    <pre class="usage"><span class='fu'>bpFitCPCA</span>(<span class='no'>target</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>c_contrasts</span>, <span class='no'>contrasts</span>, <span class='no'>n_eigen</span>,
+  <span class='no'>n_medoids</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,15 +153,6 @@
       <th>target</th>
       <td><p>The target (experimental) data set, in a standard format such
 as a <code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>background</th>
-      <td><p>The background data set, in a standard format such as a
-<code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>contrasts</th>
-      <td><p>A <code>numeric</code> vector of the contrastive parameters.</p></td>
     </tr>
     <tr>
       <th>center</th>
@@ -152,12 +164,38 @@ data sets should be centered to mean zero.</p></td>
       <td><p>A <code>logical</code> indicating whether the target and background
 data sets should be scaled to unit variance.</p></td>
     </tr>
+    <tr>
+      <th>c_contrasts</th>
+      <td><p>A <code>list</code> of contrastive covariances.</p></td>
+    </tr>
+    <tr>
+      <th>contrasts</th>
+      <td><p>A <code>numeric</code> vector of the contrastive parameters used
+to compute the contrastive covariances.</p></td>
+    </tr>
+    <tr>
+      <th>n_eigen</th>
+      <td><p>A <code>numeric</code> indicating the number of eigenvectors to be
+computed.</p></td>
+    </tr>
+    <tr>
+      <th>n_medoids</th>
+      <td><p>A <code>numeric</code> indicating the number of medoids to
+consider.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of contrastive covariance matrices. Each element has an
-  associated contrastive parameter in the <code>contrasts</code> vector.</p>
+    <p>A list of lists containing the cPCA results for each contrastive
+  parameter deemed to be a medoid.</p><ul>
+<li><p>rotation - the list of matrices of variable loadings</p></li>
+<li><p>x - the list of rotated data, centred and scaled if requested,
+    multiplied by the rotation matrix</p></li>
+<li><p>contrast - the list of contrastive parameters</p></li>
+<li><p>penalty - set to zero, since the loadings are not penalized in cPCA</p></li>
+</ul>
+
     
 
   </div>

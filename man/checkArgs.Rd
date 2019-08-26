@@ -4,29 +4,33 @@
 \alias{checkArgs}
 \title{Check Arguments passed to the scPCA Function}
 \usage{
-checkArgs(target, background, center, scale, num_eigen, contrasts,
-  penalties)
+checkArgs(target, background, center, scale, n_eigen, contrasts, penalties)
 }
 \arguments{
-\item{target}{Target data.}
+\item{target}{The target (experimental) data set, in a standard format such
+as a \code{data.frame} or \code{matrix}.}
 
-\item{background}{Background data.}
+\item{background}{The background data set, in a standard format such as a
+\code{data.frame} or \code{matrix}.}
 
-\item{center}{Indicates whether target and background should be centered.}
+\item{center}{A \code{logical} indicating whether the target and background
+data sets should be centered to mean zero.}
 
-\item{scale}{Indicates whether target and background should be scaled.}
+\item{scale}{A \code{logical} indicating whether the target and background
+data sets should be scaled to unit variance.}
 
-\item{num_eigen}{The number of eigen vectors to compute.}
+\item{n_eigen}{A \code{numeric} indicating the number of eigenvectors to be
+computed.}
 
-\item{contrasts}{The vector of contrasts parameters.}
+\item{contrasts}{A \code{numeric} vector of the contrastive parameters.}
 
-\item{penalties}{The vector of penalty terms.}
+\item{penalties}{A \code{numeric} vector of the penalty terms.}
 }
 \value{
 Whether all argument conditions are satisfied
 }
 \description{
-Checks whether or not the all arguments in the scPCA functions
-  are input properly.
+Checks whether or not the all arguments in the \code{scPCA}
+  functions are input properly.
 }
 \keyword{internal}

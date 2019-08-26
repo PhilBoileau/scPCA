@@ -7,7 +7,9 @@
 coerceMatrix(data)
 }
 \arguments{
-\item{data}{The data to be coerced to a matrix object.}
+\item{data}{The data, usually expected to be a \code{data.frame} or
+\code{matrix}, to be coerced to a \code{matrix} object if formatted as
+\code{dgCMatrix} or \code{dgeMatrix}.}
 }
 \value{
 A coerced matrix object.

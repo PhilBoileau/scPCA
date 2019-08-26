@@ -23,27 +23,27 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 Data pre-processing and exploratory data analysis and are two important steps in
-the data science life-cycle. As datasets become larger and the signal weaker,
+the data science life-cycle. As data sets become larger and the signal weaker,
 their importance increases. Thus, methods that are capable of extracting the
-signal from such datasets is badly needed. Often, these steps rely on
+signal from such data sets is badly needed. Often, these steps rely on
 dimensionality reduction techniques to isolate pertinent information in data.
 However, many of the most commonly-used methods fail to reduce the dimensions of
-these large and noisy datasets successfully.
+these large and noisy data sets successfully.
 
 Principal component analysis (PCA) is one such method. Although popular for its
 interpretable results and ease of implementation, PCA's performance on
 high-dimensional often leaves much to be desired. Its results on these large
 datasets have been found to be unstable, and it is often unable to identify
-variation that is contextually meaningfull.
+variation that is contextually meaningful.
 
 Fortunately, modifications of PCA have been developed to remedy these issues.
 Namely, sparse PCA (sPCA) was created to increase the stability of the principal
 component loadings and variable scores in high dimensions, and constrastive PCA
 (cPCA) was proposed as a method for capturing relevant information in the
-high-dimensional data.
+high-dimensional data [@abid2018exploring].
 
 Although sPCA and cPCA have proven useful in resolving individual shortcomings
-of PCA, neither is capable of tackling the issues of stability and relavance
+of PCA, neither is capable of tackling the issues of stability and relevance
 simultaneously. The goal of this research project is to determine whether a
 combination of these methods, dubbed sparse constrastive PCA (scPCA), can
 accomplish this task.
@@ -74,7 +74,7 @@ remotes::install_github("PhilBoileau/scPCA")
 
 A brief comparion of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
-observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each 
+observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each
 observation is classified as belonging to one of four classes. This label is
 known is known a priori. A background data set comprised of the same number of
 variables as the target data set.
@@ -93,7 +93,7 @@ The background data was simulated as follows:
 * Variables 11 through 20 were drawn from $N(0, 3)$
 * Variables 21 through 30 were drawn from $N(0, 1)$
 
-A similar simulation scheme is provided in \cite{abid2018exploring}.
+A similar simulation scheme is provided in @abid2018exploring.
 
 ### PCA
 

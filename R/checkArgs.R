@@ -1,15 +1,20 @@
 #' Check Arguments passed to the scPCA Function
 #'
-#' @description Checks whether or not the all arguments in the scPCA functions
-#'   are input properly.
+#' @description Checks whether or not the all arguments in the \code{scPCA}
+#'   functions are input properly.
 #'
-#' @param target Target data.
-#' @param background Background data.
-#' @param center Indicates whether target and background should be centered.
-#' @param scale Indicates whether target and background should be scaled.
-#' @param num_eigen The number of eigen vectors to compute.
-#' @param contrasts The vector of contrasts parameters.
-#' @param penalties The vector of penalty terms.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param background The background data set, in a standard format such as a
+#'  \code{data.frame} or \code{matrix}.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
+#' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
+#'  computed.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters.
+#' @param penalties A \code{numeric} vector of the penalty terms.
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
@@ -19,8 +24,8 @@
 #'
 #' @return Whether all argument conditions are satisfied
 #'
-checkArgs <- function(target, background, center, scale,
-                      num_eigen, contrasts, penalties) {
+checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
+                      penalties) {
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
     tibble::is_tibble(target) ||
@@ -45,8 +50,8 @@ checkArgs <- function(target, background, center, scale,
   assertthat::assert_that(assertthat::is.flag(scale))
 
   # check the number of eigenvectors to compute
-  assertthat::assert_that(assertthat::is.count(num_eigen))
-  assertthat::assert_that(num_eigen <= ncol(target))
+  assertthat::assert_that(assertthat::is.count(n_eigen))
+  assertthat::assert_that(n_eigen <= ncol(target))
 
   # check the contrastive parameters
   if (assertthat::see_if(!missing(contrasts))) {

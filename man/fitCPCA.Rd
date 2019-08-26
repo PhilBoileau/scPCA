@@ -4,26 +4,28 @@
 \alias{fitCPCA}
 \title{Contrastive Principal Component Analysis}
 \usage{
-fitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen,
-  num_medoids)
+fitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen, n_medoids)
 }
 \arguments{
-\item{target}{The target data set.}
+\item{target}{The target (experimental) data set, in a standard format such
+as a \code{data.frame} or \code{matrix}.}
 
-\item{center}{A \code{logical} indicating whether the data sets' columns
-should be centered so as to have mean zero.}
+\item{center}{A \code{logical} indicating whether the target and background
+data sets should be centered to mean zero.}
 
-\item{scale}{A \code{logical} indicating whether the data sets' columns
-should be re-scaled to have unit variance.}
+\item{scale}{A \code{logical} indicating whether the target and background
+data sets should be scaled to unit variance.}
 
-\item{c_contrasts}{List of of contrastive covariances.}
+\item{c_contrasts}{A \code{list} of contrastive covariances.}
 
-\item{contrasts}{Vector of contrastive parameter values used to compute the
-contrastive covariances,}
+\item{contrasts}{A \code{numeric} vector of the contrastive parameters used
+to compute the contrastive covariances.}
 
-\item{n_eigen}{The number of contrastive principal components to compute.}
+\item{n_eigen}{A \code{numeric} indicating the number of eigenvectors to be
+computed.}
 
-\item{num_medoids}{The number of medoids to consider.}
+\item{n_medoids}{A \code{numeric} indicating the number of medoids to
+consider.}
 }
 \value{
 A list of lists containing the cPCA results for each contrastive
@@ -41,6 +43,6 @@ Given target and background dataframes or matrices, \code{cPCA}
   will perform contrastive principal component analysis (cPCA) of the target
   data for a given number of eigenvectors and a vector of real valued
   contrast parameters. This is identical to the implementation of cPCA
-  method by Abid et al. \insertRef{abid2017contrastive}{scPCA}.
+  method of \insertRef{abid2018exploring}{scPCA}.
 }
 \keyword{internal}

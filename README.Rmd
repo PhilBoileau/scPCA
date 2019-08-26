@@ -19,13 +19,13 @@ knitr::opts_chunk$set(
 [![Travis-CI Build Status](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)](https://travis-ci.org/PhilBoileau/scPCA)
 [![AppVeyor Build  Status](https://ci.appveyor.com/api/projects/status/github/PhilBoileau/scPCA?branch=master&svg=true)](https://ci.appveyor.com/project/PhilBoileau/scPCA/)
 [![Coverage Status](https://img.shields.io/codecov/c/github/PhilBoileau/scPCA/master.svg)](https://codecov.io/github/PhilBoileau/scPCA?branch=master)
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
 [![Bioc Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-> Sparse and Contrastive Principal Components Analysis for Computational Biology
+> Sparse Contrastive Principal Components Analysis for Computational Biology
 
 __Authors:__ [Philippe Boileau](https://github.com/PhilBoileau),
   [Nima Hejazi](https://nimahejazi.org), William Krinsman
@@ -34,8 +34,25 @@ __Authors:__ [Philippe Boileau](https://github.com/PhilBoileau),
 
 ## What's `scPCA`?
 
-The `scPCA` R package facilitates
-@abid2018exploring
+The exploration and analysis of modern high-dimensional biological data
+regularly involves the use of dimension reduction techniques in order to tease
+out meaningful and interpretable information from complex experimental data,
+often subject to batch effects and other technical noise. In tandem with the
+development of sequencing technology (e.g., RNA-seq, scRNA-seq), many variants
+of PCA have been developed in attempts to remedy deficiencies in
+interpretability and stability that plague their classical variants. Such
+developments have included both sparse PCA, which increases the stability of
+principal component loadings in high dimensions, and, more recently, contrastive
+PCA (cPCA) [@abid2018exploring], which captures relevant information in the
+target (experimental) data set by eliminating technical noise through comparison
+to a so-called background data set, ultimately increasing the interpretability
+of findings. While SPCA and cPCA have both individually proven useful in
+resolving distinct shortcomings of PCA, neither is capable of simultaneously
+tackling the issues of interpretability and stability simultaneously. The
+`scPCA` package implements _sparse constrastive PCA_, to accomplish both of
+these tasks in the context of high-dimensional biological data. In addition to
+implementing this newly developed technique, the `scPCA` package also implements
+cPCA and generalizations of it.
 
 ---
 
@@ -53,10 +70,10 @@ BiocManager::install("scPCA")
 ```
 
 To contribute, install the bleeding-edge _development version_ from GitHub via
-[`devtools`](https://www.rstudio.com/products/rpackages/devtools/):
+[`remotes`](https://CRAN.R-project.org/package=remotes):
 
 ```{r gh-master-installation, eval = FALSE}
-devtools::install_github("PhilBoileau/scPCA")
+remotes::install_github("PhilBoileau/scPCA")
 ```
 
 Current and prior [Bioconductor](https://bioconductor.org) releases are
