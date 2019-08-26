@@ -28,8 +28,9 @@
 #'   }
 #'
 #' @importFrom kernlab specc as.kernelMatrix
+#' @importFrom Rdpack reprompt
 #'
-#' @export
+#' @keywords internal
 #'
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                     num_medoids) {
@@ -145,11 +146,6 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #' @param n_eigen The number of contrastive principal components to compute.
 #' @param num_medoids The number of medoids to consider.
 #'
-#' @importFrom kernlab specc as.kernelMatrix
-#' @importFrom BiocParallel bplapply
-#'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-#'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
 #'   \itemize{
@@ -159,6 +155,13 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since the loadings are not penalized in cPCA
 #'   }
+#'
+#' @importFrom kernlab specc as.kernelMatrix
+#' @importFrom BiocParallel bplapply
+#' @importFrom Rdpack reprompt
+#'
+#' @keywords internal
+#'
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                       num_medoids) {
   # preliminaries

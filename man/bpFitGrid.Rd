@@ -52,3 +52,4 @@ This function is used to automatically select the optimal
   but replaces all \code{lapply} calls by
   \code{\link[BiocParallel]{bplapply}}.
 }
+\keyword{internal}

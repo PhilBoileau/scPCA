@@ -36,9 +36,10 @@ bioc_packages:
   - BiocStyle
   - BiocCheck
   - BiocGenerics
+  - BiocParallel
   - S4Vectors
-  - SummarizedExperiment
-  - limma
+  - SingleCellExperiment
+  - scRNAseq
 
 after_success:
   ## coverage

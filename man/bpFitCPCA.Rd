@@ -45,6 +45,4 @@ Given target and background dataframes or matrices, \code{cPCA}
   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
   \code{\link[BiocParallel]{bplapply}}.
 }
-\author{
-Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-}
+\keyword{internal}

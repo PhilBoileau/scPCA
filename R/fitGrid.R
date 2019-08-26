@@ -34,7 +34,7 @@
 #' @importFrom stats kmeans dist
 #' @importFrom cluster pam silhouette
 #'
-#' @export
+#' @keywords internal
 #'
 fitGrid <- function(target, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
@@ -58,7 +58,7 @@ fitGrid <- function(target, center, scale,
           if (y == 0) {
             res <- eigen(c_contrasts[[x]],
               symmetric = TRUE
-            )$vectors[, 1:n_eigen]
+            )$vectors[, seq_len(n_eigen)]
           } else {
             res <- elasticnet::spca(c_contrasts[[x]],
               K = n_eigen,
@@ -195,7 +195,7 @@ fitGrid <- function(target, center, scale,
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #'
-#' @export
+#' @keywords internal
 #'
 bpFitGrid <- function(target, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,

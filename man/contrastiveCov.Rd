@@ -26,3 +26,4 @@ A list of contrastive covariance matrices. Each element has an
 \description{
 Compute the list of contrastive covariance matrices.
 }
+\keyword{internal}

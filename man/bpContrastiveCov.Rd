@@ -27,3 +27,4 @@ A list of contrastive covariance matrices. Each element has an
 Compute the list of contrastive covariance matrices in parallel
   using \code{\link[BiocParallel]{bplapply}}.
 }
+\keyword{internal}
