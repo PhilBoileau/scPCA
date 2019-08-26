@@ -332,7 +332,9 @@ been centered and scaled, and perform both cPCA and cPCA using the `scPCA`
 function, storing each in a separate object. After applying each of these
 dimension reduction techniques, we store the resultant objects in a `SimpleList`
 that is then appended to the `SingleCellExperiment` object using the
-`reducedDims` accessor. The results are presented in the following figure.
+`reducedDims` accessor. The results are presented in the following figure. cPCA
+and scPCA successfully remove the batch effect, though PCA is incapable of doing
+so in two dimensions.
 
 ```{r perform_dimred, message=FALSE}
 # for both cPCA and scPCA, we'll set the penalties and contrasts arguments
