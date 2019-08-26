@@ -4,11 +4,11 @@
 #'   set. If a variable in the dataset has zero variance, then its corresponding
 #'   row and column in the covariance matrix are zero vectors.
 #'
-#' @param data The data with which to compute the sample covariance matrix.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
+#' @param data The data for which to compute the sample covariance matrix.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
 #'
 #' @return the covariance matrix of the data.
 #'

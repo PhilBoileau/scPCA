@@ -4,22 +4,26 @@
 #'   contrastive parameter and L1 penalty term for scPCA based on a clustering
 #'   algorithm and average silhouette width.
 #'
-#' @param target The target data set.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
-#' @param c_contrasts List of of contrastive covariances.
-#' @param contrasts Vector of contrastive parameter values used to compute the
-#'   contrastive covariances.
-#' @param penalties Vector of penalty parameters.
-#' @param n_eigen The number of contrastive principal components to compute.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
+#' @param c_contrasts A \code{list} of contrastive covariances.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters used
+#'  to compute the contrastive covariances.
+#' @param penalties A \code{numeric} vector of the penalty terms.
+#' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
+#'  computed.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM).
-#' @param n_centers The number of n_centers to use in the clustering algorithm.
-#' @param max_iters The maximum number of iterations to use in k-means
-#'   clustering. Defaults to 10.
+#'  limited to either k-means or partitioning around medoids (PAM). The default
+#'  is k-means clustering.
+#' @param n_centers A \code{numeric} giving the number of centers to use in the
+#'  clustering algorithm.
+#' @param max_iter A \code{numeric} giving the maximum number of iterations to
+#'   be used in k-means clustering, defaulting to 10.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -36,10 +40,9 @@
 #'
 #' @keywords internal
 #'
-fitGrid <- function(target, center, scale,
-                    c_contrasts, contrasts, penalties, n_eigen,
-                    clust_method = c("kmeans", "pam"),
-                    n_centers, max_iters = 10) {
+fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
+                    n_eigen, clust_method = c("kmeans", "pam"), n_centers,
+                    max_iter = 10) {
   # preliminaries
   clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
@@ -131,7 +134,7 @@ fitGrid <- function(target, center, scale,
       } else if (clust_method == "kmeans") {
         clust_res <- stats::kmeans(
           x = subspace, centers = n_centers,
-          iter.max = max_iters
+          iter.max = max_iter
         )
       }
       sil_width <- cluster::silhouette(
@@ -164,22 +167,26 @@ fitGrid <- function(target, center, scale,
 #'   but replaces all \code{lapply} calls by
 #'   \code{\link[BiocParallel]{bplapply}}.
 #'
-#' @param target The target data set.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
-#' @param c_contrasts List of of contrastive covariances.
-#' @param contrasts Vector of contrastive parameter values used to compute the
-#'   contrastive covariances,
-#' @param penalties Vector of penalty parameters.
-#' @param n_eigen The number of contrastive principal components to compute.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
+#' @param c_contrasts A \code{list} of contrastive covariances.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters used
+#'  to compute the contrastive covariances.
+#' @param penalties A \code{numeric} vector of the penalty terms.
+#' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
+#'  computed.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM).
-#' @param n_centers The number of n_centers to use in the clustering algorithm.
-#' @param max_iters The maximum number of iterations to use in k-means
-#'   clustering. Defaults to 10.
+#'  limited to either k-means or partitioning around medoids (PAM). The default
+#'  is k-means clustering.
+#' @param n_centers A \code{numeric} giving the number of centers to use in the
+#'  clustering algorithm.
+#' @param max_iter A \code{numeric} giving the maximum number of iterations to
+#'   be used in k-means clustering, defaulting to 10.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -197,10 +204,9 @@ fitGrid <- function(target, center, scale,
 #'
 #' @keywords internal
 #'
-bpFitGrid <- function(target, center, scale,
-                      c_contrasts, contrasts, penalties, n_eigen,
-                      clust_method = c("kmeans", "pam"),
-                      n_centers, max_iters = 10) {
+bpFitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
+                      n_eigen, clust_method = c("kmeans", "pam"), n_centers,
+                      max_iter = 10) {
   # preliminaries
   clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
@@ -299,7 +305,7 @@ bpFitGrid <- function(target, center, scale,
       } else if (clust_method == "kmeans") {
         clust_res <- stats::kmeans(
           x = subspace, centers = n_centers,
-          iter.max = max_iters
+          iter.max = max_iter
         )
       }
       sil_width <- cluster::silhouette(

@@ -7,13 +7,13 @@
 covMat(data, center = TRUE, scale = TRUE)
 }
 \arguments{
-\item{data}{The data with which to compute the sample covariance matrix.}
+\item{data}{The data for which to compute the sample covariance matrix.}
 
-\item{center}{A \code{logical} indicating whether the data sets' columns
-should be centered so as to have mean zero.}
+\item{center}{A \code{logical} indicating whether the target and background
+data sets should be centered to mean zero.}
 
-\item{scale}{A \code{logical} indicating whether the data sets' columns
-should be re-scaled to have unit variance.}
+\item{scale}{A \code{logical} indicating whether the target and background
+data sets should be scaled to unit variance.}
 }
 \value{
 the covariance matrix of the data.

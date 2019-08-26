@@ -4,18 +4,21 @@
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}.
+#'   method of \insertRef{abid2017contrastive}{scPCA}.
 #'
-#' @param target The target data set.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
-#' @param c_contrasts List of of contrastive covariances.
-#' @param contrasts Vector of contrastive parameter values used to compute the
-#'   contrastive covariances,
-#' @param n_eigen The number of contrastive principal components to compute.
-#' @param num_medoids The number of medoids to consider.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
+#' @param c_contrasts A \code{list} of contrastive covariances.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters used
+#'  to compute the contrastive covariances.
+#' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
+#'  computed.
+#' @param n_medoids A \code{numeric} indicating the number of medoids to
+#'  consider.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -33,7 +36,7 @@
 #' @keywords internal
 #'
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                    num_medoids) {
+                    n_medoids) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -94,12 +97,12 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 
   # perfrom spectral clustering using the affinity matrix
   spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-    centers = num_medoids
+    centers = n_medoids
   )
 
   # identify the alpha medoids of the spectral clustering
   contrast_medoids <- do.call(c, lapply(
-    seq_len(num_medoids),
+    seq_len(n_medoids),
     function(x) {
       sub_index <- which(spec_clust == x)
       sub_aff_mat <- aff_mat[sub_index, sub_index]
@@ -135,16 +138,19 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
 #'   \code{\link[BiocParallel]{bplapply}}.
 #'
-#' @param target The target data set.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
-#' @param c_contrasts List of of contrastive covariances.
-#' @param contrasts Vector of contrastive parameter values used to compute the
-#'   contrastive covariances,
-#' @param n_eigen The number of contrastive principal components to compute.
-#' @param num_medoids The number of medoids to consider.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
+#' @param c_contrasts A \code{list} of contrastive covariances.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters used
+#'  to compute the contrastive covariances.
+#' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
+#'  computed.
+#' @param n_medoids A \code{numeric} indicating the number of medoids to
+#'  consider.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -163,7 +169,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #' @keywords internal
 #'
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                      num_medoids) {
+                      n_medoids) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -224,12 +230,12 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 
   # perfrom spectral clustering using the affinity matrix
   spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-    centers = num_medoids
+    centers = n_medoids
   )
 
   # identify the alpha medoids of the spectral clustering
   contrast_medoids <- BiocParallel::bplapply(
-    seq_len(num_medoids),
+    seq_len(n_medoids),
     function(x) {
       sub_index <- which(spec_clust == x)
       sub_aff_mat <- aff_mat[sub_index, sub_index]

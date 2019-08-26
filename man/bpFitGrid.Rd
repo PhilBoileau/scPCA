@@ -5,35 +5,38 @@
 \title{Identify the Optimal Contrastive and Penalty Parameters in Parallel}
 \usage{
 bpFitGrid(target, center, scale, c_contrasts, contrasts, penalties,
-  n_eigen, clust_method = c("kmeans", "pam"), n_centers,
-  max_iters = 10)
+  n_eigen, clust_method = c("kmeans", "pam"), n_centers, max_iter = 10)
 }
 \arguments{
-\item{target}{The target data set.}
+\item{target}{The target (experimental) data set, in a standard format such
+as a \code{data.frame} or \code{matrix}.}
 
-\item{center}{A \code{logical} indicating whether the data sets' columns
-should be centered so as to have mean zero.}
+\item{center}{A \code{logical} indicating whether the target and background
+data sets should be centered to mean zero.}
 
-\item{scale}{A \code{logical} indicating whether the data sets' columns
-should be re-scaled to have unit variance.}
+\item{scale}{A \code{logical} indicating whether the target and background
+data sets should be scaled to unit variance.}
 
-\item{c_contrasts}{List of of contrastive covariances.}
+\item{c_contrasts}{A \code{list} of contrastive covariances.}
 
-\item{contrasts}{Vector of contrastive parameter values used to compute the
-contrastive covariances,}
+\item{contrasts}{A \code{numeric} vector of the contrastive parameters used
+to compute the contrastive covariances.}
 
-\item{penalties}{Vector of penalty parameters.}
+\item{penalties}{A \code{numeric} vector of the penalty terms.}
 
-\item{n_eigen}{The number of contrastive principal components to compute.}
+\item{n_eigen}{A \code{numeric} indicating the number of eigenvectors to be
+computed.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
-limited to either k-means or partitioning around medoids (PAM).}
+limited to either k-means or partitioning around medoids (PAM). The default
+is k-means clustering.}
 
-\item{n_centers}{The number of n_centers to use in the clustering algorithm.}
+\item{n_centers}{A \code{numeric} giving the number of centers to use in the
+clustering algorithm.}
 
-\item{max_iters}{The maximum number of iterations to use in k-means
-clustering. Defaults to 10.}
+\item{max_iter}{A \code{numeric} giving the maximum number of iterations to
+be used in k-means clustering, defaulting to 10.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:

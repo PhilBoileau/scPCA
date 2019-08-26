@@ -17,12 +17,12 @@ Authors@R: c(
            role = "ctb",
            email = "krinsman@berkeley.edu")
    )
-Description: This package contains the necessary tools to perform sparse
-    contrastive principal component analysis (scPCA) of high-dimensional data.
-    scPCA combines the interpretability and stability of sparse PCA with the
-    ability of contrastive PCA to capture the variation of interest in a data
-    set.
-Depends: R (>= 3.6)
+Description: A toolbox for sparse contrastive principal component analysis
+    (scPCA) of high-dimensional biological data. scPCA combines the stability of
+    sparse PCA with the interpretability afforded by contrastive PCA's approach
+    of comparing the target data set to a background data set, allowing for
+    the biological variation of interest in a data set to be recovered.
+Depends: R (>= 3.4)
 Imports:
     stats,
     methods,

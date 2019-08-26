@@ -74,7 +74,7 @@ remotes::install_github("PhilBoileau/scPCA")
 
 A brief comparion of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
-observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each 
+observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each
 observation is classified as belonging to one of four classes. This label is
 known is known a priori. A background data set comprised of the same number of
 variables as the target data set.

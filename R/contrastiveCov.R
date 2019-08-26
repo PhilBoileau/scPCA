@@ -2,13 +2,15 @@
 #'
 #' @description Compute the list of contrastive covariance matrices.
 #'
-#' @param target The target data set.
-#' @param background The background data set.
-#' @param contrasts The vector of contrastive parameters.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param background The background data set, in a standard format such as a
+#'  \code{data.frame} or \code{matrix}.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
 #'
 #' @return A list of contrastive covariance matrices. Each element has an
 #'   associated contrastive parameter in the \code{contrasts} vector.
@@ -36,13 +38,15 @@ contrastiveCov <- function(target, background, contrasts, center, scale) {
 #' @description Compute the list of contrastive covariance matrices in parallel
 #'   using \code{\link[BiocParallel]{bplapply}}.
 #'
-#' @param target The target data set.
-#' @param background The background data set.
-#' @param contrasts The vector of contrastive parameters.
-#' @param center A \code{logical} indicating whether the data sets' columns
-#'  should be centered so as to have mean zero.
-#' @param scale A \code{logical} indicating whether the data sets' columns
-#'  should be re-scaled to have unit variance.
+#' @param target The target (experimental) data set, in a standard format such
+#'  as a \code{data.frame} or \code{matrix}.
+#' @param background The background data set, in a standard format such as a
+#'  \code{data.frame} or \code{matrix}.
+#' @param contrasts A \code{numeric} vector of the contrastive parameters.
+#' @param center A \code{logical} indicating whether the target and background
+#'  data sets should be centered to mean zero.
+#' @param scale A \code{logical} indicating whether the target and background
+#'  data sets should be scaled to unit variance.
 #'
 #' @return A list of contrastive covariance matrices. Each element has an
 #'   associated contrastive parameter in the \code{contrasts} vector.
