@@ -38,8 +38,8 @@ bioc_packages:
   - BiocGenerics
   - BiocParallel
   - S4Vectors
+  - splatter
   - SingleCellExperiment
-  - scRNAseq
 
 after_success:
   ## coverage

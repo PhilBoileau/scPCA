@@ -21,7 +21,7 @@ Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://biocond
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-> Sparse Contrastive Principal Components Analysis for Computational
+> Sparse Contrastive Principal Component Analysis for Computational
 > Biology
 
 **Authors:** [Philippe Boileau](https://github.com/PhilBoileau), [Nima
