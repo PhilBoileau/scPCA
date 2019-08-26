@@ -1,12 +1,12 @@
 ---
-title: "Sparse contrastive principal components analysis with `scPCA`"
+title: "`scPCA`: Sparse contrastive principal component analysis"
 author: "Philippe Boileau and [Nima Hejazi](https://nimahejazi.org)"
 date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
-bibliography: vignette-refs.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
-  %\VignetteIndexEntry{Sparse contrastive principal components analysis}
+  %\VignetteIndexEntry{Sparse contrastive principal component analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -260,10 +260,10 @@ We now turn to discussing how the tools in the `scPCA` package can be used more
 readily with data structures common in computational biology by examining their
 integration with the `SingleCellExperiment` container class. For our example, we
 will use `splatter` to simulate a scRNA-seq data set using the Splatter
-framework [@Zappia2017]. This method simulates a scRNA-seq count matrix by way
-of a gamma-Poisson hierarchical model, where the mean expression level of gene
-$g_i,\; i = 1, ..., p$ is sampled from a gamma distribution, and the count
-$x_{i, j}, \; j = 1, ..., n$ of cell $c_j$ is sampled from a Poisson
+framework [@zappia2017splatter]. This method simulates a scRNA-seq count matrix
+by way of a gamma-Poisson hierarchical model, where the mean expression level of
+gene $g_i,\; i = 1, \ldots, p$ is sampled from a gamma distribution, and the
+count $x_{i, j}, \; j = 1, \ldots, n$ of cell $c_j$ is sampled from a Poisson
 distribution with mean equal to the mean expression level of $g_i$.
 
 To start, let's load the required packages and create a simple dataset of 300
@@ -278,7 +278,7 @@ large batch effect is simulated to confound the biological signal.
 library(splatter)
 library(SingleCellExperiment)
 
-# Simulate the three groups of cells. Mask cell heterogeneity with batch effect.
+# Simulate the three groups of cells. Mask cell heterogeneity with batch effect
 params <- newSplatParams(
   seed = 6757293,
   nGenes = 500,
@@ -299,7 +299,7 @@ variable genes. We then split the simulated data into target and background data
 sets. Our goal here is to demonstrate a typical assessment of scRNA-seq data
 (and data from similar assays) using the tools made available in the `scPCA`
 package. A standard analysis would follow a workflow largely similar to the one
-below, though without such a computationaly convenient data set.
+below, though without such a computationally convenient data set.
 
 ```{r make_sce_subs, message=FALSE}
 # rank genes by variance

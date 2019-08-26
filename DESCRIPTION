@@ -41,8 +41,8 @@ Suggests:
     dplyr,
     ggplot2,
     ggpubr,
-    SingleCellExperiment,
-    scRNAseq
+    splatter,
+    SingleCellExperiment
 License: MIT + file LICENSE
 URL: https://github.com/PhilBoileau/scPCA
 BugReports: https://github.com/PhilBoileau/scPCA/issues
