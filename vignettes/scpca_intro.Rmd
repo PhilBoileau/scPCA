@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
+# Introduction
 
 ```{r setup, echo=FALSE}
 library(dplyr)
@@ -19,7 +19,8 @@ library(ggplot2)
 library(ggpubr)
 library(elasticnet)
 library(scPCA)
-knitr::opts_chunk$set(echo = FALSE)
+
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 Data pre-processing and exploratory data analysis and are two important steps in
@@ -50,7 +51,7 @@ accomplish this task.
 
 ---
 
-## Installation
+# Installation
 
 To install the latest stable release of the `scPCA` package from Bioconductor,
 use [`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
@@ -70,7 +71,7 @@ remotes::install_github("PhilBoileau/scPCA")
 
 ---
 
-## Comparing PCA, SPCA, cPCA and scPCA
+# Comparing PCA, SPCA, cPCA and scPCA
 
 A brief comparion of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
@@ -95,7 +96,7 @@ The background data was simulated as follows:
 
 A similar simulation scheme is provided in @abid2018exploring.
 
-### PCA
+## PCA
 
 First, PCA is applied to the target data. As we can see from the figure, PCA is
 incapable of creating a lower dimensional representation of the target data
@@ -123,7 +124,7 @@ p_pca <- ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
 p_pca
 ```
 
-### Sparse PCA
+## Sparse PCA
 
 Much like PCA, the leading components of SPCA -- for varying amounts of
 sparsity -- are incapable of splitting the observations into four distinct
@@ -154,7 +155,7 @@ p_spca <- ggplot(df, aes(x = SPC1, y = SPC2, colour = label)) +
 p_spca
 ```
 
-### Contrastive PCA (cPCA)
+## Contrastive PCA (cPCA)
 
 The first two contrastive principal components of cPCA successfully captured
 the variation of interest in the data with the help of the background data set.
@@ -182,7 +183,7 @@ p_cpca <- ggplot(cpca_df, aes(x = cPC1, y = cPC2, colour = label)) +
 p_cpca
 ```
 
-### scPCA: Sparse Contrastive PCA
+## scPCA: Sparse Contrastive PCA
 
 The leading sparse contrastive components were also able to capture the
 variation of interest, though the clusters corresponding to the class labels are
@@ -245,81 +246,95 @@ p2 <- load_diff_df %>%
 annotate_figure(
   ggarrange(p1, p2, nrow = 1, ncol = 2,
             common.legend = TRUE, legend = "right"),
-  top = "Non-Zero Loadings Comparison",
-  left = "Loading Values",
+  top = "Leading Loadings Vectors Comparison",
+  left = "Loading Weights",
   bottom = "Variable Index"
 )
 ```
 
 ---
 
-## Bioconductor Integration via `SingleCellExperiment`
+# Bioconductor Integration via `SingleCellExperiment`
 
 We now turn to discussing how the tools in the `scPCA` package can be used more
 readily with data structures common in computational biology by examining their
 integration with the `SingleCellExperiment` container class. For our example, we
-will use the `allen` data from the `scRNAseq` package, just as was done to
-demonstrate use of the `SingleCellExperiment` container in the [vignette from
-that package](https://bioconductor.org/packages/release/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html#2_creating_singlecellexperiment_instances).
+will use `splatter` to simulate a scRNA-seq data set using the Splatter
+framework [@Zappia2017]. This method simulates a scRNA-seq count matrix by way
+of a gamma-Poisson hierarchical model, where the mean expression level of gene
+$g_i,\; i = 1, ..., p$ is sampled from a gamma distribution, and the count
+$x_{i, j}, \; j = 1, ..., n$ of cell $c_j$ is sampled from a Poisson
+distribution with mean equal to the mean expression level of $g_i$.
 
-To start, let's load the required packages and create a simple
-`SingleCellExperiment` instance, including information about spike-ins:
+To start, let's load the required packages and create a simple dataset of 300
+cells and 500 genes. The cells are evenly split among three biological groups.
+The samples in two of these groups possess genes that are highly differentially
+expressed when compared to those in other groups; they comprise the target data.
+The genes of the third group of cells are less differentially expressed to the
+genes in the target data, and so it is considered the background data set. A
+large batch effect is simulated to confound the biological signal.
 
 ```{r sce_setup, message=FALSE}
-library(scRNAseq)
+library(splatter)
 library(SingleCellExperiment)
 
-# load data and set to SCE
-data(allen)
-sce <- as(allen, "SingleCellExperiment")
+# Simulate the three groups of cells. Mask cell heterogeneity with batch effect.
+params <- newSplatParams(
+  seed = 6757293,
+  nGenes = 500,
+  batchCells = c(150, 150),
+  batch.facLoc = c(0.05, 0.05),
+  batch.facScale = c(0.05, 0.05),
+  group.prob = rep(1/3, 3),
+  de.prob = c(0.1, 0.05, 0.1),
+  de.downProb = c(0.1, 0.05, 0.1),
+  de.facLoc = rep(0.2, 3),
+  de.facScale = rep(0.2, 3)
+)
+sim_sce <- splatSimulate(params, method = "groups")
 ```
 
-While interesting, the `allen` data set is rather large. To proceed, we use only
-a small subset of the data, limited to the 100 genes with the highest variance,
-after log-transforming the raw counts. Our goal here is to demonstrate a typical
-assessment of single-cell RNA-seq data (and data from similar assays) using the
-tools made available in the `scPCA` package, a standard analysis would follow a
-workflow largely similar to the above, though without such convenient reductions
-in the complexity of the available data.
+To proceed, we log-transform the raw counts and retain only the 250 most
+variable genes. We then split the simulated data into target and background data
+sets. Our goal here is to demonstrate a typical assessment of scRNA-seq data
+(and data from similar assays) using the tools made available in the `scPCA`
+package. A standard analysis would follow a workflow largely similar to the one
+below, though without such a computationaly convenient data set.
 
-```{r make_sce_sub, message=FALSE}
+```{r make_sce_subs, message=FALSE}
 # rank genes by variance
-n_genes <- 100
-vars <- assay(sce) %>%
+n_genes <- 250
+vars <- assay(sim_sce) %>%
   log1p %>%
   rowVars
-names(vars) <- rownames(sce)
+names(vars) <- rownames(sim_sce)
 vars <- sort(vars, decreasing = TRUE)
 
 # subset SCE to n_genes with highest variance
-sce_sub <- sce[names(vars[seq_len(n_genes)]),]
+sce_sub <- sim_sce[names(vars[seq_len(n_genes)]),]
 sce_sub
+
+# split the subsetted SCE into target and background SCEs
+tg_sce <- sce_sub[, sce_sub$Group %in% c("Group1", "Group3")]
+bg_sce <- sce_sub[, sce_sub$Group %in% c("Group2")]
 ```
 
 Note that we limit our analysis to just `r n_genes` genes in the interest of
 time, a typical analysis would generally include a much larger proportion (if
 not all) of the genes assayed.
 
-In order to use either contrastive PCA or its sparse variant, it's necessary to
-have a background data set. Absent such a version of the `allen` data, we use
-the `r n_genes` genes with the lowest variance as the background:
-
-```{r make_sce_background, message=FALSE}
-# background SCE based on low variance genes (after removing zero counts)
-vars_nz <- vars[vars > 0]
-vars_low <- vars[(length(vars_nz) - n_genes + 1):length(vars_nz)]
-sce_background <- sce[names(vars_low), ]
-```
-
 Owing to the flexibility of the `SingleCellExperiment` class, we are able to
-generate PCA, cPCA, and scPCA representations of the reduced `allen` data,
-storing these in `SingleCellExperiment` object using the `reducedDims` method.
+generate PCA, cPCA, and scPCA representations of the target data, storing these
+in `SingleCellExperiment` object using the `reducedDims` method.
 
-Below, we perform standard PCA on the experimental subset from the `allen` data
-and perform both cPCA and scPCA using the `scPCA` function, storing each in a
-separate object. After applying each of these dimension reduction techniques,
-we store the resultant objects in a `SimpleList` that is then appended to the
-`SingleCellExperiment` object using the `reducedDims` accessor.
+Below, we perform standard PCA on the log-transformed target data, which has
+been centered and scaled, and perform both cPCA and cPCA using the `scPCA`
+function, storing each in a separate object. After applying each of these
+dimension reduction techniques, we store the resultant objects in a `SimpleList`
+that is then appended to the `SingleCellExperiment` object using the
+`reducedDims` accessor. The results are presented in the following figure. cPCA
+and scPCA successfully remove the batch effect, though PCA is incapable of doing
+so in two dimensions.
 
 ```{r perform_dimred, message=FALSE}
 # for both cPCA and scPCA, we'll set the penalties and contrasts arguments
@@ -327,29 +342,93 @@ contrasts <- exp(seq(log(0.1), log(100), length.out = 5))
 penalties <- seq(0.2, 1, length.out = 3)
 
 # first, PCA
-pca_out <- prcomp(t(log1p(assay(sce_sub))))
+pca_out <- prcomp(t(log1p(counts(tg_sce))), center = TRUE, scale. = TRUE)
 
 # next, cPCA
-cpca_out <- scPCA(t(log1p(assay(sce_sub))),
-                  t(log1p(assay(sce_background))),
-                  n_centers = 4,
+cpca_out <- scPCA(t(log1p(counts(tg_sce))),
+                  t(log1p(counts(bg_sce))),
+                  n_centers = 2,
                   n_eigen = 2,
                   contrasts = contrasts,
-                  penalties = 0)
+                  penalties = 0,
+                  center = TRUE,
+                  scale = TRUE)
 
 # finally, scPCA
-scpca_out <- scPCA(t(log1p(assay(sce_sub))),
-                   t(log1p(assay(sce_background))),
-                   n_centers = 4,
+scpca_out <- scPCA(t(log1p(counts(tg_sce))),
+                   t(log1p(counts(bg_sce))),
+                   n_centers = 2,
                    n_eigen = 2,
                    contrasts = contrasts,
-                   penalties = penalties)
+                   penalties = penalties,
+                   center = TRUE,
+                   scale = TRUE)
 
 # store new representations in the SingleCellExperiment object
-reducedDims(sce_sub) <- SimpleList(PCA = pca_out$x[, 1:2],
-                                   cPCA = cpca_out$x,
-                                   scPCA = scpca_out$x)
-sce_sub
+reducedDims(tg_sce) <- SimpleList(PCA = pca_out$x[, 1:2],
+                                  cPCA = cpca_out$x,
+                                  scPCA = scpca_out$x)
+tg_sce
+```
+
+```{r plot_red_dims, echo=FALSE, fig.asp=.25, out.width="1600px"}
+# plot the 2D representations
+
+# prepare PCA
+pca_df <- data.frame(
+  PC1 = pca_out$x[, 1],
+  PC2 = pca_out$x[, 2],
+  group = tg_sce$Group,
+  batch = tg_sce$Batch
+)
+pca_p <- pca_df %>%
+  ggplot(aes(x = PC1, y = PC2, colour = group, shape = batch)) +
+  geom_point(alpha = 0.75) +
+  ggtitle("PCA") +
+  scale_colour_viridis_d(name = "Target Group", labels = c("1", "2"),
+                         begin = 0.1, end = 0.9) +
+  scale_shape_discrete(name = "Batch") +
+  theme_minimal()
+
+# prepare cPCA
+cpca_df <- data.frame(
+  cPC1 = cpca_out$x[, 1],
+  cPC2 = cpca_out$x[, 2],
+  group = tg_sce$Group,
+  batch = tg_sce$Batch
+)
+cpca_p <- cpca_df %>%
+  ggplot(aes(x = cPC1, y = cPC2, colour = group, shape = batch)) +
+  geom_point(alpha = 0.75) +
+  ggtitle("cPCA") +
+  scale_colour_viridis_d(name = "Target Group", labels = c("1", "2"),
+                         begin = 0.1, end = 0.9) +
+  scale_shape_discrete(name = "Batch") +
+  theme_minimal()
+
+# prepare scPCA
+scpca_df <- data.frame(
+  scPC1 = scpca_out$x[, 1],
+  scPC2 = scpca_out$x[, 2],
+  group = tg_sce$Group,
+  batch = tg_sce$Batch
+)
+scpca_p <- scpca_df %>%
+  ggplot(aes(x = scPC1, y = scPC2, colour = group, shape = batch)) +
+  geom_point(alpha = 0.75) +
+  ggtitle("scPCA") +
+  scale_colour_viridis_d(name = "Target Group", labels = c("1", "2"),
+                         begin = 0.1, end = 0.9) +
+  scale_shape_discrete(name = "Batch") +
+  theme_minimal()
+
+# combine the plots
+ggarrange(
+  pca_p, cpca_p, scpca_p,
+  nrow = 1,
+  common.legend = TRUE,
+  legend = "right"
+)
 ```
 
 In the above, we set `n_eigen = 2` in the calls to the `scPCA` function that
@@ -364,7 +443,7 @@ information stored in the `SingleCellExperiment` object.
 
 ---
 
-## Parallelization
+# Parallelization
 
 Finally, note that the `scPCA` function has an argument `parallel` (set to
 `FALSE` by default), which facilitates parallelized computation of the various
@@ -407,7 +486,7 @@ scpca_bp <- scPCA(
 
 ---
 
-## Session Information
+# Session Information
 
 ```{r session_info, echo=FALSE}
 sessionInfo()
@@ -415,5 +494,5 @@ sessionInfo()
 
 ---
 
-## References
+# References
 
