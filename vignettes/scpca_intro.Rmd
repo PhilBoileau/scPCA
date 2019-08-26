@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
+# Introduction
 
 ```{r setup, echo=FALSE}
 library(dplyr)
@@ -50,7 +50,7 @@ accomplish this task.
 
 ---
 
-## Installation
+# Installation
 
 To install the latest stable release of the `scPCA` package from Bioconductor,
 use [`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
@@ -70,7 +70,7 @@ remotes::install_github("PhilBoileau/scPCA")
 
 ---
 
-## Comparing PCA, SPCA, cPCA and scPCA
+# Comparing PCA, SPCA, cPCA and scPCA
 
 A brief comparion of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
@@ -95,7 +95,7 @@ The background data was simulated as follows:
 
 A similar simulation scheme is provided in @abid2018exploring.
 
-### PCA
+## PCA
 
 First, PCA is applied to the target data. As we can see from the figure, PCA is
 incapable of creating a lower dimensional representation of the target data
@@ -123,7 +123,7 @@ p_pca <- ggplot(df, aes(x = PC1, y = PC2, colour = label)) +
 p_pca
 ```
 
-### Sparse PCA
+## Sparse PCA
 
 Much like PCA, the leading components of SPCA -- for varying amounts of
 sparsity -- are incapable of splitting the observations into four distinct
@@ -154,7 +154,7 @@ p_spca <- ggplot(df, aes(x = SPC1, y = SPC2, colour = label)) +
 p_spca
 ```
 
-### Contrastive PCA (cPCA)
+## Contrastive PCA (cPCA)
 
 The first two contrastive principal components of cPCA successfully captured
 the variation of interest in the data with the help of the background data set.
@@ -182,7 +182,7 @@ p_cpca <- ggplot(cpca_df, aes(x = cPC1, y = cPC2, colour = label)) +
 p_cpca
 ```
 
-### scPCA: Sparse Contrastive PCA
+## scPCA: Sparse Contrastive PCA
 
 The leading sparse contrastive components were also able to capture the
 variation of interest, though the clusters corresponding to the class labels are
@@ -253,7 +253,7 @@ annotate_figure(
 
 ---
 
-## Bioconductor Integration via `SingleCellExperiment`
+# Bioconductor Integration via `SingleCellExperiment`
 
 We now turn to discussing how the tools in the `scPCA` package can be used more
 readily with data structures common in computational biology by examining their
@@ -364,7 +364,7 @@ information stored in the `SingleCellExperiment` object.
 
 ---
 
-## Parallelization
+# Parallelization
 
 Finally, note that the `scPCA` function has an argument `parallel` (set to
 `FALSE` by default), which facilitates parallelized computation of the various
@@ -407,7 +407,7 @@ scpca_bp <- scPCA(
 
 ---
 
-## Session Information
+# Session Information
 
 ```{r session_info, echo=FALSE}
 sessionInfo()
@@ -415,5 +415,5 @@ sessionInfo()
 
 ---
 
-## References
+# References
 
