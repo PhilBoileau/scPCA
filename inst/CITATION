@@ -1,0 +1,20 @@
+citHeader("Please cite the paper below for the 'scPCA' software package
+           itself. Please also make sure to cite the appropriate methodology
+           articles describing the statistical techniques being relied upon.")
+
+citEntry(
+    entry        = "Article",
+    doi          = "",
+    url          = "",
+    year         = "2019",
+    month        = "November",
+    publisher    = "",
+    volume       = "",
+    number       = "",
+    author       = "Philippe Boileau, Nima S. Hejazi, William Krinsman,
+                    Sandrine Dudoit",
+    title        = "scPCA: Sparse Contrastive Principal Components Analysis",
+    journal      = "F1000Research",
+    textVersion  = paste("Boileau P, Hejazi NS, Krinsman W, Dudoit S (2019).",
+                         "scPCA: Sparse contrastive principal components analysis")
+)

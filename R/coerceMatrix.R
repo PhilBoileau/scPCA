@@ -1,14 +1,21 @@
 #' Coerce Matrix Objects to Base Matrix Objects
 #'
-#' @description Coerces an object from the Matrix class to a base matrix object.
+#' @description Coerces an object from classes in the \code{Matrix} package to
+#'  the base matrix class.
 #'
 #' @param data The data to be coerced to a matrix object.
 #'
-#' @return returns a coerced matrix object.
+#' @importFrom methods is
+#'
+#' @keywords internal
+#'
+#' @return A coerced matrix object.
+#'
 coerceMatrix <- function(data) {
-
-  if(class(data) %in% c("dgCMatrix", "dgeMatrix"))
+  if (is(data, "dgCMatrix") || is(data, "dgeMatrix")) {
     data <- as.matrix(data)
-  else
+  } else {
     data
+  }
+  return(data)
 }

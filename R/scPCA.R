@@ -53,14 +53,14 @@
 #'
 #' @export
 #'
-#' @author Philippe Boileau, \email{philippe_boileau@@berkeley.edu}
+#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 #' @examples
 #' # perform cPCA on the simulated data set
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
 #'   penalties = 0,
 #'   n_centers = 4
 #' )
@@ -69,30 +69,9 @@
 #' scPCA(
 #'   target = toy_df[, 1:30],
 #'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
-#'   penalties = seq(0.1, 1, length.out = 9),
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+#'   penalties = seq(0.1, 1, length.out = 3),
 #'   n_centers = 4
-#' )
-#'
-#' # perform the same operations in parallel
-#' # perfom cPCA
-#' scPCA(
-#'   target = toy_df[, 1:30],
-#'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
-#'   penalties = 0,
-#'   n_centers = 4,
-#'   parallel = TRUE
-#' )
-#'
-#' # perform scPCA
-#' scPCA(
-#'   target = toy_df[, 1:30],
-#'   background = background_df,
-#'   contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
-#'   penalties = seq(0.1, 1, length.out = 9),
-#'   n_centers = 4,
-#'   parallel = TRUE
 #' )
 #'
 #' # cPCA as implemented in Abid et al.
@@ -110,40 +89,56 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   clust_method = "kmeans", n_centers, max_iters = 10,
                   num_medoids = 8, parallel = FALSE) {
 
-  checkArgs(target, background, center, scale, n_eigen,
-            contrasts, penalties)
+  # check arguments to function
+  checkArgs(
+    target, background, center, scale, n_eigen,
+    contrasts, penalties
+  )
 
+  # set target and background data sets to be matrices if from Matrix package
   target <- coerceMatrix(target)
   background <- coerceMatrix(background)
 
+  # call parallelized function variants if so requested
   if (parallel == FALSE) {
-
-    c_contrasts <- contrastiveCov(target, background, contrasts, center, scale)
-
+    # create contrastive covariance matrices
+    c_contrasts <- contrastiveCov(
+      target, background, contrasts, center,
+      scale
+    )
     if (n_centers == 1) {
       opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
-                            n_eigen, num_medoids = 8)
+        n_eigen,
+        num_medoids = 8
+      )
     } else {
       opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
-                            penalties, n_eigen, clust_method = c("kmeans", "pam"),
-                            n_centers, max_iters)
+        penalties, n_eigen,
+        clust_method = c("kmeans", "pam"),
+        n_centers, max_iters
+      )
     }
   } else {
-
-    c_contrasts <- bpContrastiveCov(target, background, contrasts,
-                                    center, scale)
-
+    # create contrastive covariance matrices
+    c_contrasts <- bpContrastiveCov(
+      target, background, contrasts,
+      center, scale
+    )
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
-                              n_eigen, num_medoids = 8)
+        n_eigen,
+        num_medoids = 8
+      )
     } else {
       opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
-                              penalties, n_eigen,
-                              clust_method = c("kmeans", "pam"), n_centers,
-                              max_iters)
+        penalties, n_eigen,
+        clust_method = c("kmeans", "pam"), n_centers,
+        max_iters
+      )
     }
   }
 
+  # create output object
   scpca <- list(
     rotation = opt_params$rotation,
     x = opt_params$x,
@@ -152,4 +147,5 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     center = center,
     scale = scale
   )
+  return(scpca)
 }

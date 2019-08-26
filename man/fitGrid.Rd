@@ -49,6 +49,4 @@ This function is used to automatically select the optimal
   contrastive parameter and L1 penalty term for scPCA based on a clustering
   algorithm and average silhouette width.
 }
-\author{
-Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-}
+\keyword{internal}

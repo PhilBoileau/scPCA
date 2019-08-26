@@ -29,12 +29,13 @@ environment:
 build_script:
   - travis-tool.sh install_deps
   - travis-tool.sh install_github r-lib/covr
-  - travis-tool.sh install_bioc BiocCheck
   - travis-tool.sh install_bioc BiocStyle
+  - travis-tool.sh install_bioc BiocCheck
   - travis-tool.sh install_bioc BiocGenerics
+  - travis-tool.sh install_bioc BiocParallel
   - travis-tool.sh install_bioc S4Vectors
-  - travis-tool.sh install_bioc SummarizedExperiment
-  - travis-tool.sh install_bioc limma
+  - travis-tool.sh install_bioc SingleCellExperiment
+  - travis-tool.sh install_bioc scRNAseq
   - travis-tool.sh install_bioc_deps
 
 test_script:
@@ -69,6 +70,7 @@ artifacts:
 notifications:
  - provider: Email
    to:
+     - philippe_boileau@berkeley.edu
      - nh@nimahejazi.org
    subject: 'r-appveyor build {{status}}'
    message: "https://ci.appveyor.com/project/PhilBoileau/scPCA"

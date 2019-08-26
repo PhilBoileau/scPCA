@@ -23,6 +23,4 @@ the covariance matrix of the data.
   set. If a variable in the dataset has zero variance, then its corresponding
   row and column in the covariance matrix are zero vectors.
 }
-\author{
-Philippe Boileau, \email{philippe_boileau@berkeley.edu}
-}
+\keyword{internal}

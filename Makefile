@@ -28,4 +28,3 @@ buildfast:
 
 style:
 	Rscript -e "styler::style_pkg()"
-

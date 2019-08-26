@@ -27,7 +27,8 @@ knitr::opts_chunk$set(
 
 > Sparse and Contrastive Principal Components Analysis for Computational Biology
 
-__Author:__ [Philippe Boileau](https://github.com/PhilBoileau)
+__Authors:__ [Philippe Boileau](https://github.com/PhilBoileau),
+  [Nima Hejazi](https://nimahejazi.org), William Krinsman
 
 ---
 
@@ -60,10 +61,10 @@ devtools::install_github("PhilBoileau/scPCA")
 
 Current and prior [Bioconductor](https://bioconductor.org) releases are
 available under branches with numbers prefixed by "RELEASE_". For example, to
-install the version of this package available via Bioconductor 4.0, use
+install the version of this package available via Bioconductor 3.10, use
 
 ```{r gh-develop-installation, eval = FALSE}
-devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_4_0")
+devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_3_10")
 ```
 
 ---
