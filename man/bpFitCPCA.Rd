@@ -44,7 +44,7 @@ Given target and background dataframes or matrices, \code{cPCA}
   will perform contrastive principal component analysis (cPCA) of the target
   data for a given number of eigenvectors and a vector of real valued
   contrast parameters. This is identical to the implementation of cPCA
-  method by Abid et al. \insertRef{abid2017contrastive}{scPCA}. Analogous
+  method by Abid et al. \insertRef{abid2018exploring}{scPCA}. Analogous
   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
   \code{\link[BiocParallel]{bplapply}}.
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Covariance Matrices — contrastiveCov • scPCA</title>
+<title>Identify the Optimal Contrastive and Penalty Parameters — fitGrid • scPCA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,9 +31,11 @@
 
 
 
-<meta property="og:title" content="Contrastive Covariance Matrices — contrastiveCov" />
+<meta property="og:title" content="Identify the Optimal Contrastive and Penalty Parameters — fitGrid" />
 
-<meta property="og:description" content="Compute the list of contrastive covariance matrices." />
+<meta property="og:description" content="This function is used to automatically select the optimal
+  contrastive parameter and L1 penalty term for scPCA based on a clustering
+  algorithm and average silhouette width." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,18 +114,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Covariance Matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/contrastiveCov.R'><code>R/contrastiveCov.R</code></a></small>
-    <div class="hidden name"><code>contrastiveCov.Rd</code></div>
+    <h1>Identify the Optimal Contrastive and Penalty Parameters</h1>
+    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/fitGrid.R'><code>R/fitGrid.R</code></a></small>
+    <div class="hidden name"><code>fitGrid.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute the list of contrastive covariance matrices.</p>
+    <p>This function is used to automatically select the optimal
+  contrastive parameter and L1 penalty term for scPCA based on a clustering
+  algorithm and average silhouette width.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>contrastiveCov</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>contrasts</span>, <span class='no'>center</span>, <span class='no'>scale</span>)</pre>
+    <pre class="usage"><span class='fu'>fitGrid</span>(<span class='no'>target</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>c_contrasts</span>, <span class='no'>contrasts</span>, <span class='no'>penalties</span>, <span class='no'>n_eigen</span>,
+  <span class='kw'>clust_method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"kmeans"</span>, <span class='st'>"pam"</span>), <span class='no'>n_centers</span>, <span class='kw'>max_iter</span> <span class='kw'>=</span> <span class='fl'>10</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,15 +137,6 @@
       <th>target</th>
       <td><p>The target (experimental) data set, in a standard format such
 as a <code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>background</th>
-      <td><p>The background data set, in a standard format such as a
-<code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>contrasts</th>
-      <td><p>A <code>numeric</code> vector of the contrastive parameters.</p></td>
     </tr>
     <tr>
       <th>center</th>
@@ -152,12 +148,53 @@ data sets should be centered to mean zero.</p></td>
       <td><p>A <code>logical</code> indicating whether the target and background
 data sets should be scaled to unit variance.</p></td>
     </tr>
+    <tr>
+      <th>c_contrasts</th>
+      <td><p>A <code>list</code> of contrastive covariances.</p></td>
+    </tr>
+    <tr>
+      <th>contrasts</th>
+      <td><p>A <code>numeric</code> vector of the contrastive parameters used
+to compute the contrastive covariances.</p></td>
+    </tr>
+    <tr>
+      <th>penalties</th>
+      <td><p>A <code>numeric</code> vector of the penalty terms.</p></td>
+    </tr>
+    <tr>
+      <th>n_eigen</th>
+      <td><p>A <code>numeric</code> indicating the number of eigenvectors to be
+computed.</p></td>
+    </tr>
+    <tr>
+      <th>clust_method</th>
+      <td><p>A <code>character</code> specifying the clustering method to
+use for choosing the optimal constrastive parameter. Currently, this is
+limited to either k-means or partitioning around medoids (PAM). The default
+is k-means clustering.</p></td>
+    </tr>
+    <tr>
+      <th>n_centers</th>
+      <td><p>A <code>numeric</code> giving the number of centers to use in the
+clustering algorithm.</p></td>
+    </tr>
+    <tr>
+      <th>max_iter</th>
+      <td><p>A <code>numeric</code> giving the maximum number of iterations to
+be used in k-means clustering, defaulting to 10.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of contrastive covariance matrices. Each element has an
-  associated contrastive parameter in the <code>contrasts</code> vector.</p>
+    <p>A list similar to that output by <code><a href='https://rdrr.io/r/stats/prcomp.html'>prcomp</a></code>:</p><ul>
+<li><p>rotation - the matrix of variable loadings</p></li>
+<li><p>x - the rotated data, centred and scaled, if requested, data
+    multiplied by the rotation matrix</p></li>
+<li><p>contrast - the optimal contrastive parameter</p></li>
+<li><p>penalty - the optimal L1 penalty term</p></li>
+</ul>
+
     
 
   </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Covariance Matrices — contrastiveCov • scPCA</title>
+<title>Simulated Background Data for cPCA and scPCA — background_df • scPCA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,9 +31,14 @@
 
 
 
-<meta property="og:title" content="Contrastive Covariance Matrices — contrastiveCov" />
+<meta property="og:title" content="Simulated Background Data for cPCA and scPCA — background_df" />
 
-<meta property="og:description" content="Compute the list of contrastive covariance matrices." />
+<meta property="og:description" content="The background data consisting of 400 observations and 3 variables was
+simulated as follows:
+Each of the first 10 variables was drawn from $N(0, 10)$
+Variables 11 through 20 were drawn from $N(0, 3)$
+Variables 21 through 30 were drawn from $N(0, 1)$
+" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,62 +117,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Covariance Matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/contrastiveCov.R'><code>R/contrastiveCov.R</code></a></small>
-    <div class="hidden name"><code>contrastiveCov.Rd</code></div>
+    <h1>Simulated Background Data for cPCA and scPCA</h1>
+    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/exampleData.R'><code>R/exampleData.R</code></a></small>
+    <div class="hidden name"><code>background_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute the list of contrastive covariance matrices.</p>
+    <p>The background data consisting of 400 observations and 3 variables was
+simulated as follows:</p><ul>
+<li><p>Each of the first 10 variables was drawn from $N(0, 10)$</p></li>
+<li><p>Variables 11 through 20 were drawn from $N(0, 3)$</p></li>
+<li><p>Variables 21 through 30 were drawn from $N(0, 1)$</p></li>
+</ul>
     
     </div>
 
-    <pre class="usage"><span class='fu'>contrastiveCov</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>contrasts</span>, <span class='no'>center</span>, <span class='no'>scale</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>target</th>
-      <td><p>The target (experimental) data set, in a standard format such
-as a <code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>background</th>
-      <td><p>The background data set, in a standard format such as a
-<code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>contrasts</th>
-      <td><p>A <code>numeric</code> vector of the contrastive parameters.</p></td>
-    </tr>
-    <tr>
-      <th>center</th>
-      <td><p>A <code>logical</code> indicating whether the target and background
-data sets should be centered to mean zero.</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>A <code>logical</code> indicating whether the target and background
-data sets should be scaled to unit variance.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>background_df</span>)</pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A list of contrastive covariance matrices. Each element has an
-  associated contrastive parameter in the <code>contrasts</code> vector.</p>
+    <p>A simple <code>data.frame</code>.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>background_df</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-          </ul>
+      <li><a href="#format">Format</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

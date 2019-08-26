@@ -1,12 +1,11 @@
 #' Sparse Constrastive Principal Component Analysis
 #'
 #' @description Given target and background dataframes or matrices, \code{scPCA}
-#'   will perform the sparse contrastive principal component analysis (scPCA) of
-#'   the target data for a given number of eigenvectors, a vector of real valued
-#'   contrast parameters and a vector of penalty terms. For more information on
-#'   the contrastive PCA method, which this method is an extension of, consult
-#'   \insertRef{abid2017contrastive}{scPCA}. Sparse PCA is performed using
-#'   the method described in \insertRef{Zou2006}{scPCA}.
+#'  will perform the sparse contrastive principal component analysis (scPCA) of
+#'  the target data for a given number of eigenvectors, a vector of real valued
+#'  contrast parameters and a vector of penalty terms. For more information on
+#'  the contrastive PCA method, consult \insertRef{abid2018exploring}{scPCA}.
+#'  Sparse PCA is performed via the method of \insertRef{zou2006sparse}{scPCA}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -30,9 +29,8 @@
 #'  limited to either k-means or partitioning around medoids (PAM). The default
 #'  is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
-#'  clustering algorithm. If set to 1, cPCA as implemented in
-#'  \insertRef{abid2017contrastive}{scPCA} is performed, regardless of what the
-#'  \code{penalties} argument is set to.
+#'  clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
+#'  is performed, regardless of what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
@@ -45,7 +43,7 @@
 #'   \itemize{
 #'     \item rotation - the matrix of variable loadings
 #'     \item x - the rotated data, centred and scaled if requested, multiplied
-#'     by the rotation matrix
+#'       by the rotation matrix
 #'     \item contrast - the optimal contrastive parameter
 #'     \item penalty - the optimal L1 penalty term
 #'     \item center - whether the target dataset was centered
@@ -55,8 +53,6 @@
 #' @importFrom Rdpack reprompt
 #'
 #' @export
-#'
-#' @author Philippe Boileau, \email{philippe_boileau@berkeley.edu}
 #'
 #' @examples
 #' # perform cPCA on the simulated data set

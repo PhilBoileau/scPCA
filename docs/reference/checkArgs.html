@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check Arguments in scPCA Function — checkArgs • scPCA</title>
+<title>Check Arguments passed to the scPCA Function — checkArgs • scPCA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -16,7 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -30,10 +31,10 @@
 
 
 
-<meta property="og:title" content="Check Arguments in scPCA Function — checkArgs" />
+<meta property="og:title" content="Check Arguments passed to the scPCA Function — checkArgs" />
 
 <meta property="og:description" content="Checks whether or not the all arguments in the scPCA
-functions are input properly." />
+  functions are input properly." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +65,7 @@ functions are input properly." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scPCA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.0</span>
       </span>
     </div>
 
@@ -72,7 +73,7 @@ functions are input properly." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -87,7 +88,7 @@ functions are input properly." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/scpca_intro.html">Sparse contrastive principal components analysis</a>
+      <a href="../articles/scpca_intro.html">Sparse contrastive principal components analysis with `scPCA`</a>
     </li>
   </ul>
 </li>
@@ -96,7 +97,7 @@ functions are input properly." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/PhilBoileau/scPCA">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -112,55 +113,55 @@ functions are input properly." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check Arguments in scPCA Function</h1>
+    <h1>Check Arguments passed to the scPCA Function</h1>
     <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/checkArgs.R'><code>R/checkArgs.R</code></a></small>
     <div class="hidden name"><code>checkArgs.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Checks whether or not the all arguments in the scPCA
-functions are input properly.</p>
+    <p>Checks whether or not the all arguments in the <code>scPCA</code>
+  functions are input properly.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>checkArgs</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>num_eigen</span>, <span class='no'>contrasts</span>,
-  <span class='no'>penalties</span>, <span class='no'>num_medoids</span>)</pre>
+    <pre class="usage"><span class='fu'>checkArgs</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>n_eigen</span>, <span class='no'>contrasts</span>, <span class='no'>penalties</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>target</th>
-      <td><p>Target data</p></td>
+      <td><p>The target (experimental) data set, in a standard format such
+as a <code>data.frame</code> or <code>matrix</code>.</p></td>
     </tr>
     <tr>
       <th>background</th>
-      <td><p>Background data</p></td>
+      <td><p>The background data set, in a standard format such as a
+<code>data.frame</code> or <code>matrix</code>.</p></td>
     </tr>
     <tr>
       <th>center</th>
-      <td><p>Indicates whether target and background should be centered.</p></td>
+      <td><p>A <code>logical</code> indicating whether the target and background
+data sets should be centered to mean zero.</p></td>
     </tr>
     <tr>
       <th>scale</th>
-      <td><p>Indicates whether target and background should be scaled.</p></td>
+      <td><p>A <code>logical</code> indicating whether the target and background
+data sets should be scaled to unit variance.</p></td>
     </tr>
     <tr>
-      <th>num_eigen</th>
-      <td><p>The number of eigen vectors to compute.</p></td>
+      <th>n_eigen</th>
+      <td><p>A <code>numeric</code> indicating the number of eigenvectors to be
+computed.</p></td>
     </tr>
     <tr>
       <th>contrasts</th>
-      <td><p>The vector of contrasts parameters</p></td>
+      <td><p>A <code>numeric</code> vector of the contrastive parameters.</p></td>
     </tr>
     <tr>
       <th>penalties</th>
-      <td><p>The vector of penalty terms</p></td>
-    </tr>
-    <tr>
-      <th>num_medoids</th>
-      <td><p>The number of medoids to find during spectral clustering.</p></td>
+      <td><p>A <code>numeric</code> vector of the penalty terms.</p></td>
     </tr>
     </table>
     
@@ -178,18 +179,16 @@ functions are input properly.</p>
       <li><a href="#value">Value</a></li>
           </ul>
 
-    <h2>Author</h2>
-    <p>Philippe Boileau, <a href='mailto:philippe_Boileau@berkeley.edu'>philippe_Boileau@berkeley.edu</a></p>
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Philippe Boileau.</p>
+  <p>Developed by Philippe Boileau, Nima Hejazi.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
 </div>
       </footer>
    </div>

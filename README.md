@@ -9,9 +9,9 @@ Status](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)](https://trav
 Status](https://ci.appveyor.com/api/projects/status/github/PhilBoileau/scPCA?branch=master&svg=true)](https://ci.appveyor.com/project/PhilBoileau/scPCA/)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/PhilBoileau/scPCA/master.svg)](https://codecov.io/github/PhilBoileau/scPCA?branch=master)
-[![Project Status: WIP – Initial development is in progress, but there
-has not yet been a stable, usable release suitable for the
-public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![BioC
 status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc
@@ -21,16 +21,37 @@ Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://biocond
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-> Sparse and contrastive principal components analysis for computational
-> biology
+> Sparse Contrastive Principal Components Analysis for Computational
+> Biology
 
-**Author:** [Philippe Boileau](https://github.com/PhilBoileau)
+**Authors:** [Philippe Boileau](https://github.com/PhilBoileau), [Nima
+Hejazi](https://nimahejazi.org), William Krinsman
 
 -----
 
 ## What’s `scPCA`?
 
-The `scPCA` R package facilitates Abid et al. (2018)
+The exploration and analysis of modern high-dimensional biological data
+regularly involves the use of dimension reduction techniques in order to
+tease out meaningful and interpretable information from complex
+experimental data, often subject to batch effects and other technical
+noise. In tandem with the development of sequencing technology (e.g.,
+RNA-seq, scRNA-seq), many variants of PCA have been developed in
+attempts to remedy deficiencies in interpretability and stability that
+plague their classical variants. Such developments have included both
+sparse PCA, which increases the stability of principal component
+loadings in high dimensions, and, more recently, contrastive PCA (cPCA)
+(Abid et al. 2018), which captures relevant information in the target
+(experimental) data set by eliminating technical noise through
+comparison to a so-called background data set, ultimately increasing the
+interpretability of findings. While SPCA and cPCA have both individually
+proven useful in resolving distinct shortcomings of PCA, neither is
+capable of simultaneously tackling the issues of interpretability and
+stability simultaneously. The `scPCA` package implements *sparse
+constrastive PCA*, to accomplish both of these tasks in the context of
+high-dimensional biological data. In addition to implementing this newly
+developed technique, the `scPCA` package also implements cPCA and
+generalizations of it.
 
 -----
 
@@ -48,20 +69,19 @@ BiocManager::install("scPCA")
 ```
 
 To contribute, install the bleeding-edge *development version* from
-GitHub via
-[`devtools`](https://www.rstudio.com/products/rpackages/devtools/):
+GitHub via [`remotes`](https://CRAN.R-project.org/package=remotes):
 
 ``` r
-devtools::install_github("PhilBoileau/scPCA")
+remotes::install_github("PhilBoileau/scPCA")
 ```
 
 Current and prior [Bioconductor](https://bioconductor.org) releases are
 available under branches with numbers prefixed by “RELEASE\_”. For
 example, to install the version of this package available via
-Bioconductor 4.0, use
+Bioconductor 3.10, use
 
 ``` r
-devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_4_0")
+devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_3_10")
 ```
 
 -----
@@ -109,8 +129,7 @@ See file `LICENSE` for details.
 
 Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
 “Exploring Patterns Enriched in a Dataset with Contrastive Principal
-Component Analysis.” *Nature Communications* 9 (1). Nature Publishing
-Group: 2134.
+Component Analysis.” *Nature Communications* 9 (1): 2134.
 
 </div>
 

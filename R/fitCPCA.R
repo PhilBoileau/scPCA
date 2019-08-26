@@ -4,7 +4,7 @@
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method of \insertRef{abid2017contrastive}{scPCA}.
+#'   method of \insertRef{abid2018exploring}{scPCA}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -134,7 +134,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method by Abid et al. \insertRef{abid2017contrastive}{scPCA}. Analogous
+#'   method by Abid et al. \insertRef{abid2018exploring}{scPCA}. Analogous
 #'   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
 #'   \code{\link[BiocParallel]{bplapply}}.
 #'

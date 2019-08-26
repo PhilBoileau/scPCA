@@ -43,6 +43,6 @@ Given target and background dataframes or matrices, \code{cPCA}
   will perform contrastive principal component analysis (cPCA) of the target
   data for a given number of eigenvectors and a vector of real valued
   contrast parameters. This is identical to the implementation of cPCA
-  method of \insertRef{abid2017contrastive}{scPCA}.
+  method of \insertRef{abid2018exploring}{scPCA}.
 }
 \keyword{internal}

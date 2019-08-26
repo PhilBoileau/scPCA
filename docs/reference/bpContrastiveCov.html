@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Covariance Matrices — contrastiveCov • scPCA</title>
+<title>Parallelized Contrastive Covariance Matrices — bpContrastiveCov • scPCA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,9 +31,10 @@
 
 
 
-<meta property="og:title" content="Contrastive Covariance Matrices — contrastiveCov" />
+<meta property="og:title" content="Parallelized Contrastive Covariance Matrices — bpContrastiveCov" />
 
-<meta property="og:description" content="Compute the list of contrastive covariance matrices." />
+<meta property="og:description" content="Compute the list of contrastive covariance matrices in parallel
+  using bplapply." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,18 +113,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Covariance Matrices</h1>
+    <h1>Parallelized Contrastive Covariance Matrices</h1>
     <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/contrastiveCov.R'><code>R/contrastiveCov.R</code></a></small>
-    <div class="hidden name"><code>contrastiveCov.Rd</code></div>
+    <div class="hidden name"><code>bpContrastiveCov.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute the list of contrastive covariance matrices.</p>
+    <p>Compute the list of contrastive covariance matrices in parallel
+  using <code><a href='https://rdrr.io/pkg/BiocParallel/man/bplapply.html'>bplapply</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>contrastiveCov</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>contrasts</span>, <span class='no'>center</span>, <span class='no'>scale</span>)</pre>
+    <pre class="usage"><span class='fu'>bpContrastiveCov</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>contrasts</span>, <span class='no'>center</span>, <span class='no'>scale</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
