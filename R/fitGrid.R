@@ -6,6 +6,10 @@
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
+#' @param target_valid A holdout set of the target (experimental) data set, in a
+#'  standard format such as a \code{data.frame} or \code{matrix}. \code{NULL} by
+#'  default but used by \code{\link{cvSelectParams}} for cross-validated
+#'  selection of the contrastive and penalization parameters.
 #' @param center A \code{logical} indicating whether the target and background
 #'  data sets should be centered to mean zero.
 #' @param scale A \code{logical} indicating whether the target and background
@@ -40,11 +44,11 @@
 #'
 #' @keywords internal
 #'
-fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
-                    n_eigen, clust_method = c("kmeans", "pam"), n_centers,
+fitGrid <- function(target, target_valid = NULL, center, scale,
+                    c_contrasts, contrasts, penalties, n_eigen,
+                    clust_method = c("kmeans", "pam"), n_centers,
                     max_iter = 10) {
   # preliminaries
-  clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
 
@@ -83,13 +87,26 @@ fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
   # center and scale the target data
   target <- scale(target, center, scale)
 
-  # for each loadings matrix, project target onto constrastive subspace
-  subspaces <- lapply(
-    seq_len(num_contrasts * num_penal),
-    function(x) {
-      as.matrix(target) %*% loadings_mat[[x]]
-    }
-  )
+  if (is.null(target_valid)) {
+    # for each loadings matrix, project target onto constrastive subspace
+    subspaces <- lapply(
+      seq_len(num_contrasts * num_penal),
+      function(x) {
+        as.matrix(target) %*% loadings_mat[[x]]
+      }
+    )
+  } else {
+    # center and scale the holdout set of target data
+    target_valid <- scale(target_valid, center, scale)
+
+    # for each loadings matrix, project holdout target on constrastive subspace
+    subspaces <- lapply(
+      seq_len(num_contrasts * num_penal),
+      function(x) {
+        as.matrix(target_valid) %*% loadings_mat[[x]]
+      }
+    )
+  }
 
   # remove all duplicated spaces
   kernal_idx <- which(!duplicated(subspaces))
@@ -145,14 +162,14 @@ fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
     }
   ))
 
-  # select the best contrastive parameter, and return it's covariance matrix,
+  # select the best contrastive parameter, and return its covariance matrix,
   # contrastive parameter, loadings and projection of the target data
-  max_idx <- which.max(ave_sil_widths)
   out <- list(
-    rotation = loadings_mat[[max_idx]],
-    x = subspaces[[max_idx]],
-    contrast = param_grid[max_idx, 2],
-    penalty = param_grid[max_idx, 1]
+    rotation = loadings_mat,
+    x = subspaces,
+    contrast = param_grid[, 2],
+    penalty = param_grid[, 1],
+    max_idx = which.max(ave_sil_widths)
   )
   return(out)
 }
@@ -169,6 +186,10 @@ fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
+#' @param target_valid A holdout set of the target (experimental) data set, in a
+#'  standard format such as a \code{data.frame} or \code{matrix}. \code{NULL} by
+#'  default but used by \code{\link{cvSelectParams}} for cross-validated
+#'  selection of the contrastive and penalization parameters.
 #' @param center A \code{logical} indicating whether the target and background
 #'  data sets should be centered to mean zero.
 #' @param scale A \code{logical} indicating whether the target and background
@@ -204,11 +225,11 @@ fitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
 #'
 #' @keywords internal
 #'
-bpFitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
-                      n_eigen, clust_method = c("kmeans", "pam"), n_centers,
+bpFitGrid <- function(target, target_valid = NULL, center, scale,
+                      c_contrasts, contrasts, penalties, n_eigen,
+                      clust_method = c("kmeans", "pam"), n_centers,
                       max_iter = 10) {
   # preliminaries
-  clust_method <- match.arg(clust_method)
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
 
@@ -247,13 +268,26 @@ bpFitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
   # center and scale the target data
   target <- scale(target, center, scale)
 
-  # for each loadings matrix, project target onto constrastive subspace
-  subspaces <- BiocParallel::bplapply(
-    seq_len(num_contrasts * num_penal),
-    function(x) {
-      as.matrix(target) %*% loadings_mat[[x]]
-    }
-  )
+  if (is.null(target_valid)) {
+    # for each loadings matrix, project target onto constrastive subspace
+    subspaces <- BiocParallel::bplapply(
+      seq_len(num_contrasts * num_penal),
+      function(x) {
+        as.matrix(target) %*% loadings_mat[[x]]
+      }
+    )
+  } else {
+    # center and scale the holdout set of target data
+    target_valid <- scale(target_valid, center, scale)
+
+    # for each loadings matrix, project holdout target on constrastive subspace
+    subspaces <- BiocParallel::bplapply(
+      seq_len(num_contrasts * num_penal),
+      function(x) {
+        as.matrix(target_valid) %*% loadings_mat[[x]]
+      }
+    )
+  }
 
   # remove all duplicated spaces
   kernal_idx <- which(!duplicated(subspaces))
@@ -317,14 +351,14 @@ bpFitGrid <- function(target, center, scale, c_contrasts, contrasts, penalties,
   )
   ave_sil_widths <- unlist(ave_sil_widths)
 
-  # select the best contrastive parameter, and return it's covariance matrix,
+  # select the best contrastive parameter, and return its covariance matrix,
   # contrastive parameter, loadings and projection of the target data
-  max_idx <- which.max(ave_sil_widths)
   out <- list(
-    rotation = loadings_mat[[max_idx]],
-    x = subspaces[[max_idx]],
-    contrast = param_grid[max_idx, 2],
-    penalty = param_grid[max_idx, 1]
+    rotation = loadings_mat,
+    x = subspaces,
+    contrast = param_grid[, 2],
+    penalty = param_grid[, 1],
+    max_idx = which.max(ave_sil_widths)
   )
   return(out)
 }

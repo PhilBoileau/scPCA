@@ -197,7 +197,7 @@ loadings, in terms of interpretability.
 # and possible 20 L1 penalty terms
 scpca_sim <- scPCA(target = toy_df[, 1:30],
                    background = background_df,
-                   n_centers = 4)
+                   n_centers = 4, cv = 2)
 
 # create a dataframe to be plotted
 scpca_df <- scpca_sim$x %>%
