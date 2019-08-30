@@ -32,7 +32,8 @@ Imports:
     BiocParallel,
     elasticnet,
     cluster,
-    kernlab
+    kernlab,
+    origami
 Suggests:
     testthat,
     knitr,
