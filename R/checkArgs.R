@@ -31,7 +31,7 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
     tibble::is_tibble(target) ||
       is.data.frame(target) ||
       is.matrix(target) ||
-      is(background, "dgeMatrix") ||
+      is(target, "dgeMatrix") ||
       is(target, "dgCMatrix")
   )
   assertthat::assert_that(
