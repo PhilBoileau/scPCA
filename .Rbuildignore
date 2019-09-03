@@ -12,3 +12,5 @@
 ^README-.*\.png$
 ^LICENSE\.md$
 ^docs$
+.git
+./.git
