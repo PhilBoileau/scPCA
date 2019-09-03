@@ -1,4 +1,4 @@
-context("test fitCPCA function")
+context("Test fitCPCA")
 library(scPCA)
 
 # initialization of inputs for testing function

@@ -1,4 +1,4 @@
-context("Test contrastive matrix computation")
+context("Test contrastiveCov")
 library(scPCA)
 
 test_that("performs without issue when matrices are centered or scaled", {

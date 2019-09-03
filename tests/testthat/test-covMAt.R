@@ -1,4 +1,4 @@
-context("Test covMat functionality")
+context("Test covMat")
 library(scPCA)
 library(tidyverse)
 

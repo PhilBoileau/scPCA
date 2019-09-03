@@ -1,4 +1,4 @@
-context("Test checkArgs functionality")
+context("Test checkArgs")
 library(scPCA)
 library(tidyverse)
 library(Matrix)
