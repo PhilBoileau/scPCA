@@ -35,6 +35,9 @@ n_medoids when n_centers is set to 1",
     n_medoids = 5
   )
 
-  expect_equal(length())
+  expect_equal(length(cPCA_res$contrast), 5)
+  expect_equal(length(cPCA_res$penalty), 5)
+  expect_equal(length(cPCA_res$rotation), 5)
+  expect_equal(length(cPCA_res$x), 5)
 })
 
