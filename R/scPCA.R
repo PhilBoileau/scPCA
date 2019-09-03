@@ -108,7 +108,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     if (n_centers == 1) {
       opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
         n_eigen,
-        n_medoids = 8
+        n_medoids = n_medoids
       )
     } else {
       opt_params <- fitGrid(target, center, scale, c_contrasts, contrasts,
@@ -126,7 +126,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
         n_eigen,
-        n_medoids = 8
+        n_medoids = n_medoids
       )
     } else {
       opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
