@@ -169,7 +169,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
     x = subspaces,
     contrast = param_grid[, 2],
     penalty = param_grid[, 1],
-    max_idx = which.max(ave_sil_widths)
+    ave_sil_widths = ave_sil_widths
   )
   return(out)
 }
@@ -358,7 +358,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
     x = subspaces,
     contrast = param_grid[, 2],
     penalty = param_grid[, 1],
-    max_idx = which.max(ave_sil_widths)
+    ave_sil_widths = ave_sil_widths
   )
   return(out)
 }

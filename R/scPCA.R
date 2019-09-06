@@ -151,7 +151,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       use_future = FALSE,
       .combine = FALSE
     )
-    max_idx <- opt_params$max_idx
+    max_idx <- which.max(opt_params$ave_sil_widths)
     opt_params <- list(rotation = opt_params$rotation[[max_idx]],
                        x = opt_params$x[[max_idx]],
                        contrast = opt_params$contrast[max_idx],
@@ -230,11 +230,6 @@ selectParams <- function(target, background, center, scale, n_eigen,
         clust_method = clust_method,
         n_centers, max_iter
       )
-      max_idx <- opt_params$max_idx
-      opt_params <- list(rotation = opt_params$rotation[[max_idx]],
-                         x = opt_params$x[[max_idx]],
-                         contrast = opt_params$contrast[max_idx],
-                         penalty = opt_params$penalty[max_idx])
     }
   } else {
     # create contrastive covariance matrices
@@ -253,7 +248,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
         clust_method = clust_method, n_centers,
         max_iter
       )
-      max_idx <- opt_params$max_idx
+      max_idx <- which.max(opt_params$ave_sil_widths)
       opt_params <- list(rotation = opt_params$rotation[[max_idx]],
                          x = opt_params$x[[max_idx]],
                          contrast = opt_params$contrast[max_idx],
@@ -335,11 +330,6 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         target_valid = valid_target,
         n_centers, max_iter
       )
-      max_idx <- opt_params$max_idx
-      opt_params <- list(rotation = opt_params$rotation[[max_idx]],
-                         x = opt_params$x[[max_idx]],
-                         contrast = opt_params$contrast[max_idx],
-                         penalty = opt_params$penalty[max_idx])
     }
   } else {
     # create contrastive covariance matrices
