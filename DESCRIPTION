@@ -33,7 +33,9 @@ Imports:
     elasticnet,
     cluster,
     kernlab,
-    origami
+    origami,
+    Matrix,
+    tidyverse
 Suggests:
     testthat,
     knitr,
