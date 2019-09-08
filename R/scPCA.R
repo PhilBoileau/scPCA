@@ -151,11 +151,13 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       use_future = FALSE,
       .combine = FALSE
     )
-    max_idx <- which.max(opt_params$ave_sil_widths)
-    opt_params <- list(rotation = opt_params$rotation[[max_idx]],
-                       x = opt_params$x[[max_idx]],
-                       contrast = opt_params$contrast[max_idx],
-                       penalty = opt_params$penalty[max_idx])
+    browser()
+    max_idx <- unlist(lapply(cv_opt_params$ave_sil_widths, which.max))
+    max_idx_mode <- as.numeric(names(which.max(table(max_idx))))
+    opt_params <- list(rotation = cv_opt_params$rotation[[max_idx_mode]],
+                       x = cv_opt_params$x[[max_idx_mode]],
+                       contrast = cv_opt_params$contrast[max_idx_mode],
+                       penalty = cv_opt_params$penalty[max_idx_mode])
   }
 
   # create output object
@@ -308,9 +310,7 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
   valid_target <- origami::validation(target, fold$target)
   train_background <- origami::training(background, fold$background)
 
-  browser()
-
-  # call parallelized function variants if so requested
+    # call parallelized function variants if so requested
   if (parallel == FALSE) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
@@ -318,9 +318,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
       scale
     )
     if (n_centers == 1) {
-      opt_params <- fitCPCA(target, center, scale, c_contrasts, contrasts,
-        n_eigen,
-        n_medoids = 8
+      opt_params <- fitCPCA(train_target, center, scale, c_contrasts,
+                            contrasts, n_eigen, n_medoids = 8
       )
     } else {
       opt_params <- fitGrid(
@@ -334,20 +333,19 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
   } else {
     # create contrastive covariance matrices
     c_contrasts <- bpContrastiveCov(
-      target, background, contrasts,
+      train_target, train_background, contrasts,
       center, scale
     )
     if (n_centers == 1) {
-      opt_params <- bpFitCPCA(target, center, scale, c_contrasts, contrasts,
-        n_eigen,
-        n_medoids = 8
+      opt_params <- bpFitCPCA(train_target, center, scale, c_contrasts,
+                              contrasts, n_eigen, n_medoids = 8
       )
     } else {
-      opt_params <- bpFitGrid(target, center, scale, c_contrasts, contrasts,
-        penalties, n_eigen,
-        clust_method = clust_method,
-        target_valid = valid_target,
-        n_centers, max_iter
+      opt_params <- bpFitGrid(train_target, center, scale, c_contrasts,
+                              contrasts, penalties, n_eigen,
+                              clust_method = clust_method,
+                              target_valid = valid_target,
+                              n_centers, max_iter
       )
     }
   }
