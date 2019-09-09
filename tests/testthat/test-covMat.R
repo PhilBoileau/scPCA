@@ -1,6 +1,7 @@
 context("Test covMat")
 library(scPCA)
-library(tidyverse)
+library(tibble)
+library(dplyr)
 
 test_that("can be applied to dataframes, tibbles and matrices", {
   # make sure that all outputs agree
@@ -29,7 +30,6 @@ test_that("can center, scale, center and scale, or neither center and scale", {
 })
 
 test_that("variables with zero variance have zeros rows/cols in cov matrix", {
-
   # add a constant column to the background data
   test_df <- background_df %>%
     mutate(
@@ -39,4 +39,3 @@ test_that("variables with zero variance have zeros rows/cols in cov matrix", {
   expect_equal(sum(covMat(test_df)[, 31]), 0)
   expect_equal(sum(covMat(test_df)[31, ]), 0)
 })
-

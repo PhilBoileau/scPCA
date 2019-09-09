@@ -10,16 +10,19 @@ contrasts <- c(0, 1, 10, 100)
 c_contrasts <- contrastiveCov(target, background, contrasts, TRUE, TRUE)
 n_eigen <- 2
 n_medoids <- 2
-fit <- fitCPCA(target, center, scale, c_contrasts, contrasts,
-               n_eigen, n_medoids)
+fit <- fitCPCA(
+  target, center, scale, c_contrasts, contrasts,
+  n_eigen, n_medoids
+)
 
 test_that(
-"the length of the ouput list is 4 (rotations, projections, contrasts
-and penalties)",{
-  expect_equal(length(fit), 4)
-})
+  "the length of the ouput list is 4 (rotations, projections, contrasts
+and penalties)", {
+    expect_equal(length(fit), 4)
+  }
+)
 
-test_that("the number of medoids output equals the initial argument",{
+test_that("the number of medoids output equals the initial argument", {
   expect_equal(length(fit$contrast), 2)
 })
 

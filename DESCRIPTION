@@ -34,8 +34,7 @@ Imports:
     cluster,
     kernlab,
     origami,
-    Matrix,
-    tidyverse
+    Matrix
 Suggests:
     testthat,
     knitr,
