@@ -100,8 +100,8 @@ A similar simulation scheme is provided in @abid2018exploring.
 
 First, PCA is applied to the target data. As we can see from the figure, PCA is
 incapable of creating a lower dimensional representation of the target data
-that captures the variation of interest (i.e. the four groups). In fact, no pair
-of principal components among the first twelve were able to.
+that captures the variation of interest (i.e. the four groups). In fact, no
+pair of principal components among the first twelve were able to.
 
 ```{r PCA_sim}
 # set seed for reproducibility
@@ -197,7 +197,7 @@ loadings, in terms of interpretability.
 # and possible 20 L1 penalty terms
 scpca_sim <- scPCA(target = toy_df[, 1:30],
                    background = background_df,
-                   n_centers = 4, cv = 2)
+                   n_centers = 4)
 
 # create a dataframe to be plotted
 scpca_df <- scpca_sim$x %>%

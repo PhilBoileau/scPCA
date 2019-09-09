@@ -247,7 +247,6 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       }
     }
   )
-
   contrast_medoids <- unlist(contrast_medoids)
 
   # create the lists of contrastive parameter medoids, loadings and projections
