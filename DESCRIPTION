@@ -22,7 +22,7 @@ Description: A toolbox for sparse contrastive principal component analysis
     sparse PCA with the interpretability afforded by contrastive PCA's approach
     of comparing the target data set to a background data set, allowing for
     the biological variation of interest in a data set to be recovered.
-Depends: R (>= 3.4)
+Depends: R (>= 3.6)
 Imports:
     stats,
     methods,
@@ -33,13 +33,13 @@ Imports:
     elasticnet,
     cluster,
     kernlab,
-    origami,
-    Matrix
+    origami
 Suggests:
     testthat,
     knitr,
     rmarkdown,
     BiocStyle,
+    Matrix,
     dplyr,
     ggplot2,
     ggpubr,

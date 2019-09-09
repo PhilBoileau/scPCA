@@ -54,7 +54,14 @@ consider if \code{n_centers} is set to 1. The default is 8 such medoids.}
 processing via the \pkg{BiocParallel} infrastructure. The default is
 \code{FALSE} for sequential evaluation.}
 }
+\value{
+Output structure matching either that of \code{\link{fitCPCA}} or
+ \code{\link{fitGrid}} (or their parallelized variants, namely either
+ \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respecively).
+}
 \description{
-Fold-Specific Selection of Contrastive and Penalization Parameters
+A wrapper function for fitting various internal functions to
+ select the optimal setting of the contrastive and penalization parameters
+ via cross-validation. For internal use only.
 }
 \keyword{internal}
