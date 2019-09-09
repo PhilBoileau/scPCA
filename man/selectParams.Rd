@@ -54,7 +54,7 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 \value{
 Output structure matching either that of \code{\link{fitCPCA}} or
  \code{\link{fitGrid}} (or their parallelized variants, namely either
- \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respecively).
+ \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 }
 \description{
 A wrapper function for fitting various internal functions to

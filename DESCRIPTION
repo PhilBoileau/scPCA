@@ -15,7 +15,13 @@ Authors@R: c(
     person(given = "William",
            family = "Krinsman",
            role = "ctb",
-           email = "krinsman@berkeley.edu")
+           email = "krinsman@berkeley.edu",
+           comment = c(ORCID = "")),
+    person(given = "Sandrine",
+           family = "Dudoit",
+           role = c("ctb", "ths"),
+           email = "sandrine@stat.berkeley.edu",
+           comment = c(ORCID = ""))
    )
 Description: A toolbox for sparse contrastive principal component analysis
     (scPCA) of high-dimensional biological data. scPCA combines the stability of
@@ -28,6 +34,9 @@ Imports:
     methods,
     assertthat,
     tibble,
+    dplyr,
+    purrr,
+    stringr,
     Rdpack,
     BiocParallel,
     elasticnet,
@@ -40,7 +49,6 @@ Suggests:
     rmarkdown,
     BiocStyle,
     Matrix,
-    dplyr,
     ggplot2,
     ggpubr,
     splatter,

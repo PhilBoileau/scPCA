@@ -186,9 +186,9 @@ p_cpca
 ## scPCA: Sparse Contrastive PCA
 
 The leading sparse contrastive components were also able to capture the
-variation of interest, though the clusters corresponding to the class labels are
-more loose than those of cPCA. Importantly, the first and second scPC contain
-only two and three non-zero loadings, respectively. This is a significant
+variation of interest, though the clusters corresponding to the class labels
+are more loose than those of cPCA. Importantly, the first and second scPC
+contain only two and three non-zero loadings, respectively -- a significant
 improvement over cPCA, whose first and second cPCs each possess 30 non-zero
 loadings, in terms of interpretability.
 
@@ -197,7 +197,7 @@ loadings, in terms of interpretability.
 # and possible 20 L1 penalty terms
 scpca_sim <- scPCA(target = toy_df[, 1:30],
                    background = background_df,
-                   n_centers = 4)
+                   n_centers = 4, cv=2)
 
 # create a dataframe to be plotted
 scpca_df <- scpca_sim$x %>%

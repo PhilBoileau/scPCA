@@ -58,6 +58,10 @@
 #'
 #' @importFrom Rdpack reprompt
 #' @importFrom origami cross_validate make_folds
+#' @importFrom dplyr "%>%" full_join
+#' @importFrom purrr reduce
+#' @importFrom stringr str_detect
+#' @importFrom tibble as_tibble
 #'
 #' @export
 #'
@@ -162,18 +166,33 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       use_future = FALSE,
       .combine = FALSE
     )
-    cv_sil_max <- do.call(c, (lapply(cv_opt_params$ave_sil_widths, max)))
-    ave_sil_max <- mean(cv_sil_max)
+
+    # match up tables of contrast-penalty-silhouette across folds and merge
+    cv_ave_sil_pairs <- lapply(seq_len(cv), function(v) {
+      ave_sil_pairings <- tibble::as_tibble(
+        list(contrast = cv_opt_params$contrast[[v]],
+             penalty = cv_opt_params$penalty[[v]],
+             ave_sil_widths = cv_opt_params$ave_sil_widths[[v]])
+      )
+    }) %>%
+    purrr::reduce(dplyr::full_join, by = c("contrast", "penalty"))
+
+    # compute CV-average silhouette width, find maximizer, and select the
+    # optimal set of contrastive and penalization parameters
+    ave_sil_col_idx <- stringr::str_detect(colnames(cv_ave_sil_pairs),
+                                           "ave_sil_width")
+    cv_sil_max_idx <- which.max(rowMeans(cv_ave_sil_pairs[, ave_sil_col_idx]))
+    cv_opt_params <- cv_ave_sil_pairs[cv_sil_max_idx, c("contrast", "penalty")]
 
     # re-fit on full data to get more stable estimates
-    opt_params <- selectParams(
+    fit_cv_opt_params <- selectParams(
       target = target,
       background = background,
       center = center,
       scale = scale,
       n_eigen = n_eigen,
-      contrasts = contrasts,
-      penalties = penalties,
+      contrasts = cv_opt_params$contrast,
+      penalties = cv_opt_params$penalty,
       clust_method = clust_method,
       n_centers = n_centers,
       max_iter = max_iter,
@@ -181,12 +200,11 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel
     )
     if (n_centers > 1) {
-      max_idx <- which.min(abs(opt_params$ave_sil_widths - ave_sil_max))
       opt_params <- list(
-        rotation = opt_params$rotation[[max_idx]],
-        x = opt_params$x[[max_idx]],
-        contrast = opt_params$contrast[max_idx],
-        penalty = opt_params$penalty[max_idx]
+        rotation = fit_cv_opt_params$rotation[[1]],
+        x = fit_cv_opt_params$x[[1]],
+        contrast = fit_cv_opt_params$contrast,
+        penalty = fit_cv_opt_params$penalty
       )
     }
   }
@@ -246,7 +264,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'
 #' @return Output structure matching either that of \code{\link{fitCPCA}} or
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
-#'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respecively).
+#'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
 #' @keywords internal
 #'
@@ -347,7 +365,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'
 #' @return Output structure matching either that of \code{\link{fitCPCA}} or
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
-#'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respecively).
+#'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
 #' @keywords internal
 #'
