@@ -23,7 +23,7 @@ license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://openso
 > Sparse Contrastive Principal Component Analysis for Computational
 > Biology
 
-**Authors:** [Philippe Boileau](https://github.com/PhilBoileau), [Nima
+**Authors:** [Philippe Boileau](https://pboileau.ca/), [Nima
 Hejazi](https://nimahejazi.org), William Krinsman
 
 -----
@@ -117,7 +117,7 @@ prior to submitting a pull request.
 
 ## License
 
-© 2019 [Philippe Boileau](https://github.com/PhilBoileau)
+© 2019 [Philippe Boileau](https://pboileau.ca/)
 
 The contents of this repository are distributed under the MIT license.
 See file `LICENSE` for details.

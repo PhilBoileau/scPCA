@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 > Sparse Contrastive Principal Component Analysis for Computational Biology
 
-__Authors:__ [Philippe Boileau](https://github.com/PhilBoileau),
+__Authors:__ [Philippe Boileau](https://pboileau.ca/),
   [Nima Hejazi](https://nimahejazi.org), William Krinsman
 
 ---
@@ -120,7 +120,7 @@ prior to submitting a pull request.
 
 ## License
 
-&copy; 2019 [Philippe Boileau](https://github.com/PhilBoileau)
+&copy; 2019 [Philippe Boileau](https://pboileau.ca/)
 
 The contents of this repository are distributed under the MIT license. See file
 `LICENSE` for details.
