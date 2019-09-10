@@ -9,6 +9,6 @@ test_that("coerces sparse matrices to standard matrices", {
   )
   expect_equal(
     class(coerceMatrix(data = as(as.matrix(background_df), "dgeMatrix"))),
-          "matrix"
+    "matrix"
   )
 })

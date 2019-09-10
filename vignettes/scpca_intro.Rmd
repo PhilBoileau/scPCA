@@ -100,8 +100,8 @@ A similar simulation scheme is provided in @abid2018exploring.
 
 First, PCA is applied to the target data. As we can see from the figure, PCA is
 incapable of creating a lower dimensional representation of the target data
-that captures the variation of interest (i.e. the four groups). In fact, no pair
-of principal components among the first twelve were able to.
+that captures the variation of interest (i.e. the four groups). In fact, no
+pair of principal components among the first twelve were able to.
 
 ```{r PCA_sim}
 # set seed for reproducibility
@@ -186,9 +186,9 @@ p_cpca
 ## scPCA: Sparse Contrastive PCA
 
 The leading sparse contrastive components were also able to capture the
-variation of interest, though the clusters corresponding to the class labels are
-more loose than those of cPCA. Importantly, the first and second scPC contain
-only two and three non-zero loadings, respectively. This is a significant
+variation of interest, though the clusters corresponding to the class labels
+are more loose than those of cPCA. Importantly, the first and second scPC
+contain only two and three non-zero loadings, respectively -- a significant
 improvement over cPCA, whose first and second cPCs each possess 30 non-zero
 loadings, in terms of interpretability.
 

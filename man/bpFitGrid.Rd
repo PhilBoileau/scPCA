@@ -4,12 +4,18 @@
 \alias{bpFitGrid}
 \title{Identify the Optimal Contrastive and Penalty Parameters in Parallel}
 \usage{
-bpFitGrid(target, center, scale, c_contrasts, contrasts, penalties,
-  n_eigen, clust_method = c("kmeans", "pam"), n_centers, max_iter = 10)
+bpFitGrid(target, target_valid = NULL, center, scale, c_contrasts,
+  contrasts, penalties, n_eigen, clust_method = c("kmeans", "pam"),
+  n_centers, max_iter = 10)
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
 as a \code{data.frame} or \code{matrix}.}
+
+\item{target_valid}{A holdout set of the target (experimental) data set, in a
+standard format such as a \code{data.frame} or \code{matrix}. \code{NULL} by
+default but used by \code{\link{cvSelectParams}} for cross-validated
+selection of the contrastive and penalization parameters.}
 
 \item{center}{A \code{logical} indicating whether the target and background
 data sets should be centered to mean zero.}
