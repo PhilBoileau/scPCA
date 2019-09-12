@@ -45,6 +45,7 @@ Imports:
     origami
 Suggests:
     testthat,
+    covr,
     knitr,
     rmarkdown,
     BiocStyle,
