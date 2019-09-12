@@ -27,7 +27,7 @@ Description: A toolbox for sparse contrastive principal component analysis
     (scPCA) of high-dimensional biological data. scPCA combines the stability
     and interpretability of sparse PCA with contrastive PCA's ability to
     disentangle biological signal from techical noise through the use of control
-    data.
+    data. Also implements and extends cPCA.
 Depends: R (>= 3.6)
 Imports:
     stats,
