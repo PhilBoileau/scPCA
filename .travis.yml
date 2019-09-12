@@ -17,6 +17,7 @@ r_check_args: '--no-build-vignettes --no-manual'
 
 r:
   - bioc-release
+  - bioc-devel
 
 before_install:
   #- Rscript -e 'source("https://bioconductor.org/biocLite.R"); biocLite()'
