@@ -38,19 +38,19 @@ noise. In tandem with the development of sequencing technology (e.g.,
 RNA-seq, scRNA-seq), many variants of PCA have been developed in
 attempts to remedy deficiencies in interpretability and stability that
 plague their classical variants. Such developments have included both
-sparse PCA, which increases the stability of principal component
-loadings in high dimensions, and, more recently, contrastive PCA (cPCA)
-(Abid et al. 2018), which captures relevant information in the target
-(experimental) data set by eliminating technical noise through
-comparison to a so-called background data set, ultimately increasing the
-interpretability of findings. While SPCA and cPCA have both individually
-proven useful in resolving distinct shortcomings of PCA, neither is
-capable of simultaneously tackling the issues of interpretability and
-stability simultaneously. The `scPCA` package implements *sparse
-constrastive PCA*, to accomplish both of these tasks in the context of
-high-dimensional biological data. In addition to implementing this newly
-developed technique, the `scPCA` package also implements cPCA and
-generalizations of it.
+sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006), which increases
+the stability and interpretability of principal component loadings in
+high dimensions, and, more recently, contrastive PCA (cPCA) (Abid et al.
+2018), which captures relevant information in the target (experimental)
+data set by eliminating technical noise through comparison to a
+so-called background data set. While SPCA and cPCA have both
+individually proven useful in resolving distinct shortcomings of PCA,
+neither is capable of simultaneously tackling the issues of
+interpretability, stability and relevance simultaneously. The `scPCA`
+package implements *sparse constrastive PCA*, to accomplish both of
+these tasks in the context of high-dimensional biological data. In
+addition to implementing this newly developed technique, the `scPCA`
+package also implements cPCA and generalizations of it.
 
 <!--
 ...
@@ -60,42 +60,53 @@ generalizations of it.
 
 ## Installation
 
-For standard use, install from
-[Bioconductor](https://bioconductor.org/packages/scPCA) using
-[`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
+<!-- For standard use, install from -->
 
-``` r
-if (!requireNamespace("BiocManager", quietly=TRUE)) {
-  install.packages("BiocManager")
-}
-BiocManager::install("scPCA")
-```
+<!-- [Bioconductor](https://bioconductor.org/packages/scPCA) using -->
+
+<!-- [`BiocManager`](https://CRAN.R-project.org/package=BiocManager): -->
+
+<!-- ```{r bioc-installation, eval = FALSE} -->
+
+<!-- if (!requireNamespace("BiocManager", quietly=TRUE)) { -->
+
+<!--   install.packages("BiocManager") -->
+
+<!-- } -->
+
+<!-- BiocManager::install("scPCA") -->
+
+<!-- ``` -->
 
 To contribute, install the bleeding-edge *development version* from
-GitHub via [`remotes`](https://CRAN.R-project.org/package=remotes):
+GitHub via
+[`remotes`](https://CRAN.R-project.org/package=remotes):
 
 ``` r
 remotes::install_github("PhilBoileau/scPCA")
 ```
 
-Current and prior [Bioconductor](https://bioconductor.org) releases are
-available under branches with numbers prefixed by “RELEASE\_”. For
-example, to install the version of this package available via
-Bioconductor 3.10, use
+<!-- Current and prior [Bioconductor](https://bioconductor.org) releases are -->
 
-``` r
-devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_3_10")
-```
+<!-- available under branches with numbers prefixed by "RELEASE_". For example, to -->
+
+<!-- install the version of this package available via Bioconductor 3.10, use -->
+
+<!-- ```{r gh-develop-installation, eval = FALSE} -->
+
+<!-- devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_3_10") -->
+
+<!-- ``` -->
 
 -----
 
 ## Example
 
 For details on how to best use the `scPCA` R package, please consult the
-most recent [package
-vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html)
-available through the [Bioconductor
-project](https://bioconductor.org/packages/scPCA).
+most recent vignette. <!-- [package -->
+<!-- vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html) -->
+<!-- available through the [Bioconductor -->
+<!-- project](https://bioconductor.org/packages/scPCA). -->
 
 -----
 
@@ -133,6 +144,14 @@ See file `LICENSE` for details.
 Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
 “Exploring Patterns Enriched in a Dataset with Contrastive Principal
 Component Analysis.” *Nature Communications* 9 (1): 2134.
+
+</div>
+
+<div id="ref-zou2006sparse">
+
+Zou, Hui, Trevor Hastie, and Robert Tibshirani. 2006. “Sparse Principal
+Component Analysis.” *Journal of Computational and Graphical Statistics*
+15 (2). Taylor & Francis: 265–86.
 
 </div>
 
