@@ -20,8 +20,7 @@ r:
   - bioc-devel
 
 before_install:
-  #- Rscript -e 'source("https://bioconductor.org/biocLite.R"); biocLite()'
-  - Rscript -e 'update.packages(ask = FALSE)'
+  - Rscript -e 'BiocManager::install(version = "devel", ask = FALSE)'
 
 r_packages:
   - devtools
