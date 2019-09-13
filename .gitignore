@@ -2,3 +2,5 @@
 .RData
 .Rproj.user
 .DS_Store
+scPCA-Ex.*
+scPCA-tests/
