@@ -20,17 +20,23 @@ branches:
 environment:
   global:
     WARNINGS_ARE_ERRORS: 0
-    R_ARCH: x64
+    _R_CHECK_FORCE_SUGGESTS_: false
     USE_RTOOLS: true
     PKGTYPE: both
 
   matrix:
+    - R_VERSION: devel
+      R_ARCH: x64
+
     - R_VERSION: release
+      R_ARCH: x64
 
 build_script:
+  - echo Current directory=%CD%
+  - travis-tool.sh install_r base64
   - travis-tool.sh install_github r-lib/remotes r-lib/covr
   - travis-tool.sh install_r BiocManager testthat knitr
-  - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics BiocParallel
+  - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics
   - travis-tool.sh install_bioc S4Vectors splatter SingleCellExperiment
   - travis-tool.sh install_bioc_deps
   - travis-tool.sh install_deps

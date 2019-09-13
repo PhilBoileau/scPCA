@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
 
 __Authors:__ [Philippe Boileau](https://pboileau.ca/),
   [Nima Hejazi](https://nimahejazi.org), William Krinsman,
-  [Sandrine Dudoit](https://www.stat.berkeley.edu/~sandrine/)
+  [Sandrine Dudoit](https://statistics.berkeley.edu/~sandrine/)
 
 ---
 
