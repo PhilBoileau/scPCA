@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Principal Component Analysis — fitCPCA • scPCA</title>
+<title>Changelog • scPCA</title>
 
 
 <!-- jquery -->
@@ -35,17 +35,7 @@
 
 
 
-<meta property="og:title" content="Contrastive Principal Component Analysis — fitCPCA" />
-<meta property="og:description" content="Given target and background dataframes or matrices, cPCA
-  will perform contrastive principal component analysis (cPCA) of the target
-  data for a given number of eigenvectors and a vector of real valued
-  contrast parameters. This is identical to the implementation of cPCA
-  method of Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
-&amp;#8220;Exploring patterns enriched in a dataset with contrastive principal
-    component analysis.&amp;#8221;
-Nature communications, 9(1), 2134.
-." />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -64,7 +54,7 @@ Nature communications, 9(1), 2134.
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -128,85 +118,20 @@ Nature communications, 9(1), 2134.
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Principal Component Analysis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/fitCPCA.R'><code>R/fitCPCA.R</code></a></small>
-    <div class="hidden name"><code>fitCPCA.Rd</code></div>
+      <h1>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
-
-    <div class="ref-description">
-    <p>Given target and background dataframes or matrices, <code>cPCA</code>
-  will perform contrastive principal component analysis (cPCA) of the target
-  data for a given number of eigenvectors and a vector of real valued
-  contrast parameters. This is identical to the implementation of cPCA
-  method of Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
-&#8220;Exploring patterns enriched in a dataset with contrastive principal
-    component analysis.&#8221;
-<em>Nature communications</em>, <b>9</b>(1), 2134.
-.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>fitCPCA</span>(<span class='no'>target</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>c_contrasts</span>, <span class='no'>contrasts</span>, <span class='no'>n_eigen</span>, <span class='no'>n_medoids</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>target</th>
-      <td><p>The target (experimental) data set, in a standard format such
-as a <code>data.frame</code> or <code>matrix</code>.</p></td>
-    </tr>
-    <tr>
-      <th>center</th>
-      <td><p>A <code>logical</code> indicating whether the target and background
-data sets should be centered to mean zero.</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>A <code>logical</code> indicating whether the target and background
-data sets should be scaled to unit variance.</p></td>
-    </tr>
-    <tr>
-      <th>c_contrasts</th>
-      <td><p>A <code>list</code> of contrastive covariances.</p></td>
-    </tr>
-    <tr>
-      <th>contrasts</th>
-      <td><p>A <code>numeric</code> vector of the contrastive parameters used
-to compute the contrastive covariances.</p></td>
-    </tr>
-    <tr>
-      <th>n_eigen</th>
-      <td><p>A <code>numeric</code> indicating the number of eigenvectors to be
-computed.</p></td>
-    </tr>
-    <tr>
-      <th>n_medoids</th>
-      <td><p>A <code>numeric</code> indicating the number of medoids to
-consider.</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A list of lists containing the cPCA results for each contrastive
-  parameter deemed to be a medoid.</p><ul>
-<li><p>rotation - the list of matrices of variable loadings</p></li>
-<li><p>x - the list of rotated data, centred and scaled if requested,
-    multiplied by the rotation matrix</p></li>
-<li><p>contrast - the list of contrastive parameters</p></li>
-<li><p>penalty - set to zero, since the loadings are not penalized in cPCA</p></li>
-</ul>
-
 
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-    </ul>
-
+    <div id="tocnav">
+      <h2>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+      </ul>
+    </div>
   </div>
+
 </div>
 
 

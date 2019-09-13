@@ -12,10 +12,11 @@ c_contrasts <- contrastiveCov(target, background, contrasts, TRUE, TRUE)
 penalties <- c(0, 0.1, 1)
 n_eigen <- 2
 n_centers <- 4
-fit <- fitGrid(target = target, center = center, scale = scale,
-               c_contrasts = c_contrasts, contrasts = contrasts,
-               penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
-               clust_method = "kmeans"
+fit <- fitGrid(
+  target = target, center = center, scale = scale,
+  c_contrasts = c_contrasts, contrasts = contrasts,
+  penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
+  clust_method = "kmeans"
 )
 
 test_that("the output is a list of length 4", {
@@ -39,14 +40,18 @@ test_that("the optimal contrast and penalty terms are real valued and non-neg", 
 })
 
 test_that("both cluster methods run without producing errors", {
-  expect_silent(fitGrid(target = target, center = center, scale = scale,
-                        c_contrasts = c_contrasts, contrasts = contrasts,
-                        penalties = penalties, n_eigen = n_eigen,
-                        n_centers = n_centers, clust_method = "kmeans"))
-  expect_silent(fitGrid(target = target, center = center, scale = scale,
-                        c_contrasts = c_contrasts, contrasts = contrasts,
-                        penalties = penalties, n_eigen = n_eigen,
-                        n_centers = n_centers, clust_method = "pam"))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "kmeans"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "pam"
+  ))
 })
 
 test_that("the following results are repeatable", {
@@ -58,10 +63,12 @@ test_that("the following results are repeatable", {
   expect_equal(fit$penalty[[idx]], 0)
 
   # using new example
-  fit_pam <- fitGrid(target = target, center = center, scale = scale,
-                     c_contrasts = c_contrasts, contrasts = c(1, 10, 100),
-                     penalties = c(0.1, 0.5, 1), n_eigen = n_eigen,
-                     n_centers = 4, clust_method = "pam")
+  fit_pam <- fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = c(1, 10, 100),
+    penalties = c(0.1, 0.5, 1), n_eigen = n_eigen,
+    n_centers = 4, clust_method = "pam"
+  )
 
   idx <- which.max(fit_pam$ave_sil_widths)
   expect_equal(fit_pam$contrast[[idx]], 1)
