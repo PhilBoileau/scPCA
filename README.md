@@ -7,8 +7,8 @@
 Status](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)](https://travis-ci.org/PhilBoileau/scPCA)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/PhilBoileau/scPCA?branch=master&svg=true)](https://ci.appveyor.com/project/PhilBoileau/scPCA/)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/PhilBoileau/scPCA/master.svg)](https://codecov.io/github/PhilBoileau/scPCA?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/PhilBoileau/scPCA/branch/master/graph/badge.svg)](https://codecov.io/gh/PhilBoileau/scPCA?branch=master)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
