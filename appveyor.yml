@@ -25,9 +25,6 @@ environment:
     PKGTYPE: both
 
   matrix:
-    - R_VERSION: devel
-      R_ARCH: x64
-
     - R_VERSION: release
       R_ARCH: x64
 
