@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contrastive Principal Component Analysis — fitCPCA • scPCA</title>
+<title>Selection of Contrastive and Penalization Parameters — selectParams • scPCA</title>
 
 
 <!-- jquery -->
@@ -35,16 +35,10 @@
 
 
 
-<meta property="og:title" content="Contrastive Principal Component Analysis — fitCPCA" />
-<meta property="og:description" content="Given target and background dataframes or matrices, cPCA
-  will perform contrastive principal component analysis (cPCA) of the target
-  data for a given number of eigenvectors and a vector of real valued
-  contrast parameters. This is identical to the implementation of cPCA
-  method of Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
-&amp;#8220;Exploring patterns enriched in a dataset with contrastive principal
-    component analysis.&amp;#8221;
-Nature communications, 9(1), 2134.
-." />
+<meta property="og:title" content="Selection of Contrastive and Penalization Parameters — selectParams" />
+<meta property="og:description" content="A wrapper function for fitting various internal functions to
+ select the optimal setting of the contrastive and penalization parameters.
+ For internal use only." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -128,24 +122,19 @@ Nature communications, 9(1), 2134.
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Contrastive Principal Component Analysis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/fitCPCA.R'><code>R/fitCPCA.R</code></a></small>
-    <div class="hidden name"><code>fitCPCA.Rd</code></div>
+    <h1>Selection of Contrastive and Penalization Parameters</h1>
+    <small class="dont-index">Source: <a href='https://github.com/PhilBoileau/scPCA/blob/master/R/scPCA.R'><code>R/scPCA.R</code></a></small>
+    <div class="hidden name"><code>selectParams.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given target and background dataframes or matrices, <code>cPCA</code>
-  will perform contrastive principal component analysis (cPCA) of the target
-  data for a given number of eigenvectors and a vector of real valued
-  contrast parameters. This is identical to the implementation of cPCA
-  method of Abid A, Zhang MJ, Bagaria VK, Zou J (2018).
-&#8220;Exploring patterns enriched in a dataset with contrastive principal
-    component analysis.&#8221;
-<em>Nature communications</em>, <b>9</b>(1), 2134.
-.</p>
+    <p>A wrapper function for fitting various internal functions to
+ select the optimal setting of the contrastive and penalization parameters.
+ For internal use only.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fitCPCA</span>(<span class='no'>target</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>c_contrasts</span>, <span class='no'>contrasts</span>, <span class='no'>n_eigen</span>, <span class='no'>n_medoids</span>)</pre>
+    <pre class="usage"><span class='fu'>selectParams</span>(<span class='no'>target</span>, <span class='no'>background</span>, <span class='no'>center</span>, <span class='no'>scale</span>, <span class='no'>n_eigen</span>, <span class='no'>contrasts</span>,
+  <span class='no'>penalties</span>, <span class='no'>clust_method</span>, <span class='no'>n_centers</span>, <span class='no'>max_iter</span>, <span class='no'>n_medoids</span>, <span class='no'>parallel</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +143,12 @@ Nature communications, 9(1), 2134.
       <th>target</th>
       <td><p>The target (experimental) data set, in a standard format such
 as a <code>data.frame</code> or <code>matrix</code>.</p></td>
+    </tr>
+    <tr>
+      <th>background</th>
+      <td><p>The background data set, in a standard format such as a
+<code>data.frame</code> or <code>matrix</code>. Note that the number of features must
+match the number of features in the target data.</p></td>
     </tr>
     <tr>
       <th>center</th>
@@ -166,37 +161,58 @@ data sets should be centered to mean zero.</p></td>
 data sets should be scaled to unit variance.</p></td>
     </tr>
     <tr>
-      <th>c_contrasts</th>
-      <td><p>A <code>list</code> of contrastive covariances.</p></td>
+      <th>n_eigen</th>
+      <td><p>A <code>numeric</code> indicating the number of eigenvectors (or
+sparse contrastive components) to be computed. The default is to compute two
+such eigenvectors.</p></td>
     </tr>
     <tr>
       <th>contrasts</th>
-      <td><p>A <code>numeric</code> vector of the contrastive parameters used
-to compute the contrastive covariances.</p></td>
+      <td><p>A <code>numeric</code> vector of the contrastive parameters. Each
+element must be a unique non-negative real number. The default is to use 40
+logarithmically spaced values between 0.1 and 1000.</p></td>
     </tr>
     <tr>
-      <th>n_eigen</th>
-      <td><p>A <code>numeric</code> indicating the number of eigenvectors to be
-computed.</p></td>
+      <th>penalties</th>
+      <td><p>A <code>numeric</code> vector of the L1 penalty terms on the
+loadings. The default is to use 20 equidistant values between 0.05 and 1.</p></td>
+    </tr>
+    <tr>
+      <th>clust_method</th>
+      <td><p>A <code>character</code> specifying the clustering method to
+use for choosing the optimal constrastive parameter. Currently, this is
+limited to either k-means or partitioning around medoids (PAM). The default
+is k-means clustering.</p></td>
+    </tr>
+    <tr>
+      <th>n_centers</th>
+      <td><p>A <code>numeric</code> giving the number of centers to use in the
+clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
+is performed, regardless of what the <code>penalties</code> argument is set to.</p></td>
+    </tr>
+    <tr>
+      <th>max_iter</th>
+      <td><p>A <code>numeric</code> giving the maximum number of iterations to
+be used in k-means clustering, defaulting to 10.</p></td>
     </tr>
     <tr>
       <th>n_medoids</th>
       <td><p>A <code>numeric</code> indicating the number of medoids to
-consider.</p></td>
+consider if <code>n_centers</code> is set to 1. The default is 8 such medoids.</p></td>
+    </tr>
+    <tr>
+      <th>parallel</th>
+      <td><p>A <code>logical</code> indicating whether to invoke parallel
+processing via the <span class="pkg">BiocParallel</span> infrastructure. The default is
+<code>FALSE</code> for sequential evaluation.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of lists containing the cPCA results for each contrastive
-  parameter deemed to be a medoid.</p><ul>
-<li><p>rotation - the list of matrices of variable loadings</p></li>
-<li><p>x - the list of rotated data, centred and scaled if requested,
-    multiplied by the rotation matrix</p></li>
-<li><p>contrast - the list of contrastive parameters</p></li>
-<li><p>penalty - set to zero, since the loadings are not penalized in cPCA</p></li>
-</ul>
-
+    <p>Output structure matching either that of <code><a href='fitCPCA.html'>fitCPCA</a></code> or
+ <code><a href='fitGrid.html'>fitGrid</a></code> (or their parallelized variants, namely either
+ <code><a href='bpFitCPCA.html'>bpFitCPCA</a></code> and <code>link{bpFitGrid}</code>, respectively).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

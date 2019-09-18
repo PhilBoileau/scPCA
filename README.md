@@ -25,7 +25,7 @@ license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://openso
 
 **Authors:** [Philippe Boileau](https://pboileau.ca/), [Nima
 Hejazi](https://nimahejazi.org), William Krinsman, [Sandrine
-Dudoit](https://www.stat.berkeley.edu/~sandrine/)
+Dudoit](https://statistics.berkeley.edu/~sandrine/)
 
 -----
 

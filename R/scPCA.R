@@ -170,17 +170,21 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     # match up tables of contrast-penalty-silhouette across folds and merge
     cv_ave_sil_pairs <- lapply(seq_len(cv), function(v) {
       ave_sil_pairings <- tibble::as_tibble(
-        list(contrast = cv_opt_params$contrast[[v]],
-             penalty = cv_opt_params$penalty[[v]],
-             ave_sil_widths = cv_opt_params$ave_sil_widths[[v]])
+        list(
+          contrast = cv_opt_params$contrast[[v]],
+          penalty = cv_opt_params$penalty[[v]],
+          ave_sil_widths = cv_opt_params$ave_sil_widths[[v]]
+        )
       )
     }) %>%
-    purrr::reduce(dplyr::full_join, by = c("contrast", "penalty"))
+      purrr::reduce(dplyr::full_join, by = c("contrast", "penalty"))
 
     # compute CV-average silhouette width, find maximizer, and select the
     # optimal set of contrastive and penalization parameters
-    ave_sil_col_idx <- stringr::str_detect(colnames(cv_ave_sil_pairs),
-                                           "ave_sil_width")
+    ave_sil_col_idx <- stringr::str_detect(
+      colnames(cv_ave_sil_pairs),
+      "ave_sil_width"
+    )
     cv_sil_max_idx <- which.max(rowMeans(cv_ave_sil_pairs[, ave_sil_col_idx]))
     cv_opt_params <- cv_ave_sil_pairs[cv_sil_max_idx, c("contrast", "penalty")]
 
