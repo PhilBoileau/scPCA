@@ -55,7 +55,7 @@ simultaneously tackling the issues of interpretability, stability and relevance
 simultaneously. The `scPCA` package implements _sparse constrastive PCA_, to
 accomplish both of these tasks in the context of high-dimensional biological
 data. In addition to implementing this newly developed technique, the `scPCA`
-package also implements cPCA and generalizations of it.
+package also implements cPCA and generalizations thereof.
 
 <!--
 ...

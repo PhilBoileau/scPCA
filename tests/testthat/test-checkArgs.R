@@ -1,5 +1,4 @@
-context("Test checkArgs")
-library(scPCA)
+context("Test checking of input arguments")
 library(Matrix)
 library(tibble)
 
@@ -12,7 +11,7 @@ n_eigen <- 2
 contrasts <- c(1, 2)
 penalties <- c(1, 2)
 
-test_that("only dataframes, tibbles, matrices, and sparse matrices pass", {
+test_that("Only data.frames, tibbles, matrices, and sparse matrices pass", {
   expect_equal(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, contrasts, penalties
@@ -37,7 +36,8 @@ test_that("only dataframes, tibbles, matrices, and sparse matrices pass", {
   ), TRUE)
 })
 
-test_that("catches target and background data with differing num of cols", {
+test_that(paste("Catches target and background data with differing number",
+                "of columns"), {
   expect_error(checkArgs(
     toy_df, background_df, center,
     scale, n_eigen, contrasts, penalties
@@ -47,7 +47,7 @@ test_that("catches target and background data with differing num of cols", {
   )
 })
 
-test_that("center and scale only handle bools", {
+test_that("Center and scale arguments only handle Logical options", {
   expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, contrasts, penalties
@@ -82,7 +82,7 @@ test_that("center and scale only handle bools", {
   ))
 })
 
-test_that("n_eigen is an integer between 1 and ncol(target)", {
+test_that("Argument n_eigen is set to an integer between 1 and ncol(target)", {
   expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, 1, contrasts, penalties
@@ -109,7 +109,7 @@ test_that("n_eigen is an integer between 1 and ncol(target)", {
   ))
 })
 
-test_that("contrasts is a non-negative, non-zero vector of length at least 1", {
+test_that("Contrasts is a non-negative, non-zero vector of length >= 1", {
   expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, 1, penalties
@@ -133,7 +133,7 @@ test_that("contrasts is a non-negative, non-zero vector of length at least 1", {
   ))
 })
 
-test_that("penalties is a non-negative vector of length at least 1", {
+test_that("Penalties is a non-negative vector of length at least 1", {
   expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, contrasts, penalties

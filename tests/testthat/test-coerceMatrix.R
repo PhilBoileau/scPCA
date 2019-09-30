@@ -1,8 +1,7 @@
-context("Test coerceMatrix")
-library(scPCA)
+context("Test routine for coercing inputs to matrix objects")
 library(Matrix)
 
-test_that("coerces sparse matrices to standard matrices", {
+test_that("Coercion of sparse matrices to standard matrices works", {
   expect_equal(
     class(coerceMatrix(data = as(as.matrix(background_df), "dgCMatrix"))),
     "matrix"

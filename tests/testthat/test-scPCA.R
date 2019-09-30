@@ -1,5 +1,5 @@
-context("Test scPCA")
-library(scPCA)
+context("Test fitting of sparse contrastive PCA")
+library(BiocParallel)
 
 test_that("scPCA outputs a list of length 6", {
   cPCA_res <- scPCA(
@@ -22,9 +22,8 @@ test_that("scPCA outputs a list of length 6", {
   expect_equal(length(scPCA_res), 6)
 })
 
-test_that(
-  "scPCA outputs a list of length 6, where each element is a sublist of length
-n_medoids when n_centers is set to 1", {
+test_that(paste("scPCA outputs a list of length 6, where each element is a",
+                "sublist of length n_medoids when n_centers is set to 1"), {
     cPCA_res <- scPCA(
       target = toy_df[, 1:30],
       background = background_df,
@@ -40,3 +39,24 @@ n_medoids when n_centers is set to 1", {
     expect_equal(length(cPCA_res$x), 5)
   }
 )
+
+test_that("The parallelized analog matches the sequential variant exactly", {
+  set.seed(123)
+  scPCA_res <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+    penalties = seq(0.1, 1, length.out = 3),
+    n_centers = 4, parallel = FALSE
+  )
+  register(SerialParam())
+  set.seed(123)
+  scPCA_bpres <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+    penalties = seq(0.1, 1, length.out = 3),
+    n_centers = 4, parallel = TRUE
+  )
+  expect_equal(scPCA_res, scPCA_bpres)
+})
