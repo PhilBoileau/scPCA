@@ -15,9 +15,11 @@ fit <- fitCPCA(
   n_eigen, n_medoids
 )
 
-test_that(paste("The length of the ouput list is 4 (rotations, projections,",
-                "contrasts and penalties)"), {
-    expect_equal(length(fit), 4)
+test_that(paste(
+  "The length of the ouput list is 4 (rotations, projections,",
+  "contrasts and penalties)"
+), {
+  expect_equal(length(fit), 4)
 })
 
 test_that("The number of medoids output equals the initial specified option", {

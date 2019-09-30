@@ -33,8 +33,10 @@ test_that("The projection matrix is nrow(target) by n_eigen", {
   expect_equal(ncol(fit$x[[2]]), n_eigen)
 })
 
-test_that(paste("The optimal contrast and penalty terms are real-valued",
-                "and non-negative"), {
+test_that(paste(
+  "The optimal contrast and penalty terms are real-valued",
+  "and non-negative"
+), {
   idx <- which.max(fit$ave_sil_widths)
   expect_gte(fit$contrast[[idx]], 0)
   expect_gte(fit$penalty[[idx]], 0)
@@ -74,10 +76,14 @@ test_that("The following results are replicable/reproducible", {
   idx <- which.max(fit_pam$ave_sil_widths)
   expect_equal(fit_pam$contrast[[idx]], 1)
   expect_equal(fit_pam$penalty[[idx]], 0.1)
-  expect_equal(as.numeric(round(fit_pam$rotation[[idx]][11, ], 5)),
-               c(-0.31483, 0))
-  expect_equal(as.numeric(round(fit_pam$x[[idx]][1, ], 5)),
-               c(2.46554, 2.96500))
+  expect_equal(
+    as.numeric(round(fit_pam$rotation[[idx]][11, ], 5)),
+    c(-0.31483, 0)
+  )
+  expect_equal(
+    as.numeric(round(fit_pam$x[[idx]][1, ], 5)),
+    c(2.46554, 2.96500)
+  )
 })
 
 test_that("The parallelized analog matches the sequential variant exactly", {

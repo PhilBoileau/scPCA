@@ -36,8 +36,10 @@ test_that("Only data.frames, tibbles, matrices, and sparse matrices pass", {
   ), TRUE)
 })
 
-test_that(paste("Catches target and background data with differing number",
-                "of columns"), {
+test_that(paste(
+  "Catches target and background data with differing number",
+  "of columns"
+), {
   expect_error(checkArgs(
     toy_df, background_df, center,
     scale, n_eigen, contrasts, penalties

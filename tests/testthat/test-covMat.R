@@ -19,18 +19,24 @@ test_that("Routine can center, scale, center and scale, or neither", {
   expect_silent(covMat(as_tibble(background_df), center = TRUE, scale = TRUE))
   expect_silent(covMat(as_tibble(background_df), center = TRUE, scale = FALSE))
   expect_silent(covMat(as_tibble(background_df), center = FALSE, scale = TRUE))
-  expect_silent(covMat(as_tibble(background_df), center = FALSE,
-                       scale = FALSE))
+  expect_silent(covMat(as_tibble(background_df),
+    center = FALSE,
+    scale = FALSE
+  ))
 
   expect_silent(covMat(as.matrix(background_df), center = TRUE, scale = TRUE))
   expect_silent(covMat(as.matrix(background_df), center = TRUE, scale = FALSE))
   expect_silent(covMat(as.matrix(background_df), center = FALSE, scale = TRUE))
-  expect_silent(covMat(as.matrix(background_df), center = FALSE,
-                       scale = FALSE))
+  expect_silent(covMat(as.matrix(background_df),
+    center = FALSE,
+    scale = FALSE
+  ))
 })
 
-test_that(paste("Variables with zero variance have zeros rows/columns in",
-                "covariance matrix"), {
+test_that(paste(
+  "Variables with zero variance have zeros rows/columns in",
+  "covariance matrix"
+), {
   # add a constant column to the background data
   test_df <- background_df %>%
     mutate(
