@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+@font-face {
+font-family: octicons-link;
+src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+body {
+-webkit-text-size-adjust: 100%;
+text-size-adjust: 100%;
+color: #333;
+font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+font-size: 16px;
+line-height: 1.6;
+word-wrap: break-word;
+}
+a {
+background-color: transparent;
+}
+a:active,
+a:hover {
+outline: 0;
+}
+strong {
+font-weight: bold;
+}
+h1 {
+font-size: 2em;
+margin: 0.67em 0;
+}
+img {
+border: 0;
+}
+hr {
+box-sizing: content-box;
+height: 0;
+}
+pre {
+overflow: auto;
+}
+code,
+kbd,
+pre {
+font-family: monospace, monospace;
+font-size: 1em;
+}
+input {
+color: inherit;
+font: inherit;
+margin: 0;
+}
+html input[disabled] {
+cursor: default;
+}
+input {
+line-height: normal;
+}
+input[type="checkbox"] {
+box-sizing: border-box;
+padding: 0;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+td,
+th {
+padding: 0;
+}
+* {
+box-sizing: border-box;
+}
+input {
+font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+a {
+color: #4078c0;
+text-decoration: none;
+}
+a:hover,
+a:active {
+text-decoration: underline;
+}
+hr {
+height: 0;
+margin: 15px 0;
+overflow: hidden;
+background: transparent;
+border: 0;
+border-bottom: 1px solid #ddd;
+}
+hr:before {
+display: table;
+content: "";
+}
+hr:after {
+display: table;
+clear: both;
+content: "";
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 15px;
+margin-bottom: 15px;
+line-height: 1.1;
+}
+h1 {
+font-size: 30px;
+}
+h2 {
+font-size: 21px;
+}
+h3 {
+font-size: 16px;
+}
+h4 {
+font-size: 14px;
+}
+h5 {
+font-size: 12px;
+}
+h6 {
+font-size: 11px;
+}
+blockquote {
+margin: 0;
+}
+ul,
+ol {
+padding: 0;
+margin-top: 0;
+margin-bottom: 0;
+}
+ol ol,
+ul ol {
+list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+list-style-type: lower-alpha;
+}
+dd {
+margin-left: 0;
+}
+code {
+font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+font-size: 12px;
+}
+pre {
+margin-top: 0;
+margin-bottom: 0;
+font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+.select::-ms-expand {
+opacity: 0;
+}
+.octicon {
+font: normal normal normal 16px/1 octicons-link;
+display: inline-block;
+text-decoration: none;
+text-rendering: auto;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.octicon-link:before {
+content: '\f05c';
+}
+.markdown-body:before {
+display: table;
+content: "";
+}
+.markdown-body:after {
+display: table;
+clear: both;
+content: "";
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.markdown-body>*:last-child {
+margin-bottom: 0 !important;
+}
+a:not([href]) {
+color: inherit;
+text-decoration: none;
+}
+.anchor {
+display: inline-block;
+padding-right: 2px;
+margin-left: -18px;
+}
+.anchor:focus {
+outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 1em;
+margin-bottom: 16px;
+font-weight: bold;
+line-height: 1.4;
+}
+h1 .octicon-link,
+h2 .octicon-link,
+h3 .octicon-link,
+h4 .octicon-link,
+h5 .octicon-link,
+h6 .octicon-link {
+color: #000;
+vertical-align: middle;
+visibility: hidden;
+}
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+text-decoration: none;
+}
+h1:hover .anchor .octicon-link,
+h2:hover .anchor .octicon-link,
+h3:hover .anchor .octicon-link,
+h4:hover .anchor .octicon-link,
+h5:hover .anchor .octicon-link,
+h6:hover .anchor .octicon-link {
+visibility: visible;
+}
+h1 {
+padding-bottom: 0.3em;
+font-size: 2.25em;
+line-height: 1.2;
+border-bottom: 1px solid #eee;
+}
+h1 .anchor {
+line-height: 1;
+}
+h2 {
+padding-bottom: 0.3em;
+font-size: 1.75em;
+line-height: 1.225;
+border-bottom: 1px solid #eee;
+}
+h2 .anchor {
+line-height: 1;
+}
+h3 {
+font-size: 1.5em;
+line-height: 1.43;
+}
+h3 .anchor {
+line-height: 1.2;
+}
+h4 {
+font-size: 1.25em;
+}
+h4 .anchor {
+line-height: 1.2;
+}
+h5 {
+font-size: 1em;
+}
+h5 .anchor {
+line-height: 1.1;
+}
+h6 {
+font-size: 1em;
+color: #777;
+}
+h6 .anchor {
+line-height: 1.1;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table,
+pre {
+margin-top: 0;
+margin-bottom: 16px;
+}
+hr {
+height: 4px;
+padding: 0;
+margin: 16px 0;
+background-color: #e7e7e7;
+border: 0 none;
+}
+ul,
+ol {
+padding-left: 2em;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+margin-top: 0;
+margin-bottom: 0;
+}
+li>p {
+margin-top: 16px;
+}
+dl {
+padding: 0;
+}
+dl dt {
+padding: 0;
+margin-top: 16px;
+font-size: 1em;
+font-style: italic;
+font-weight: bold;
+}
+dl dd {
+padding: 0 16px;
+margin-bottom: 16px;
+}
+blockquote {
+padding: 0 15px;
+color: #777;
+border-left: 4px solid #ddd;
+}
+blockquote>:first-child {
+margin-top: 0;
+}
+blockquote>:last-child {
+margin-bottom: 0;
+}
+table {
+display: block;
+width: 100%;
+overflow: auto;
+word-break: normal;
+word-break: keep-all;
+}
+table th {
+font-weight: bold;
+}
+table th,
+table td {
+padding: 6px 13px;
+border: 1px solid #ddd;
+}
+table tr {
+background-color: #fff;
+border-top: 1px solid #ccc;
+}
+table tr:nth-child(2n) {
+background-color: #f8f8f8;
+}
+img {
+max-width: 100%;
+box-sizing: content-box;
+background-color: #fff;
+}
+code {
+padding: 0;
+padding-top: 0.2em;
+padding-bottom: 0.2em;
+margin: 0;
+font-size: 85%;
+background-color: rgba(0,0,0,0.04);
+border-radius: 3px;
+}
+code:before,
+code:after {
+letter-spacing: -0.2em;
+content: "\00a0";
+}
+pre>code {
+padding: 0;
+margin: 0;
+font-size: 100%;
+word-break: normal;
+white-space: pre;
+background: transparent;
+border: 0;
+}
+.highlight {
+margin-bottom: 16px;
+}
+.highlight pre,
+pre {
+padding: 16px;
+overflow: auto;
+font-size: 85%;
+line-height: 1.45;
+background-color: #f7f7f7;
+border-radius: 3px;
+}
+.highlight pre {
+margin-bottom: 0;
+word-break: normal;
+}
+pre {
+word-wrap: normal;
+}
+pre code {
+display: inline;
+max-width: initial;
+padding: 0;
+margin: 0;
+overflow: initial;
+line-height: inherit;
+word-wrap: normal;
+background-color: transparent;
+border: 0;
+}
+pre code:before,
+pre code:after {
+content: normal;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font-size: 11px;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.pl-c {
+color: #969896;
+}
+.pl-c1,
+.pl-s .pl-v {
+color: #0086b3;
+}
+.pl-e,
+.pl-en {
+color: #795da3;
+}
+.pl-s .pl-s1,
+.pl-smi {
+color: #333;
+}
+.pl-ent {
+color: #63a35c;
+}
+.pl-k {
+color: #a71d5d;
+}
+.pl-pds,
+.pl-s,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sra,
+.pl-sr .pl-sre {
+color: #183691;
+}
+.pl-v {
+color: #ed6a43;
+}
+.pl-id {
+color: #b52a1d;
+}
+.pl-ii {
+background-color: #b52a1d;
+color: #f8f8f8;
+}
+.pl-sr .pl-cce {
+color: #63a35c;
+font-weight: bold;
+}
+.pl-ml {
+color: #693a17;
+}
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+color: #1d3e81;
+font-weight: bold;
+}
+.pl-mq {
+color: #008080;
+}
+.pl-mi {
+color: #333;
+font-style: italic;
+}
+.pl-mb {
+color: #333;
+font-weight: bold;
+}
+.pl-md {
+background-color: #ffecec;
+color: #bd2c00;
+}
+.pl-mi1 {
+background-color: #eaffea;
+color: #55a532;
+}
+.pl-mdr {
+color: #795da3;
+font-weight: bold;
+}
+.pl-mo {
+color: #1d3e81;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.task-list-item {
+list-style-type: none;
+}
+.task-list-item+.task-list-item {
+margin-top: 3px;
+}
+.task-list-item input {
+margin: 0 0.35em 0.25em -1.6em;
+vertical-align: middle;
+}
+:checked+.radio-label {
+z-index: 1;
+position: relative;
+border-color: #4078c0;
+}
+.sourceLine {
+display: inline-block;
+}
+code .kw { color: #000000; }
+code .dt { color: #ed6a43; }
+code .dv { color: #009999; }
+code .bn { color: #009999; }
+code .fl { color: #009999; }
+code .ch { color: #009999; }
+code .st { color: #183691; }
+code .co { color: #969896; }
+code .ot { color: #0086b3; }
+code .al { color: #a61717; }
+code .fu { color: #63a35c; }
+code .er { color: #a61717; background-color: #e3d2d2; }
+code .wa { color: #000000; }
+code .cn { color: #008080; }
+code .sc { color: #008080; }
+code .vs { color: #183691; }
+code .ss { color: #183691; }
+code .im { color: #000000; }
+code .va {color: #008080; }
+code .cf { color: #000000; }
+code .op { color: #000000; }
+code .bu { color: #000000; }
+code .ex { color: #000000; }
+code .pp { color: #999999; }
+code .at { color: #008080; }
+code .do { color: #969896; }
+code .an { color: #008080; }
+code .cv { color: #008080; }
+code .in { color: #008080; }
+</style>
+<style>
+body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+  padding-top: 0px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<h1 id="rscpca">R/<code>scPCA</code></h1>
+<p><a href="https://travis-ci.org/PhilBoileau/scPCA"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MCIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PHJlY3Qgcng9IjMiIHdpZHRoPSI5MCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHJ4PSIzIiB4PSIzNyIgd2lkdGg9IjUzIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNGMxIi8+PHBhdGggZmlsbD0iIzRjMSIgZD0iTTM3IDBoNHYyMGgtNHoiLz48cmVjdCByeD0iMyIgd2lkdGg9IjkwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI2EpIi8+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjE5LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5idWlsZDwvdGV4dD48dGV4dCB4PSIxOS41IiB5PSIxNCI+YnVpbGQ8L3RleHQ+PHRleHQgeD0iNjIuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnBhc3Npbmc8L3RleHQ+PHRleHQgeD0iNjIuNSIgeT0iMTQiPnBhc3Npbmc8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Travis-CI Build Status" /></a> <a href="https://ci.appveyor.com/project/PhilBoileau/scPCA/"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjAiIHN0eWxlPSJzaGFwZS1yZW5kZXJpbmc6Z2VvbWV0cmljUHJlY2lzaW9uOyBpbWFnZS1yZW5kZXJpbmc6b3B0aW1pemVRdWFsaXR5OyBmaWxsLXJ1bGU6ZXZlbm9kZDsgY2xpcC1ydWxlOmV2ZW5vZGQiPg0KICA8bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgyPSIwIiB5Mj0iMTAwJSI+DQogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+DQogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+DQogIDwvbGluZWFyR3JhZGllbnQ+DQogIDxtYXNrIGlkPSJhIj4NCiAgICA8cmVjdCB3aWR0aD0iMTA2IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPg0KICA8L21hc2s+DQogIDxnIG1hc2s9InVybCgjYSkiPg0KICAgIDxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNTN2MjBIMHoiLz4NCiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNTMgMGg4NHYyMEg1M3oiLz4NCiAgICA8cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJNMCAwaDEwNnYyMEgweiIvPg0KICA8L2c+DQogIDxnIHRyYW5zZm9ybT0ibWF0cml4KDAuMDQ1LDAsMCwwLjA0NSwwLDEuMDIyNzI3MikiPg0KICAgIDxwYXRoIGZpbGw9IiNjY2MiIGQ9Ik0yNDIgNDhjODYsMCAxNTUsNjkgMTU1LDE1NCAwLDg2IC02OSwxNTUgLTE1NSwxNTUgLTg1LDAgLTE1NCwtNjkgLTE1NCwtMTU1IDAsLTg1IDY5LC0xNTQgMTU0LC0xNTR6bTM4IDE4NGMtMTcsMjIgLTQ4LDI2IC02OSw5IC0yMSwtMTYgLTI0LC00NyAtNywtNjkgMTgsLTIxIDQ5LC0yNSA3MCwtOSAyMSwxNyAyNCw0OCA2LDY5em0tODIgMTAxbDU5IC01N2MtMjIsNSAtNDUsMSAtNjMsLTE0IC0yMSwtMTYgLTMwLC00MyAtMjcsLTY4bC01MyA1OGMwLDAgLTcsLTEzIC05LC0zN2w5MyAtNzNjMjgsLTIwIDY2LC0yMSA5MywwIDMwLDI0IDM2LDY4IDE0LDEwMWwtNjggOTdjLTEwLDAgLTMwLC0zIC0zOSwtN3oiLz4NCiAgPC9nPg0KICA8ZyBmaWxsPSIjZmZmIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+DQoNCiAgICA8dGV4dCB4PSIyMiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPmJ1aWxkPC90ZXh0Pg0KICAgIDx0ZXh0IHg9IjIyIiB5PSIxNCI+YnVpbGQ8L3RleHQ+DQoNCiAgICA8dGV4dCB4PSI1OCIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnBhc3Npbmc8L3RleHQ+DQogICAgPHRleHQgeD0iNTgiIHk9IjE0Ij5wYXNzaW5nPC90ZXh0Pg0KICA8L2c+DQo8L3N2Zz4=" alt="AppVeyor Build Status" /></a> <a href="https://codecov.io/gh/PhilBoileau/scPCA?branch=master"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIgLz4KICAgICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPG1hc2sgaWQ9ImEiPgogICAgICAgIDxyZWN0IHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIiAvPgogICAgPC9tYXNrPgogICAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICAgICAgPHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGg3NnYyMEgweiIgLz4KICAgICAgICA8cGF0aCBmaWxsPSIjZmE3NzM5IiBkPSJNNzYgMGgzNnYyMEg3NnoiIC8+CiAgICAgICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxMTJ2MjBIMHoiIC8+CiAgICA8L2c+CiAgICA8ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgICAgPHRleHQgeD0iNDYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5jb2RlY292PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjQ2IiB5PSIxNCI+Y29kZWNvdjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MyIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPjc1JTwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MyIgeT0iMTQiPjc1JTwvdGV4dD4KICAgIDwvZz4KICAgIDxzdmcgdmlld0JveD0iMTIwIC04IDYwIDYwIj4KICAgICAgICA8cGF0aCBkPSJNMjMuMDEzIDBDMTAuMzMzLjAwOS4wMSAxMC4yMiAwIDIyLjc2MnYuMDU4bDMuOTE0IDIuMjc1LjA1My0uMDM2YTExLjI5MSAxMS4yOTEgMCAwIDEgOC4zNTItMS43NjcgMTAuOTExIDEwLjkxMSAwIDAgMSA1LjUgMi43MjZsLjY3My42MjQuMzgtLjgyOGMuMzY4LS44MDIuNzkzLTEuNTU2IDEuMjY0LTIuMjQuMTktLjI3Ni4zOTgtLjU1NC42MzctLjg1MWwuMzkzLS40OS0uNDg0LS40MDRhMTYuMDggMTYuMDggMCAwIDAtNy40NTMtMy40NjYgMTYuNDgyIDE2LjQ4MiAwIDAgMC03LjcwNS40NDlDNy4zODYgMTAuNjgzIDE0LjU2IDUuMDE2IDIzLjAzIDUuMDFjNC43NzkgMCA5LjI3MiAxLjg0IDEyLjY1MSA1LjE4IDIuNDEgMi4zODIgNC4wNjkgNS4zNSA0LjgwNyA4LjU5MWExNi41MyAxNi41MyAwIDAgMC00Ljc5Mi0uNzIzbC0uMjkyLS4wMDJhMTYuNzA3IDE2LjcwNyAwIDAgMC0xLjkwMi4xNGwtLjA4LjAxMmMtLjI4LjAzNy0uNTI0LjA3NC0uNzQ4LjExNS0uMTEuMDE5LS4yMTguMDQxLS4zMjcuMDYzLS4yNTcuMDUyLS41MS4xMDgtLjc1LjE2OWwtLjI2NS4wNjdhMTYuMzkgMTYuMzkgMCAwIDAtLjkyNi4yNzZsLS4wNTYuMDE4Yy0uNjgyLjIzLTEuMzYuNTExLTIuMDE2LjgzOGwtLjA1Mi4wMjZjLS4yOS4xNDUtLjU4NC4zMDUtLjg5OS40OWwtLjA2OS4wNGExNS41OTYgMTUuNTk2IDAgMCAwLTQuMDYxIDMuNDY2bC0uMTQ1LjE3NWMtLjI5LjM2LS41MjEuNjY2LS43MjMuOTYtLjE3LjI0Ny0uMzQuNTEzLS41NTIuODY0bC0uMTE2LjE5OWMtLjE3LjI5Mi0uMzIuNTctLjQ0OS44MjRsLS4wMy4wNTdhMTYuMTE2IDE2LjExNiAwIDAgMC0uODQzIDIuMDI5bC0uMDM0LjEwMmExNS42NSAxNS42NSAwIDAgMC0uNzg2IDUuMTc0bC4wMDMuMjE0YTIxLjUyMyAyMS41MjMgMCAwIDAgLjA0Ljc1NGMuMDA5LjExOS4wMi4yMzcuMDMyLjM1NS4wMTQuMTQ1LjAzMi4yOS4wNDkuNDMybC4wMS4wOGMuMDEuMDY3LjAxNy4xMzMuMDI2LjE5Ny4wMzQuMjQyLjA3NC40OC4xMTkuNzIuNDYzIDIuNDE5IDEuNjIgNC44MzYgMy4zNDUgNi45OWwuMDc4LjA5OC4wOC0uMDk1Yy42ODgtLjgxIDIuMzk1LTMuMzggMi41MzktNC45MjJsLjAwMy0uMDI5LS4wMTQtLjAyNWExMC43MjcgMTAuNzI3IDAgMCAxLTEuMjI2LTQuOTU2YzAtNS43NiA0LjU0NS0xMC41NDQgMTAuMzQzLTEwLjg5bC4zODEtLjAxNGExMS40MDMgMTEuNDAzIDAgMCAxIDYuNjUxIDEuOTU3bC4wNTQuMDM2IDMuODYyLTIuMjM3LjA1LS4wM3YtLjA1NmMuMDA2LTYuMDgtMi4zODQtMTEuNzkzLTYuNzI5LTE2LjA4OUMzNC45MzIgMi4zNjEgMjkuMTYgMCAyMy4wMTMgMCIgZmlsbD0iI0YwMUY3QSIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L3N2Zz4KPC9zdmc+" alt="Codecov test coverage" /></a> <a href="https://www.repostatus.org/#active"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTE2IiBoZWlnaHQ9IjIwIj48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9ImEiPjxyZWN0IHdpZHRoPSIxMTYiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNzN2MjBIMHoiLz48cGF0aCBmaWxsPSIjNGMxIiBkPSJNNzMgMGg0M3YyMEg3M3oiLz48cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJNMCAwaDExNnYyMEgweiIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+PHRleHQgeD0iMzYuNSIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPnJlcG8gc3RhdHVzPC90ZXh0Pjx0ZXh0IHg9IjM2LjUiIHk9IjE0Ij5yZXBvIHN0YXR1czwvdGV4dD48dGV4dCB4PSI5My41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+QWN0aXZlPC90ZXh0Pjx0ZXh0IHg9IjkzLjUiIHk9IjE0Ij5BY3RpdmU8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a> <a href="https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MSIgaGVpZ2h0PSIyMCI+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PG1hc2sgaWQ9ImEiPjxyZWN0IHdpZHRoPSI2MSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L21hc2s+PGcgbWFzaz0idXJsKCNhKSI+PHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGgzN3YyMEgweiIvPjxwYXRoIGZpbGw9IiM4N2IxM2YiIGQ9Ik0zNyAwaDI0djIwSDM3eiIvPjxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoNjF2MjBIMHoiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkRlamFWdSBTYW5zLFZlcmRhbmEsR2VuZXZhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjx0ZXh0IHg9IjE4LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5idWlsZDwvdGV4dD48dGV4dCB4PSIxOC41IiB5PSIxNCI+YnVpbGQ8L3RleHQ+PHRleHQgeD0iNDgiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5vazwvdGV4dD48dGV4dCB4PSI0OCIgeT0iMTQiPm9rPC90ZXh0PjwvZz48L3N2Zz4=" alt="BioC status" /></a> <a href="https://bioconductor.org/packages/release/bioc/html/scPCA.html"><img src="data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%20PUBLIC%20%22%2D%2F%2FW3C%2F%2FDTD%20XHTML%201%2E0%20Transitional%2F%2FEN%22%20%22http%3A%2F%2Fwww%2Ew3%2Eorg%2FTR%2Fxhtml1%2FDTD%2Fxhtml1%2Dtransitional%2Edtd%22%3E%0A%3Chtml%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F1999%2Fxhtml%22%20dir%3D%22ltr%22%20lang%3D%22en%2DUS%22%0Aprefix%3D%22og%3A%20http%3A%2F%2Fogp%2Eme%2Fns%23%22%3E%0A%20%20%3Chead%3E%0A%20%20%3Cmeta%20http%2Dequiv%3D%22Content%2DType%22%20content%3D%22text%2Fhtml%3B%20charset%3Dutf%2D8%22%20%2F%3E%0A%20%20%3Cmeta%20http%2Dequiv%3D%22Content%2DLanguage%22%20content%3D%22en%2Dus%22%20%2F%3E%0A%20%20%3Cmeta%20name%3D%22robots%22%20content%3D%22all%22%20%2F%3E%0A%20%20%0A%0A%0A%0A%20%20%0A%20%20%0A%20%20%0A%20%20%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%0A%20%20%0A%20%20%3Cscript%20src%3D%22%2Fjs%2Fjquery%2Etools%2Emin%2Ejs%22%3E%3C%2Fscript%3E%0A%0A%20%20%0A%20%20%0A%20%20%3Ctitle%3EBioconductor%20%2D%20Help%3C%2Ftitle%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20type%3D%22text%2Fcss%22%20href%3D%22%2Fstyle%2Fbioconductor%2Ecss%22%20media%3D%22screen%22%20%2F%3E%0A%20%20%3Clink%20rel%3D%22SHORTCUT%20ICON%22%20type%3D%22image%2Fx%2Dicon%22%20href%3D%22%2Ffavicon%2Eico%22%20%2F%3E%0A%20%20%3Clink%20rel%3D%22ICON%22%20type%3D%22image%2Fx%2Dicon%22%20href%3D%22%2Ffavicon%2Eico%22%20%2F%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fbioconductor%2Ejs%22%3E%3C%2Fscript%3E%0A%20%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Ecorner%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Etimeago%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fbioc%2Dstyle%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fversions%2Ejs%22%3E%3C%2Fscript%3E%0A%0A%20%20%3C%21%2D%2D%20Google%20Analytics%20script%20%2D%2D%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%3E%0A%20%20%20%20var%20%5Fgaq%20%3D%20%5Fgaq%20%7C%7C%20%5B%5D%3B%0A%20%20%20%20%5Fgaq%2Epush%28%5B%27%5FsetAccount%27%2C%20%27UA%2D9338486%2D1%27%5D%29%3B%0A%20%20%20%20%5Fgaq%2Epush%28%5B%27%5FtrackPageview%27%5D%29%3B%0A%0A%20%20%20%20%28function%28%29%20%7B%0A%20%20%20%20%20%20var%20ga%20%3D%20document%2EcreateElement%28%27script%27%29%3B%20ga%2Etype%20%3D%20%27text%2Fjavascript%27%3B%20ga%2Easync%20%3D%20true%3B%0A%20%20%20%20%20%20ga%2Esrc%20%3D%20%28%27https%3A%27%20%3D%3D%20document%2Elocation%2Eprotocol%20%3F%20%27https%3A%2F%2Fssl%27%20%3A%20%27http%3A%2F%2Fwww%27%29%20%2B%20%27%2Egoogle%2Danalytics%2Ecom%2Fga%2Ejs%27%3B%0A%20%20%20%20%20%20var%20s%20%3D%20document%2EgetElementsByTagName%28%27script%27%29%5B0%5D%3B%20s%2EparentNode%2EinsertBefore%28ga%2C%20s%29%3B%0A%20%20%20%20%7D%29%28%29%3B%0A%20%20%3C%2Fscript%3E%0A%3C%2Fhead%3E%0A%0A%20%20%3Cbody%3E%0A%20%20%20%20%3Ca%20name%3D%22top%22%3E%3C%2Fa%3E%0A%0A%3C%21%2D%2D%20a%20few%20hooks%20for%20screen%20readers%20%2D%2D%3E%0A%3Ca%20href%3D%22%23site%2Dnavigation%22%20title%3D%22Jump%20to%20site%20nav%22%3E%3C%2Fa%3E%0A%0A%3Ca%20href%3D%22%23site%2Dmap%22%20title%3D%22Jump%20to%20site%20map%22%3E%3C%2Fa%3E%0A%0A%0A%20%20%20%20%3Cdiv%20id%3D%22SiteContainer%22%20class%3D%22SiteContainer%22%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%3Cdiv%20id%3D%22PageContent%22%20class%3D%22PageContent%22%3E%0A%20%20%20%20%20%20%0A%0A%0A%09%0A%09%20%20%3Cdiv%20id%3D%22PageBreadcrumbs%22%20class%3D%22PageBreadcrumbs%22%3E%0A%20%20%3Cul%3E%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%09%20%20%09%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2F%22%3EHome%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%09%20%20%09%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2F%22%3EHelp%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3Cli%3EHelp%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%3C%2Ful%3E%0A%3C%2Fdiv%3E%0A%0A%09%0A%0A%09%0A%09%0A%09%0A%0A%09%3Ch1%3EPage%20Not%20Found%3C%2Fh1%3E%0A%0AThe%20page%20you%20were%20looking%20for%20was%20not%20found%2E%0A%0A%0A%09%0A%0A%20%20%20%20%20%20%3C%2Fdiv%3E%0A%0A%20%20%20%20%20%20%3Cdiv%20id%3D%22SiteGlobalFooter%22%20class%3D%22SiteGlobalFooter%22%3E%0A%0A%20%20%3Cspan%20class%3D%22global%5Ffooter%5Flogo%5Fbc%20noprint%22%3E%3Cimg%20src%3D%22%2Fimages%2Flogo%5Fglobal%5Ffooter%5Fbioconductor%2Egif%22%20height%3D%2251%22%20width%3D%22154%22%20alt%3D%22%22%2F%3E%3C%2Fspan%3E%0A%0A%20%20%3Cdiv%20class%3D%22attribution%5Fcopyright%22%3E%0A%20%20%20%20%3Cp%3EContact%20us%3A%20%3Ca%20href%3D%22https%3A%2F%2Fsupport%2Ebioconductor%2Eorg%2F%22%3Esupport%2Ebioconductor%2Eorg%3C%2Fa%3E%3C%2Fp%3E%0A%20%20%20%20%3Cp%3ECopyright%20%26copy%3B%202003%20%2D%202019%2C%20Bioconductor%3C%2Fp%3E%0A%20%20%3C%2Fdiv%3E%0A%0A%20%20%3Ca%20name%3D%22site%2Dmap%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%20%20%3Cul%20class%3D%22footer%5Fnav%5Flist%20noprint%22%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F0%22%3E%0A%20%20%20%20%20%20%3Cb%3E%3Ca%20href%3D%22%2Findex%2Ehtml%22%3EHome%3C%2Fa%3E%3C%2Fb%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F1%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%22%3EInstall%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23install%2DR%22%3EInstall%20R%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23find%2Dbioconductor%2Dpackages%22%3EFind%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23install%2Dbioconductor%2Dpackages%22%3EInstall%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23update%2Dbioconductor%2Dpackages%22%3EUpdate%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F2%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fhelp%2Findex%2Ehtml%22%3EHelp%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fpackages%2Frelease%2Fworkflows%2F%22%3EWorkflows%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fpackage%2Dvignettes%2F%22%3EPackage%20Vignettes%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Ffaq%2F%22%3EFAQ%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fsupport%2F%22%3ESupport%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22http%3A%2F%2Fcran%2Er%2Dproject%2Eorg%2F%22%3EUsing%20R%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fcourse%2Dmaterials%2F%22%3ECourses%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fpublications%2F%22%3EPublications%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fbioconductor%2Dcloud%2Dami%2F%22%3ECloud%20AMI%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fcommunity%2F%22%3ECommunity%20Resources%3C%2Fa%3E%3C%2Fli%3E%0A%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F3%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fdevelopers%2Findex%2Ehtml%22%3EDevelopers%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fpackage%2Dguidelines%2F%22%3EPackage%20Guidelines%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fpackage%2Dsubmission%2F%22%3EPackage%20Submission%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Frelease%2Dschedule%2F%22%3ERelease%20Schedule%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fsource%2Dcontrol%2F%22%3ESource%20Control%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F4%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fabout%2Findex%2Ehtml%22%3EAbout%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fannual%2Dreports%2F%22%3EAnnual%20Reports%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fcore%2Dteam%2F%22%3ECore%20Team%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fmirrors%2F%22%3EMirrors%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Frelated%2Dprojects%2F%22%3ERelated%20Projects%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%3C%2Ful%3E%0A%20%20%3Cbr%20style%3D%22clear%3Aboth%22%2F%3E%0A%20%20%26nbsp%3B%0A%0A%3C%2Fdiv%3E%0A%0A%0A%3Cdiv%20id%3D%22SiteMasthead%22%20class%3D%22SiteMasthead%22%3E%0A%0A%20%20%3Ca%20name%3D%22site%2Dnavigation%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%0A%20%20%3Cspan%20class%3D%22logo%5Fvanity%5Fbar%20noprint%22%3E%3C%2Fspan%3E%0A%0A%20%20%3Ca%20href%3D%22%2F%22%3E%0A%09%3Cimg%20src%3D%22%2Fimages%2Flogo%5Fbioconductor%2Egif%22%20border%3D%220%22%20class%3D%22masthead%5Flogo%22%20height%3D%2278%22%20width%3D%22260%22%20alt%3D%22Bioconductor%20%2D%20open%20source%20software%20for%20bioinformatics%22%2F%3E%0A%20%20%3C%2Fa%3E%0A%0A%20%20%3Cdiv%20id%3D%22SiteMastheadRight%22%20class%3D%22SiteMastheadRight%22%3E%0A%20%20%20%20%3Cdiv%20id%3D%22SiteMastheadRightBackground%22%20class%3D%22SiteMastheadRightBackground%22%3E%0A%0A%20%20%20%20%20%20%3Ca%20name%3D%22site%2Dsearch%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%20%20%20%20%20%20%3Cform%20class%3D%22site%5Fsearch%22%20id%3D%22search%5Fform%22%20method%3D%22GET%22%0A%20%20%20%20%20%20%20%20%20%20%20%20action%3D%22%2Fhelp%2Fsearch%2Findex%2Ehtml%22%3E%0A%20%20%20%20%20%20%20%20Search%3A%20%3Cinput%20id%3D%22q%22%20name%3D%22q%22%20%2F%3E%0A%20%20%20%20%20%20%3C%2Fform%3E%0A%0A%20%20%20%20%20%20%3Cul%20class%3D%22masthead%5Fnav%20noprint%22%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F1%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2F%22%3EHome%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F2%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Finstall%2F%22%3EInstall%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F3%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fhelp%2F%22%3EHelp%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F4%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fdevelopers%2F%22%3EDevelopers%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F5%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fabout%2F%22%3EAbout%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%0A%0A%3C%2Fdiv%3E%0A%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A" alt="Bioc Time" /></a> <a href="https://bioconductor.org/packages/release/bioc/html/scPCA.html"><img src="data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%20PUBLIC%20%22%2D%2F%2FW3C%2F%2FDTD%20XHTML%201%2E0%20Transitional%2F%2FEN%22%20%22http%3A%2F%2Fwww%2Ew3%2Eorg%2FTR%2Fxhtml1%2FDTD%2Fxhtml1%2Dtransitional%2Edtd%22%3E%0A%3Chtml%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F1999%2Fxhtml%22%20dir%3D%22ltr%22%20lang%3D%22en%2DUS%22%0Aprefix%3D%22og%3A%20http%3A%2F%2Fogp%2Eme%2Fns%23%22%3E%0A%20%20%3Chead%3E%0A%20%20%3Cmeta%20http%2Dequiv%3D%22Content%2DType%22%20content%3D%22text%2Fhtml%3B%20charset%3Dutf%2D8%22%20%2F%3E%0A%20%20%3Cmeta%20http%2Dequiv%3D%22Content%2DLanguage%22%20content%3D%22en%2Dus%22%20%2F%3E%0A%20%20%3Cmeta%20name%3D%22robots%22%20content%3D%22all%22%20%2F%3E%0A%20%20%0A%0A%0A%0A%20%20%0A%20%20%0A%20%20%0A%20%20%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%0A%20%20%0A%20%20%3Cscript%20src%3D%22%2Fjs%2Fjquery%2Etools%2Emin%2Ejs%22%3E%3C%2Fscript%3E%0A%0A%20%20%0A%20%20%0A%20%20%3Ctitle%3EBioconductor%20%2D%20Help%3C%2Ftitle%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20type%3D%22text%2Fcss%22%20href%3D%22%2Fstyle%2Fbioconductor%2Ecss%22%20media%3D%22screen%22%20%2F%3E%0A%20%20%3Clink%20rel%3D%22SHORTCUT%20ICON%22%20type%3D%22image%2Fx%2Dicon%22%20href%3D%22%2Ffavicon%2Eico%22%20%2F%3E%0A%20%20%3Clink%20rel%3D%22ICON%22%20type%3D%22image%2Fx%2Dicon%22%20href%3D%22%2Ffavicon%2Eico%22%20%2F%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fbioconductor%2Ejs%22%3E%3C%2Fscript%3E%0A%20%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Ecorner%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fjquery%2Etimeago%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fbioc%2Dstyle%2Ejs%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%20src%3D%22%2Fjs%2Fversions%2Ejs%22%3E%3C%2Fscript%3E%0A%0A%20%20%3C%21%2D%2D%20Google%20Analytics%20script%20%2D%2D%3E%0A%20%20%3Cscript%20type%3D%22text%2Fjavascript%22%3E%0A%20%20%20%20var%20%5Fgaq%20%3D%20%5Fgaq%20%7C%7C%20%5B%5D%3B%0A%20%20%20%20%5Fgaq%2Epush%28%5B%27%5FsetAccount%27%2C%20%27UA%2D9338486%2D1%27%5D%29%3B%0A%20%20%20%20%5Fgaq%2Epush%28%5B%27%5FtrackPageview%27%5D%29%3B%0A%0A%20%20%20%20%28function%28%29%20%7B%0A%20%20%20%20%20%20var%20ga%20%3D%20document%2EcreateElement%28%27script%27%29%3B%20ga%2Etype%20%3D%20%27text%2Fjavascript%27%3B%20ga%2Easync%20%3D%20true%3B%0A%20%20%20%20%20%20ga%2Esrc%20%3D%20%28%27https%3A%27%20%3D%3D%20document%2Elocation%2Eprotocol%20%3F%20%27https%3A%2F%2Fssl%27%20%3A%20%27http%3A%2F%2Fwww%27%29%20%2B%20%27%2Egoogle%2Danalytics%2Ecom%2Fga%2Ejs%27%3B%0A%20%20%20%20%20%20var%20s%20%3D%20document%2EgetElementsByTagName%28%27script%27%29%5B0%5D%3B%20s%2EparentNode%2EinsertBefore%28ga%2C%20s%29%3B%0A%20%20%20%20%7D%29%28%29%3B%0A%20%20%3C%2Fscript%3E%0A%3C%2Fhead%3E%0A%0A%20%20%3Cbody%3E%0A%20%20%20%20%3Ca%20name%3D%22top%22%3E%3C%2Fa%3E%0A%0A%3C%21%2D%2D%20a%20few%20hooks%20for%20screen%20readers%20%2D%2D%3E%0A%3Ca%20href%3D%22%23site%2Dnavigation%22%20title%3D%22Jump%20to%20site%20nav%22%3E%3C%2Fa%3E%0A%0A%3Ca%20href%3D%22%23site%2Dmap%22%20title%3D%22Jump%20to%20site%20map%22%3E%3C%2Fa%3E%0A%0A%0A%20%20%20%20%3Cdiv%20id%3D%22SiteContainer%22%20class%3D%22SiteContainer%22%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%3Cdiv%20id%3D%22PageContent%22%20class%3D%22PageContent%22%3E%0A%20%20%20%20%20%20%0A%0A%0A%09%0A%09%20%20%3Cdiv%20id%3D%22PageBreadcrumbs%22%20class%3D%22PageBreadcrumbs%22%3E%0A%20%20%3Cul%3E%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%09%20%20%09%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2F%22%3EHome%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%09%20%20%09%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2F%22%3EHelp%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3Cli%3EHelp%3C%2Fli%3E%0A%20%20%20%20%20%20%0A%20%20%20%20%0A%20%20%3C%2Ful%3E%0A%3C%2Fdiv%3E%0A%0A%09%0A%0A%09%0A%09%0A%09%0A%0A%09%3Ch1%3EPage%20Not%20Found%3C%2Fh1%3E%0A%0AThe%20page%20you%20were%20looking%20for%20was%20not%20found%2E%0A%0A%0A%09%0A%0A%20%20%20%20%20%20%3C%2Fdiv%3E%0A%0A%20%20%20%20%20%20%3Cdiv%20id%3D%22SiteGlobalFooter%22%20class%3D%22SiteGlobalFooter%22%3E%0A%0A%20%20%3Cspan%20class%3D%22global%5Ffooter%5Flogo%5Fbc%20noprint%22%3E%3Cimg%20src%3D%22%2Fimages%2Flogo%5Fglobal%5Ffooter%5Fbioconductor%2Egif%22%20height%3D%2251%22%20width%3D%22154%22%20alt%3D%22%22%2F%3E%3C%2Fspan%3E%0A%0A%20%20%3Cdiv%20class%3D%22attribution%5Fcopyright%22%3E%0A%20%20%20%20%3Cp%3EContact%20us%3A%20%3Ca%20href%3D%22https%3A%2F%2Fsupport%2Ebioconductor%2Eorg%2F%22%3Esupport%2Ebioconductor%2Eorg%3C%2Fa%3E%3C%2Fp%3E%0A%20%20%20%20%3Cp%3ECopyright%20%26copy%3B%202003%20%2D%202019%2C%20Bioconductor%3C%2Fp%3E%0A%20%20%3C%2Fdiv%3E%0A%0A%20%20%3Ca%20name%3D%22site%2Dmap%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%20%20%3Cul%20class%3D%22footer%5Fnav%5Flist%20noprint%22%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F0%22%3E%0A%20%20%20%20%20%20%3Cb%3E%3Ca%20href%3D%22%2Findex%2Ehtml%22%3EHome%3C%2Fa%3E%3C%2Fb%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F1%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%22%3EInstall%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23install%2DR%22%3EInstall%20R%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23find%2Dbioconductor%2Dpackages%22%3EFind%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23install%2Dbioconductor%2Dpackages%22%3EInstall%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Finstall%2Findex%2Ehtml%23update%2Dbioconductor%2Dpackages%22%3EUpdate%20Bioconductor%20Packages%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F2%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fhelp%2Findex%2Ehtml%22%3EHelp%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fpackages%2Frelease%2Fworkflows%2F%22%3EWorkflows%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fpackage%2Dvignettes%2F%22%3EPackage%20Vignettes%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Ffaq%2F%22%3EFAQ%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fsupport%2F%22%3ESupport%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22http%3A%2F%2Fcran%2Er%2Dproject%2Eorg%2F%22%3EUsing%20R%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fcourse%2Dmaterials%2F%22%3ECourses%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fpublications%2F%22%3EPublications%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fbioconductor%2Dcloud%2Dami%2F%22%3ECloud%20AMI%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fhelp%2Fcommunity%2F%22%3ECommunity%20Resources%3C%2Fa%3E%3C%2Fli%3E%0A%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F3%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fdevelopers%2Findex%2Ehtml%22%3EDevelopers%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fpackage%2Dguidelines%2F%22%3EPackage%20Guidelines%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fpackage%2Dsubmission%2F%22%3EPackage%20Submission%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Frelease%2Dschedule%2F%22%3ERelease%20Schedule%3C%2Fa%3E%3C%2Fli%3E%0A%09%09%3Cli%3E%3Ca%20href%3D%22%2Fdevelopers%2Fsource%2Dcontrol%2F%22%3ESource%20Control%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%3Cli%20class%3D%22footer%5Fnav%5Flist%5Felement%20footer%5Fnav%5Flist%5Felement%5F4%22%3E%0A%20%20%20%20%20%20%3Cul%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Cb%3E%3Ca%20href%3D%22%2Fabout%2Findex%2Ehtml%22%3EAbout%3C%2Fa%3E%3C%2Fb%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fannual%2Dreports%2F%22%3EAnnual%20Reports%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fcore%2Dteam%2F%22%3ECore%20Team%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Fmirrors%2F%22%3EMirrors%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20href%3D%22%2Fabout%2Frelated%2Dprojects%2F%22%3ERelated%20Projects%3C%2Fa%3E%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%3C%2Fli%3E%0A%20%20%3C%2Ful%3E%0A%20%20%3Cbr%20style%3D%22clear%3Aboth%22%2F%3E%0A%20%20%26nbsp%3B%0A%0A%3C%2Fdiv%3E%0A%0A%0A%3Cdiv%20id%3D%22SiteMasthead%22%20class%3D%22SiteMasthead%22%3E%0A%0A%20%20%3Ca%20name%3D%22site%2Dnavigation%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%0A%20%20%3Cspan%20class%3D%22logo%5Fvanity%5Fbar%20noprint%22%3E%3C%2Fspan%3E%0A%0A%20%20%3Ca%20href%3D%22%2F%22%3E%0A%09%3Cimg%20src%3D%22%2Fimages%2Flogo%5Fbioconductor%2Egif%22%20border%3D%220%22%20class%3D%22masthead%5Flogo%22%20height%3D%2278%22%20width%3D%22260%22%20alt%3D%22Bioconductor%20%2D%20open%20source%20software%20for%20bioinformatics%22%2F%3E%0A%20%20%3C%2Fa%3E%0A%0A%20%20%3Cdiv%20id%3D%22SiteMastheadRight%22%20class%3D%22SiteMastheadRight%22%3E%0A%20%20%20%20%3Cdiv%20id%3D%22SiteMastheadRightBackground%22%20class%3D%22SiteMastheadRightBackground%22%3E%0A%0A%20%20%20%20%20%20%3Ca%20name%3D%22site%2Dsearch%22%3E%3C%2Fa%3E%20%3C%21%2D%2D%20accessibility%20anchor%20%2D%2D%3E%0A%20%20%20%20%20%20%3Cform%20class%3D%22site%5Fsearch%22%20id%3D%22search%5Fform%22%20method%3D%22GET%22%0A%20%20%20%20%20%20%20%20%20%20%20%20action%3D%22%2Fhelp%2Fsearch%2Findex%2Ehtml%22%3E%0A%20%20%20%20%20%20%20%20Search%3A%20%3Cinput%20id%3D%22q%22%20name%3D%22q%22%20%2F%3E%0A%20%20%20%20%20%20%3C%2Fform%3E%0A%0A%20%20%20%20%20%20%3Cul%20class%3D%22masthead%5Fnav%20noprint%22%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F1%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2F%22%3EHome%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F2%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Finstall%2F%22%3EInstall%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F3%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fhelp%2F%22%3EHelp%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F4%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fdevelopers%2F%22%3EDevelopers%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%20%20%3Cli%20class%3D%22masthead%5Fnav%5Felement%22%20id%3D%22masthead%5Fnav%5Felement%5F5%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22%2Fabout%2F%22%3EAbout%3C%2Fa%3E%0A%20%20%20%20%20%20%20%20%3C%2Fli%3E%0A%20%20%20%20%20%20%3C%2Ful%3E%0A%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%0A%0A%3C%2Fdiv%3E%0A%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A" alt="Bioc Downloads" /></a> <a href="http://opensource.org/licenses/MIT"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNzgiIGhlaWdodD0iMjAiPjxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iYSI+PHJlY3Qgd2lkdGg9Ijc4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI2EpIj48cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQ3djIwSDB6Ii8+PHBhdGggZmlsbD0iIzRjMSIgZD0iTTQ3IDBoMzF2MjBINDd6Ii8+PHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGg3OHYyMEgweiIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMTAiPiA8dGV4dCB4PSIyNDUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjM3MCI+bGljZW5zZTwvdGV4dD48dGV4dCB4PSIyNDUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjM3MCI+bGljZW5zZTwvdGV4dD48dGV4dCB4PSI2MTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjIxMCI+TUlUPC90ZXh0Pjx0ZXh0IHg9IjYxNSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMjEwIj5NSVQ8L3RleHQ+PC9nPiA8L3N2Zz4=" alt="MIT license" /></a></p>
+<blockquote>
+<p>Sparse Contrastive Principal Component Analysis for Computational Biology</p>
+</blockquote>
+<p><strong>Authors:</strong> <a href="https://pboileau.ca/">Philippe Boileau</a>, <a href="https://nimahejazi.org">Nima Hejazi</a>, <a href="https://statistics.berkeley.edu/~sandrine/">Sandrine Dudoit</a></p>
+<hr />
+<h2 id="whats-scpca">What’s <code>scPCA</code>?</h2>
+<p>The exploration and analysis of modern high-dimensional biological data regularly involves the use of dimension reduction techniques in order to tease out meaningful and interpretable information from complex experimental data, often subject to batch effects and other technical noise. In tandem with the development of sequencing technology (e.g., RNA-seq, scRNA-seq), many variants of PCA have been developed in attempts to remedy deficiencies in interpretability and stability that plague their classical variants. Such developments have included both sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006), which increases the stability and interpretability of principal component loadings in high dimensions, and, more recently, contrastive PCA (cPCA) (Abid et al. 2018), which captures relevant information in the target (experimental) data set by eliminating technical noise through comparison to a so-called background data set. While SPCA and cPCA have both individually proven useful in resolving distinct shortcomings of PCA, neither is capable of simultaneously tackling the issues of interpretability, stability and relevance simultaneously. The <code>scPCA</code> package implements <em>sparse constrastive PCA</em>, to accomplish both of these tasks in the context of high-dimensional biological data. In addition to implementing this newly developed technique, the <code>scPCA</code> package also implements cPCA and generalizations thereof.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<p>For standard use, install from <a href="https://bioconductor.org/packages/biotmle">Bioconductor</a> using <a href="https://CRAN.R-project.org/package=BiocManager"><code>BiocManager</code></a>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="dt">quietly=</span><span class="ot">TRUE</span>)) {</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;scPCA&quot;</span>)</a></code></pre></div>
+<p>To contribute, install the bleeding-edge <em>development version</em> from GitHub via <a href="https://CRAN.R-project.org/package=remotes"><code>remotes</code></a>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;PhilBoileau/scPCA&quot;</span>)</a></code></pre></div>
+<p>Current and prior <a href="https://bioconductor.org">Bioconductor</a> releases are available under branches with numbers prefixed by “RELEASE_”. For example, to install the version of this package available via Bioconductor 3.10, use</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;PhilBoileau/scPCA@RELEASE_3_10&quot;</span>)</a></code></pre></div>
+<hr />
+<h2 id="example">Example</h2>
+<p>For details on how to best use the <code>scPCA</code> R package, please consult the most recent <a href="https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html">package vignette</a> available through the <a href="https://bioconductor.org/packages/scPCA">Bioconductor project</a>.</p>
+<hr />
+<h2 id="issues">Issues</h2>
+<p>If you encounter any bugs or have any specific feature requests, please <a href="https://github.com/PhilBoileau/scPCA/issues">file an issue</a>.</p>
+<hr />
+<h2 id="contributions">Contributions</h2>
+<p>Contributions are very welcome. Interested contributors should consult our <a href="https://github.com/PhilBoileau/scPCA/blob/master/CONTRIBUTING.md">contribution guidelines</a> prior to submitting a pull request.</p>
+<hr />
+<h2 id="license">License</h2>
+<p>© 2019 <a href="https://pboileau.ca/">Philippe Boileau</a></p>
+<p>The contents of this repository are distributed under the MIT license. See file <code>LICENSE</code> for details.</p>
+<hr />
+<h2 id="references">References</h2>
+<div id="refs" class="references">
+
+<div id="ref-abid2018exploring">
+
+<p>Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018. “Exploring Patterns Enriched in a Dataset with Contrastive Principal Component Analysis.” <em>Nature Communications</em> 9 (1): 2134.</p>
+</div>
+
+<div id="ref-zou2006sparse">
+
+<p>Zou, Hui, Trevor Hastie, and Robert Tibshirani. 2006. “Sparse Principal Component Analysis.” <em>Journal of Computational and Graphical Statistics</em> 15 (2). Taylor &amp; Francis: 265–86.</p>
+</div>
+
+</div>
+
+</body>
+</html>

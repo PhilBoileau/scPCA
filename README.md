@@ -12,13 +12,14 @@ coverage](https://codecov.io/gh/PhilBoileau/scPCA/branch/master/graph/badge.svg)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![BioC
+status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
+[![Bioc
+Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
+[![Bioc
+Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-<!--
-[![BioC status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
-[![Bioc Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
-[![Bioc Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
--->
 
 > Sparse Contrastive Principal Component Analysis for Computational
 > Biology
@@ -51,63 +52,48 @@ interpretability, stability and relevance simultaneously. The `scPCA`
 package implements *sparse constrastive PCA*, to accomplish both of
 these tasks in the context of high-dimensional biological data. In
 addition to implementing this newly developed technique, the `scPCA`
-package also implements cPCA and generalizations of it.
-
-<!--
-...
--->
+package also implements cPCA and generalizations thereof.
 
 -----
 
 ## Installation
 
-<!-- For standard use, install from -->
+For standard use, install from
+[Bioconductor](https://bioconductor.org/packages/biotmle) using
+[`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
 
-<!-- [Bioconductor](https://bioconductor.org/packages/scPCA) using -->
-
-<!-- [`BiocManager`](https://CRAN.R-project.org/package=BiocManager): -->
-
-<!-- ```{r bioc-installation, eval = FALSE} -->
-
-<!-- if (!requireNamespace("BiocManager", quietly=TRUE)) { -->
-
-<!--   install.packages("BiocManager") -->
-
-<!-- } -->
-
-<!-- BiocManager::install("scPCA") -->
-
-<!-- ``` -->
+``` r
+if (!requireNamespace("BiocManager", quietly=TRUE)) {
+  install.packages("BiocManager")
+}
+BiocManager::install("scPCA")
+```
 
 To contribute, install the bleeding-edge *development version* from
-GitHub via
-[`remotes`](https://CRAN.R-project.org/package=remotes):
+GitHub via [`remotes`](https://CRAN.R-project.org/package=remotes):
 
 ``` r
 remotes::install_github("PhilBoileau/scPCA")
 ```
 
-<!-- Current and prior [Bioconductor](https://bioconductor.org) releases are -->
+Current and prior [Bioconductor](https://bioconductor.org) releases are
+available under branches with numbers prefixed by “RELEASE\_”. For
+example, to install the version of this package available via
+Bioconductor 3.10, use
 
-<!-- available under branches with numbers prefixed by "RELEASE_". For example, to -->
-
-<!-- install the version of this package available via Bioconductor 3.10, use -->
-
-<!-- ```{r gh-develop-installation, eval = FALSE} -->
-
-<!-- devtools::install_github("PhilBoileau/scPCA", ref = "RELEASE_3_10") -->
-
-<!-- ``` -->
+``` r
+remotes::install_github("PhilBoileau/scPCA@RELEASE_3_10")
+```
 
 -----
 
 ## Example
 
 For details on how to best use the `scPCA` R package, please consult the
-most recent vignette. <!-- [package -->
-<!-- vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html) -->
-<!-- available through the [Bioconductor -->
-<!-- project](https://bioconductor.org/packages/scPCA). -->
+most recent [package
+vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/doc/scpca_intro.html)
+available through the [Bioconductor
+project](https://bioconductor.org/packages/scPCA).
 
 -----
 

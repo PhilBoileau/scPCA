@@ -1,6 +1,6 @@
 ---
 title: "`scPCA`: Sparse contrastive principal component analysis"
-author: "Philippe Boileau and [Nima Hejazi](https://nimahejazi.org)"
+author: "Philippe Boileau and Nima Hejazi"
 date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
