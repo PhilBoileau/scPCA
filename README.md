@@ -16,8 +16,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc
 Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
-[![Bioc
-Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
+<!-- [![Bioc Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html) -->
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
@@ -59,7 +58,7 @@ package also implements cPCA and generalizations thereof.
 ## Installation
 
 For standard use, install from
-[Bioconductor](https://bioconductor.org/packages/biotmle) using
+[Bioconductor](https://bioconductor.org/packages/scPCA) using
 [`BiocManager`](https://CRAN.R-project.org/package=BiocManager):
 
 ``` r
