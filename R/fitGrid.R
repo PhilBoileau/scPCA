@@ -28,11 +28,11 @@
 #'  clustering algorithm.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
-#' @param linkage_method The agglomerative linkage method to be used if
-#'   \code{clust_method = "hclust"}. The options are \code{ward.D},
-#'   \code{ward.D2}, \code{single}, \code{complete}, \code{average,
-#'   \code{mcquitty}, \code{median}, and \code{centroid}. The default is
-#'   \code{complete}.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -224,11 +224,11 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'  clustering algorithm.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
-#' @param linkage_method The agglomerative linkage method to be used if
-#'   \code{clust_method = "hclust"}. The options are \code{ward.D},
-#'   \code{ward.D2}, \code{single}, \code{complete}, \code{average,
-#'   \code{mcquitty}, \code{median}, and \code{centroid}. The default is
-#'   \code{complete}.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #'   
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -240,7 +240,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   }
 #'
 #' @importFrom elasticnet spca
-#' @importFrom stats kmeans dist
+#' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #'
