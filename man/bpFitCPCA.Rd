@@ -4,8 +4,7 @@
 \alias{bpFitCPCA}
 \title{Contrastive Principal Component Analysis in Parallel}
 \usage{
-bpFitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen,
-  n_medoids)
+bpFitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen, n_medoids)
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
