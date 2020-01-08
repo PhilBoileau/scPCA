@@ -22,12 +22,17 @@
 #'  computed.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM). The default
-#'  is k-means clustering.
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -39,15 +44,16 @@
 #'   }
 #'
 #' @importFrom elasticnet spca
-#' @importFrom stats kmeans dist
+#' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #'
 #' @keywords internal
 #'
 fitGrid <- function(target, target_valid = NULL, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
-                    clust_method = c("kmeans", "pam"), n_centers,
-                    max_iter = 10) {
+                    clust_method = c("kmeans", "pam", "hclust"),
+                    n_centers, max_iter = 10,
+                    linkage_method = "complete") {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -153,11 +159,21 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
           x = subspace, centers = n_centers,
           iter.max = max_iter
         )
+      } else if (clust_method == "hclust") {
+        dist_matrix <- stats::dist(x = subspace, method = "euclidean")
+        hclust_res <- stats::hclust(d = dist_matrix, method = linkage_method)
+        clust_res <- stats::cutree(tree = hclust_res, k = n_centers)
+        sil_width <- cluster::silhouette(
+          clust_res,
+          dist_matrix
+        )[, 3]
       }
-      sil_width <- cluster::silhouette(
-        clust_res$cluster,
-        stats::dist(subspace)
-      )[, 3]
+      if (clust_method %in% c("kmeans", "pam")) {
+        sil_width <- cluster::silhouette(
+          clust_res$cluster,
+          stats::dist(subspace)
+        )[, 3] 
+      }
       mean(sil_width)
     }
   ))
@@ -202,13 +218,18 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'  computed.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM). The default
-#'  is k-means clustering.
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
-#'
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
+#'   
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
 #'     \item rotation - the matrix of variable loadings
@@ -219,7 +240,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   }
 #'
 #' @importFrom elasticnet spca
-#' @importFrom stats kmeans dist
+#' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #'
@@ -227,8 +248,9 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
-                      clust_method = c("kmeans", "pam"), n_centers,
-                      max_iter = 10) {
+                      clust_method = c("kmeans", "pam", "hclust"),
+                      n_centers, max_iter = 10,
+                      linkage_method = "complete") {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -341,11 +363,21 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
           x = subspace, centers = n_centers,
           iter.max = max_iter
         )
+      } else if (clust_method == "hclust") {
+        dist_matrix <- stats::dist(x = subspace, method = "euclidean")
+        hclust_res <- stats::hclust(d = dist_matrix, method = linkage_method)
+        clust_res <- stats::cutree(tree = hclust_res, k = n_centers)
+        sil_width <- cluster::silhouette(
+          clust_res,
+          dist_matrix
+        )[, 3]
       }
-      sil_width <- cluster::silhouette(
-        clust_res$cluster,
-        stats::dist(subspace)
-      )[, 3]
+      if (clust_method %in% c("kmeans", "pam")) {
+        sil_width <- cluster::silhouette(
+          clust_res$cluster,
+          stats::dist(subspace)
+        )[, 3] 
+      }
       mean(sil_width)
     }
   )

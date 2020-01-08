@@ -32,13 +32,18 @@
 #'  loadings. The default is to use 20 equidistant values between 0.05 and 1.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM). The default
-#'  is k-means clustering.
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
 #'  is performed, regardless of what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider if \code{n_centers} is set to 1. The default is 8 such medoids.
 #' @param parallel A \code{logical} indicating whether to invoke parallel
@@ -96,7 +101,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2, cv = NULL,
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
-                  clust_method = c("kmeans", "pam"), n_centers, max_iter = 10,
+                  clust_method = c("kmeans", "pam", "hclust"), n_centers,
+                  max_iter = 10, linkage_method = "complete",
                   n_medoids = 8, parallel = FALSE) {
   # set defaults
   clust_method <- match.arg(clust_method)
@@ -123,6 +129,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       clust_method = clust_method,
       n_centers = n_centers,
       max_iter = max_iter,
+      linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel
     )
@@ -161,6 +168,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       clust_method = clust_method,
       n_centers = n_centers,
       max_iter = max_iter,
+      linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel,
       use_future = FALSE,
@@ -200,6 +208,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       clust_method = clust_method,
       n_centers = n_centers,
       max_iter = max_iter,
+      linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel
     )
@@ -253,13 +262,18 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  loadings. The default is to use 20 equidistant values between 0.05 and 1.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM). The default
-#'  is k-means clustering.
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
 #'  is performed, regardless of what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider if \code{n_centers} is set to 1. The default is 8 such medoids.
 #' @param parallel A \code{logical} indicating whether to invoke parallel
@@ -274,7 +288,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'
 selectParams <- function(target, background, center, scale, n_eigen,
                          contrasts, penalties, clust_method, n_centers,
-                         max_iter, n_medoids, parallel) {
+                         max_iter, linkage_method, n_medoids, parallel) {
   # call parallelized function variants if so requested
   if (!parallel) {
     # create contrastive covariance matrices
@@ -294,7 +308,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
         c_contrasts = c_contrasts, contrasts = contrasts,
         penalties = penalties, n_eigen = n_eigen,
         clust_method = clust_method, n_centers = n_centers,
-        max_iter = max_iter
+        max_iter = max_iter, linkage_method = linkage_method
       )
     }
   } else {
@@ -307,8 +321,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
       opt_params <- bpFitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
-        n_eigen = n_eigen,
-        n_medoids = n_medoids
+        n_eigen = n_eigen, n_medoids = n_medoids
       )
     } else {
       opt_params <- bpFitGrid(
@@ -316,7 +329,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
         c_contrasts = c_contrasts, contrasts = contrasts,
         penalties = penalties, n_eigen = n_eigen,
         clust_method = clust_method, n_centers = n_centers,
-        max_iter = max_iter
+        max_iter = max_iter, linkage_method = linkage_method
       )
     }
   }
@@ -352,13 +365,18 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'  loadings. The default is to use 20 equidistant values between 0.05 and 1.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal constrastive parameter. Currently, this is
-#'  limited to either k-means or partitioning around medoids (PAM). The default
-#'  is k-means clustering.
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
 #'  is performed, regardless of what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider if \code{n_centers} is set to 1. The default is 8 such medoids.
 #' @param parallel A \code{logical} indicating whether to invoke parallel
@@ -375,7 +393,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            contrasts, penalties, clust_method, n_centers,
-                           max_iter, n_medoids, parallel) {
+                           max_iter, linkage_method, n_medoids, parallel) {
   # make training and validation folds
   train_target <- origami::training(target, fold$target)
   valid_target <- origami::validation(target, fold$target)
@@ -406,7 +424,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         n_eigen = n_eigen,
         clust_method = clust_method,
         n_centers = n_centers,
-        max_iter = max_iter
+        max_iter = max_iter,
+        linkage_method = linkage_method
       )
     }
   } else {
@@ -431,7 +450,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         clust_method = clust_method,
         target_valid = valid_target,
         n_centers = n_centers,
-        max_iter = max_iter
+        max_iter = max_iter,
+        linkage_method = linkage_method
       )
     }
   }

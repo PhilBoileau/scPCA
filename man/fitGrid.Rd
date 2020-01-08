@@ -4,9 +4,20 @@
 \alias{fitGrid}
 \title{Identify the Optimal Contrastive and Penalty Parameters}
 \usage{
-fitGrid(target, target_valid = NULL, center, scale, c_contrasts,
-  contrasts, penalties, n_eigen, clust_method = c("kmeans", "pam"),
-  n_centers, max_iter = 10)
+fitGrid(
+  target,
+  target_valid = NULL,
+  center,
+  scale,
+  c_contrasts,
+  contrasts,
+  penalties,
+  n_eigen,
+  clust_method = c("kmeans", "pam", "hclust"),
+  n_centers,
+  max_iter = 10,
+  linkage_method = "complete"
+)
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
@@ -35,14 +46,20 @@ computed.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
-limited to either k-means or partitioning around medoids (PAM). The default
-is k-means clustering.}
+limited to either k-means, partitioning around medoids (PAM), and
+hierarchical clustering. The default is k-means clustering.}
 
 \item{n_centers}{A \code{numeric} giving the number of centers to use in the
 clustering algorithm.}
 
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
 be used in k-means clustering, defaulting to 10.}
+
+\item{linkage_method}{A \code{character} specifying the agglomerative linkage
+method to be used if \code{clust_method = "hclust"}. The options are
+\code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+\code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+default is \code{complete}.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:

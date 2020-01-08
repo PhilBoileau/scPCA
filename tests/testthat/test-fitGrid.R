@@ -42,7 +42,7 @@ test_that(paste(
   expect_gte(fit$penalty[[idx]], 0)
 })
 
-test_that("Both cluster methods (kmeans, pam) run without errors", {
+test_that("All cluster methods (kmeans, pam, hclust) run without errors", {
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
@@ -54,6 +54,62 @@ test_that("Both cluster methods (kmeans, pam) run without errors", {
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "pam"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "complete"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "average"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "single"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "ward.D"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "ward.D2"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "mcquitty"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "median"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "centroid"
   ))
 })
 
