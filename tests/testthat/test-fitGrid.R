@@ -88,13 +88,6 @@ test_that("All cluster methods (kmeans, pam, hclust) run without errors", {
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "ward.D2"
-  ))
-  expect_silent(fitGrid(
-    target = target, center = center, scale = scale,
-    c_contrasts = c_contrasts, contrasts = contrasts,
-    penalties = penalties, n_eigen = n_eigen,
-    n_centers = n_centers, clust_method = "hclust",
     linkage_method = "mcquitty"
   ))
   expect_silent(fitGrid(

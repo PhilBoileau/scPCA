@@ -30,7 +30,7 @@
 #'   be used in k-means clustering, defaulting to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative linkage
 #'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
 #'
@@ -226,7 +226,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   be used in k-means clustering, defaulting to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative linkage
 #'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
 #'   

@@ -15,6 +15,15 @@
 #'  computed.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters.
 #' @param penalties A \code{numeric} vector of the penalty terms.
+#' @param clust_method A \code{character} specifying the clustering method to
+#'  use for choosing the optimal constrastive parameter. Currently, this is
+#'  limited to either k-means, partitioning around medoids (PAM), and
+#'  hierarchical clustering. The default is k-means clustering.
+#' @param linkage_method A \code{character} specifying the agglomerative linkage
+#'   method to be used if \code{clust_method = "hclust"}. The options are
+#'   \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+#'   default is \code{complete}.
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
@@ -25,7 +34,7 @@
 #' @return Whether all argument conditions are satisfied
 #'
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
-                      penalties) {
+                      penalties, clust_method, linkage_method) {
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
     tibble::is_tibble(target) ||
@@ -65,5 +74,10 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
     assertthat::assert_that(length(penalties) > 0)
     assertthat::assert_that(is.numeric(penalties))
     assertthat::assert_that(all(penalties >= 0))
+  }
+  
+  # check that the linkage method is not ward.D is not selected
+  if (clust_method == "hclust") {
+    assertthat::assert_that(linkage_method != "ward.D")
   }
 }

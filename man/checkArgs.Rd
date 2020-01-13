@@ -4,7 +4,17 @@
 \alias{checkArgs}
 \title{Check Arguments passed to the scPCA Function}
 \usage{
-checkArgs(target, background, center, scale, n_eigen, contrasts, penalties)
+checkArgs(
+  target,
+  background,
+  center,
+  scale,
+  n_eigen,
+  contrasts,
+  penalties,
+  clust_method,
+  linkage_method
+)
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
@@ -25,6 +35,17 @@ computed.}
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters.}
 
 \item{penalties}{A \code{numeric} vector of the penalty terms.}
+
+\item{clust_method}{A \code{character} specifying the clustering method to
+use for choosing the optimal constrastive parameter. Currently, this is
+limited to either k-means, partitioning around medoids (PAM), and
+hierarchical clustering. The default is k-means clustering.}
+
+\item{linkage_method}{A \code{character} specifying the agglomerative linkage
+method to be used if \code{clust_method = "hclust"}. The options are
+\code{ward.D2}, \code{single}, \code{complete},
+\code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
+default is \code{complete}.}
 }
 \value{
 Whether all argument conditions are satisfied

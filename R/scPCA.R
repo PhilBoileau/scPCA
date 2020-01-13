@@ -41,7 +41,7 @@
 #'   be used in k-means clustering, defaulting to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative linkage
 #'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
@@ -110,7 +110,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   # check arguments to function
   checkArgs(
     target, background, center, scale, n_eigen,
-    contrasts, penalties
+    contrasts, penalties, clust_method, linkage_method
   )
 
   # set target and background data sets to be matrices if from Matrix package
@@ -271,7 +271,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'   be used in k-means clustering, defaulting to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative linkage
 #'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
@@ -374,7 +374,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'   be used in k-means clustering, defaulting to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative linkage
 #'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D}, \code{ward.D2}, \code{single}, \code{complete},
+#'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
