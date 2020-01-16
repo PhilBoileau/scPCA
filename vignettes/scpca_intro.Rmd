@@ -13,7 +13,7 @@ vignette: >
 
 # Introduction
 
-```{r setup, echo=FALSE}
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
 library(ggpubr)
@@ -45,9 +45,9 @@ high-dimensional data [@abid2018exploring].
 
 Although sPCA and cPCA have proven useful in resolving individual shortcomings
 of PCA, neither is capable of tackling the issues of stability and relevance
-simultaneously. The goal of this research project is to determine whether a
-combination of these methods, dubbed sparse constrastive PCA (scPCA), can
-accomplish this task.
+simultaneously. This `scPCA` package implements a combination of these methods,
+dubbed sparse constrastive PCA (scPCA), that can accomplish this task. cPCA,
+previously unavailable to `R` users, is also implmented.
 
 ---
 
@@ -251,6 +251,15 @@ annotate_figure(
   bottom = "Variable Index"
 )
 ```
+
+
+## Cross-Validation for Hyperparameter Tuning of cPCA and scPCA
+
+The hyperparemeters of the cPCA and scPCA algorithms provided in this package
+are selected through a clustering-based hyperparemeter tuning framework
+(detailed in [@boileau2020]). If the discovery of non-generalizable patterns in
+the data becomes a concern, a cross-validated approach to this tuning framework
+is made available.
 
 ---
 
