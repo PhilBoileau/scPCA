@@ -160,10 +160,14 @@ p_spca
 The first two contrastive principal components of cPCA successfully captured
 the variation of interest in the data with the help of the background data set.
 To fit contrastive PCA with the `scPCA` function of this package, simply select
-no penalization (by setting argument `penalties = 0`):
+no penalization (by setting argument `penalties = 0`), and specify the expected
+number of clusters in the data. Here, we set the number of clusters to 4
+(`n_centers = 4`). In general, this hyperparameter can be inferred *a priori*
+from sample annotation variables (e.g. treatment groups, biological groups,
+etc.), and empirical evidence suggests that the results of the algorithm are
+robust to different values of `n_centers` [@boileau2020].
 
 ```{r cPCA_sim}
-# run cPCA across with a penalty of zero to recover Abid et al.'s cPCA
 cpca_sim <- scPCA(target = toy_df[, 1:30],
                   background = background_df,
                   penalties = 0,
@@ -190,7 +194,9 @@ variation of interest, though the clusters corresponding to the class labels
 are more loose than those of cPCA. Importantly, the first and second scPC
 contain only two and three non-zero loadings, respectively -- a significant
 improvement over cPCA, whose first and second cPCs each possess 30 non-zero
-loadings, in terms of interpretability.
+loadings, in terms of interpretability. As with cPCA, the scPCA algorithm has
+demonstrated it's insensitivity to reasonable choices of `n_centers`
+[@boileau2020].
 
 ```{r scPCA_sim}
 # run scPCA for using 40 logarithmically seperated contrastive parameter values
@@ -208,6 +214,7 @@ colnames(scpca_df) <- c("scPC1", "scPC2", "label")
 # plot the results
 p_scpca <- ggplot(scpca_df, aes(x = scPC1, y = scPC2, colour = label)) +
   geom_point(alpha = 0.5) +
+  ggtitle("scPCA of Simulated Data") +
   theme_minimal()
 p_scpca
 
@@ -255,11 +262,65 @@ annotate_figure(
 
 ## Cross-Validation for Hyperparameter Tuning of cPCA and scPCA
 
-The hyperparemeters of the cPCA and scPCA algorithms provided in this package
-are selected through a clustering-based hyperparemeter tuning framework
-(detailed in [@boileau2020]). If the discovery of non-generalizable patterns in
-the data becomes a concern, a cross-validated approach to this tuning framework
-is made available.
+The hyperparemeters reponsible for contrastiveness and sparsity of the cPCA and
+scPCA algorithms provided in this package are selected through a 
+clustering-based hyperparemeter tuning framework (detailed in [@boileau2020]).
+If the discovery of non-generalizable patterns in the data becomes a concern, a
+cross-validated approach to this tuning framework is made available. Below, we
+provide the results of the cPCA and scPCA algorithms whose hyperparemeters were
+selected using 5-fold cross-validation. We recommend using between 5-fold and
+10-fold cross-valdidation when using this framework, though the number of folds
+can vary with dataset size. Smaller samples will require fewer folds.
+
+```{r cPCA_sim_cv}
+cpca_cv_sim <- scPCA(target = toy_df[, 1:30],
+                     background = background_df,
+                     penalties = 0,
+                     n_centers = 4,
+                     cv = 5)
+
+# create a dataframe to be plotted
+cpca_cv_df <- cpca_cv_sim$x %>%
+  as_tibble() %>%
+  mutate(label = toy_df[, 31] %>% as.character)
+colnames(cpca_cv_df) <- c("cPC1", "cPC2", "label")
+
+# plot the results
+p_cpca_cv <- ggplot(cpca_cv_df, aes(x = cPC1, y = cPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("cPCA of Simulated Data") +
+  theme_minimal()
+```
+
+```{r scPCA_sim_cv}
+scpca_cv_sim <- scPCA(target = toy_df[, 1:30],
+                      background = background_df,
+                      n_centers = 4,
+                      cv = 5)
+
+# create a dataframe to be plotted
+scpca_cv_df <- scpca_cv_sim$x %>%
+  as_tibble() %>%
+  mutate(label = toy_df[, 31] %>% as.character)
+colnames(scpca_cv_df) <- c("scPC1", "scPC2", "label")
+
+# plot the results
+p_scpca_cv <- ggplot(scpca_cv_df, aes(x = -scPC1, y = -scPC2, colour = label)) +
+  geom_point(alpha = 0.5) +
+  ggtitle("scPCA of Simulated Data") +
+  theme_minimal()
+```
+
+```{r plot_cv_cPCA_scPCA, echo=FALSE}
+ggarrange(
+  p_cpca_cv, p_scpca_cv,
+  nrow = 1,
+  common.legend = TRUE,
+  legend = "right"
+)
+```
+
+
 
 ---
 
