@@ -31,9 +31,11 @@ column. When the lowest estimate falls below \code{tolVar}, it is truncated
 to the value specified in this argument. The default is 0.01.}
 }
 \description{
-This is a safer utility for centering and scaling an input matrix \code{X}.
-It is intended to avoid some of the drawbacks of \code{\link[base]{scale}}
-while simultaneously being faster through relying on \pkg{matrixStats} for
-key internal computations.
+\code{safeColScale} is a safe utility for centering and scaling
+ an input matrix \code{X}. It is intended to avoid the drawback of using
+ \code{\link[base]{scale}} on data with constant variance by inducing adding
+ a small perturbation to truncate the values in such columns. It also takes
+ the opportunity to be faster than \code{\link[base]{scale}} through relying
+ on \pkg{matrixStats} for a key internal computation.
 }
 \keyword{internal}

@@ -1,6 +1,0 @@
-pandoc: 2.2.1
-pkgdown: 1.4.1
-pkgdown_sha: ~
-articles:
-  scpca_intro: scpca_intro.html
-
