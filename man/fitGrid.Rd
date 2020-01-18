@@ -23,9 +23,9 @@ fitGrid(
 \item{target}{The target (experimental) data set, in a standard format such
 as a \code{data.frame} or \code{matrix}.}
 
-\item{target_valid}{A holdout set of the target (experimental) data set, in a
-standard format such as a \code{data.frame} or \code{matrix}. \code{NULL} by
-default but used by \code{\link{cvSelectParams}} for cross-validated
+\item{target_valid}{A holdout set of the target (experimental) data set, in
+a standard format such as a \code{data.frame} or \code{matrix}. \code{NULL}
+by default but used by \code{\link{cvSelectParams}} for cross-validated
 selection of the contrastive and penalization parameters.}
 
 \item{center}{A \code{logical} indicating whether the target and background
@@ -55,11 +55,11 @@ clustering algorithm.}
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
 be used in k-means clustering, defaulting to 10.}
 
-\item{linkage_method}{A \code{character} specifying the agglomerative linkage
-method to be used if \code{clust_method = "hclust"}. The options are
-\code{ward.D2}, \code{single}, \code{complete},
-\code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
-default is \code{complete}.}
+\item{linkage_method}{A \code{character} specifying the agglomerative
+linkage method to be used if \code{clust_method = "hclust"}. The options
+are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
+\code{mcquitty}, \code{median}, and \code{centroid}. The default is
+\code{complete}.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:

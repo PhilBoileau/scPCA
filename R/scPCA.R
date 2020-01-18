@@ -286,7 +286,6 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
 #' @keywords internal
-#'
 selectParams <- function(target, background, center, scale, n_eigen,
                          contrasts, penalties, clust_method, n_centers,
                          max_iter, linkage_method, n_medoids, parallel) {
@@ -391,7 +390,6 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
 #' @keywords internal
-#'
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            contrasts, penalties, clust_method, n_centers,
                            max_iter, linkage_method, n_medoids, parallel) {
