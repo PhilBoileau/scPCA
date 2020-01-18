@@ -5,11 +5,12 @@
 #' while simultaneously being faster through relying on \pkg{matrixStats} for
 #' key internal computations.
 #'
-#' @param X An input \code{matrix} to be centered and/or scaled.
+#' @param X An input \code{matrix} to be centered and/or scaled. If \code{X} is
+#'  not of class \code{matrix}, then it must be coercible to such.
 #' @param center A \code{logical} indicating whether to re-center the columns
-#'  of the input matrix \code{X}.
+#'  of the input \code{X}.
 #' @param scale A \code{logical} indicating whether to re-scale the columns of
-#'  the input matrix \code{X}.
+#'  the input \code{X}.
 #' @param tolVar A tolerance level for the lowest column variance (or standard
 #'  deviation) value to be tolerated when scaling is desired. The default is
 #'  set to \code{double.eps} of machine precision \code{\link[base]{.Machine}}.
@@ -27,11 +28,13 @@ safeColScale <- function(X,
                          tol = .Machine$double.eps,
                          eps = 0.01) {
   # check argument types
-  assertthat::assert_that(is.matrix(X))
   assertthat::assert_that(is.logical(center))
   assertthat::assert_that(is.logical(scale))
   assertthat::assert_that(is.numeric(tol))
   assertthat::assert_that(is.numeric(eps))
+
+  # input X must be a matrix for matrixStats
+  if (!is.matrix(X)) X <- as.matrix(X)
 
   # compute column means
   colMeansX <- colMeans(X, na.rm = TRUE)

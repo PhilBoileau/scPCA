@@ -60,8 +60,6 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
   # create the grid of contrast and penalty parameters
   param_grid <- expand.grid(penalties, contrasts)
 
-  browser()
-
   # create the loadings matrices
   loadings_mat <- lapply(
     seq_len(num_contrasts),
