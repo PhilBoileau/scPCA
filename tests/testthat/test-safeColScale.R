@@ -28,12 +28,12 @@ test_that("`safeColScale` avoid NA in its output even when `scale` fails to", {
 })
 
 # `safeColScale` is faster than `scale`
-#library(ggplot2)
-#library(microbenchmark)
-#mb_scale <- microbenchmark(safeColScale(target), scale(target),
-                           #times = 20, unit = "s")
-#p_mb_scale <- ggplot(data = mb_scale, aes(y = time / 1e9, x = expr)) +
-  #geom_violin() + theme_grey(base_size = 20) +
-  #xlab("Method") + ylab("Time (seconds)")
-#print(mb_scale)
-#print(p_mb_scale)
+# library(ggplot2)
+# library(microbenchmark)
+# mb_scale <- microbenchmark(safeColScale(target), scale(target),
+# times = 20, unit = "s")
+# p_mb_scale <- ggplot(data = mb_scale, aes(y = time / 1e9, x = expr)) +
+# geom_violin() + theme_grey(base_size = 20) +
+# xlab("Method") + ylab("Time (seconds)")
+# print(mb_scale)
+# print(p_mb_scale)

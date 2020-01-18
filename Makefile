@@ -24,3 +24,6 @@ buildfast:
 
 style:
 	Rscript -e "styler::style_pkg()"
+
+pr: style doc check bioc md
+	echo "If all checks have passed, your PR is ready for submission."

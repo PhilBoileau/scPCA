@@ -20,6 +20,8 @@
 #'  column. When the lowest estimate falls below \code{tolVar}, it is truncated
 #'  to the value specified in this argument. The default is 0.01.
 #'
+#' @return A centered and/or scaled version of the input data.
+#'
 #' @importFrom matrixStats colSds
 #' @importFrom assertthat assert_that
 #'

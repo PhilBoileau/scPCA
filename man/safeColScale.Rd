@@ -30,6 +30,9 @@ set to \code{double.eps} of machine precision \code{\link[base]{.Machine}}.}
 column. When the lowest estimate falls below \code{tolVar}, it is truncated
 to the value specified in this argument. The default is 0.01.}
 }
+\value{
+A centered and/or scaled version of the input data.
+}
 \description{
 \code{safeColScale} is a safe utility for centering and scaling
  an input matrix \code{X}. It is intended to avoid the drawback of using

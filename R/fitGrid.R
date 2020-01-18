@@ -171,7 +171,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)
-        )[, 3] 
+        )[, 3]
       }
       mean(sil_width)
     }
@@ -244,7 +244,6 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @importFrom BiocParallel bplapply
 #'
 #' @keywords internal
-#'
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
                       clust_method = c("kmeans", "pam", "hclust"),
@@ -375,7 +374,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)
-        )[, 3] 
+        )[, 3]
       }
       mean(sil_width)
     }
