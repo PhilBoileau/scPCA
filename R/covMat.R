@@ -1,8 +1,8 @@
 #' Compute Sample Covariance Matrix
 #'
 #' @description \code{covMat} computes the sample covariance matrix of a data
-#'   set. If a variable in the dataset has zero variance, then its corresponding
-#'   row and column in the covariance matrix are zero vectors.
+#'   set. If a variable in the dataset has zero variance, then its
+#'   corresponding row and column in the covariance matrix are zero vectors.
 #'
 #' @param data The data for which to compute the sample covariance matrix.
 #' @param center A \code{logical} indicating whether the target and background
@@ -15,7 +15,6 @@
 #' @importFrom stats cov var
 #'
 #' @keywords internal
-#'
 covMat <- function(data, center = TRUE, scale = TRUE) {
   # convert data to a data.frame
   # NOTE: consider replacing with DataFrame
@@ -23,18 +22,13 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
 
   # center the data matrix if required
   if (center) {
-    data <- as.data.frame(scale(data, center = TRUE, scale = FALSE))
+    data <- as.data.frame(safeColScale(data, center = TRUE, scale = FALSE))
   }
 
   # scale the matrix if required
-  # NOTE: if there are constant columns, replace NAs by 0s
   if (scale) {
-    # identify columns with zero variance
-    no_var_idx <- which(do.call(c, lapply(data, stats::var)) == 0)
-
-    # scale the data and replace the columns with no variation by zero vectors
-    data <- scale(data, center = FALSE, scale = TRUE)
-    data[, no_var_idx] <- rep(0, nrow(data))
+    # scale the data and avoid columns with no variation by small perturbation
+    data <- safeColScale(data, center = FALSE, scale = TRUE)
   }
 
   # compute the covariance matrix of the data

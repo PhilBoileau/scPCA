@@ -27,14 +27,13 @@
 #'     \item x - the list of rotated data, centred and scaled if requested,
 #'     multiplied by the rotation matrix
 #'     \item contrast - the list of contrastive parameters
-#'     \item penalty - set to zero, since the loadings are not penalized in cPCA
+#'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom Rdpack reprompt
 #'
 #' @keywords internal
-#'
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                     n_medoids) {
   # preliminaries
@@ -51,7 +50,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # center and scale the target data
-  target <- scale(target, center, scale)
+  target <- safeColScale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- lapply(
@@ -159,7 +158,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'     \item x - the list of rotated data, centred and scaled if requested,
 #'     multiplied by the rotation matrix
 #'     \item contrast - the list of contrastive parameters
-#'     \item penalty - set to zero, since the loadings are not penalized in cPCA
+#'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
 #'
 #' @importFrom kernlab specc as.kernelMatrix
@@ -167,7 +166,6 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #' @importFrom Rdpack reprompt
 #'
 #' @keywords internal
-#'
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
                       n_medoids) {
   # preliminaries
@@ -184,7 +182,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   )
 
   # center and scale the target data
-  target <- scale(target, center, scale)
+  target <- safeColScale(target, center, scale)
 
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- BiocParallel::bplapply(
