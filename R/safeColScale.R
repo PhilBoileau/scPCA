@@ -13,11 +13,11 @@
 #'  of the input \code{X}.
 #' @param scale A \code{logical} indicating whether to re-scale the columns of
 #'  the input \code{X}.
-#' @param tolVar A tolerance level for the lowest column variance (or standard
+#' @param tol A tolerance level for the lowest column variance (or standard
 #'  deviation) value to be tolerated when scaling is desired. The default is
 #'  set to \code{double.eps} of machine precision \code{\link[base]{.Machine}}.
-#' @param epsVar The desired lower bound of the estimated variance for a given
-#'  column. When the lowest estimate falls below \code{tolVar}, it is truncated
+#' @param eps The desired lower bound of the estimated variance for a given
+#'  column. When the lowest estimate falls below \code{tol}, it is truncated
 #'  to the value specified in this argument. The default is 0.01.
 #'
 #' @return A centered and/or scaled version of the input data.
