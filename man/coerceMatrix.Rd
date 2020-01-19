@@ -16,6 +16,6 @@ A coerced matrix object.
 }
 \description{
 Coerces an object from classes in the \code{Matrix} package to
- the base matrix class.
+ the base \code{matrix} class.
 }
 \keyword{internal}

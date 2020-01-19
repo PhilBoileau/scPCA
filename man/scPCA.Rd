@@ -36,15 +36,15 @@ data sets should be centered to mean zero.}
 data sets should be scaled to unit variance.}
 
 \item{n_eigen}{A \code{numeric} indicating the number of eigenvectors (or
-sparse contrastive components) to be computed. The default is to compute two
-such eigenvectors.}
+sparse contrastive components) to be computed. The default is to compute
+two such eigenvectors.}
 
-\item{cv}{A \code{numeric} indicating the number of cross-validation folds to
-use in choosing the optimal contrastive and penalization parameters from
-over the grids of \code{contrasts} and \code{penalties}. Cross-validation is
-expected to improve the robustness and generalization of the choice of these
-parameters; however, it increases the time the procedure costs, thus, the
-default is \code{NULL}, corresponding to no cross-validation.}
+\item{cv}{A \code{numeric} indicating the number of cross-validation folds
+to use in choosing the optimal contrastive and penalization parameters from
+over the grids of \code{contrasts} and \code{penalties}. Cross-validation
+is expected to improve the robustness and generalization of the choice of
+these parameters; however, it increases the time the procedure costs, thus,
+the default is \code{NULL}, corresponding to no cross-validation.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique non-negative real number. The default is to use 40
@@ -65,11 +65,11 @@ is performed, regardless of what the \code{penalties} argument is set to.}
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
 be used in k-means clustering, defaulting to 10.}
 
-\item{linkage_method}{A \code{character} specifying the agglomerative linkage
-method to be used if \code{clust_method = "hclust"}. The options are
-\code{ward.D2}, \code{single}, \code{complete},
-\code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
-default is \code{complete}.}
+\item{linkage_method}{A \code{character} specifying the agglomerative
+linkage method to be used if \code{clust_method = "hclust"}. The options
+are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
+\code{mcquitty}, \code{median}, and \code{centroid}. The default is
+\code{complete}.}
 
 \item{n_medoids}{A \code{numeric} indicating the number of medoids to
 consider if \code{n_centers} is set to 1. The default is 8 such medoids.}
@@ -91,12 +91,13 @@ A list containing the following components:
   }
 }
 \description{
-Given target and background dataframes or matrices, \code{scPCA}
- will perform the sparse contrastive principal component analysis (scPCA) of
- the target data for a given number of eigenvectors, a vector of real valued
- contrast parameters and a vector of penalty terms. For more information on
- the contrastive PCA method, consult \insertRef{abid2018exploring}{scPCA}.
- Sparse PCA is performed via the method of \insertRef{zou2006sparse}{scPCA}.
+Given target and background data frames or matrices,
+ \code{scPCA} will perform the sparse contrastive principal component
+ analysis (scPCA) of the target data for a given number of eigenvectors, a
+ vector of real-valued contrast parameters and a vector of penalty terms.
+ For more information on the contrastive PCA method, consult
+ \insertRef{abid2018exploring}{scPCA}. Sparse PCA is performed via the
+ method of \insertRef{zou2006sparse}{scPCA}.
 }
 \examples{
 # perform cPCA on the simulated data set

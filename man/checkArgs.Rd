@@ -41,11 +41,11 @@ use for choosing the optimal constrastive parameter. Currently, this is
 limited to either k-means, partitioning around medoids (PAM), and
 hierarchical clustering. The default is k-means clustering.}
 
-\item{linkage_method}{A \code{character} specifying the agglomerative linkage
-method to be used if \code{clust_method = "hclust"}. The options are
-\code{ward.D2}, \code{single}, \code{complete},
-\code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
-default is \code{complete}.}
+\item{linkage_method}{A \code{character} specifying the agglomerative
+linkage method to be used if \code{clust_method = "hclust"}. The options
+are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
+\code{mcquitty}, \code{median}, and \code{centroid}. The default is
+\code{complete}.}
 }
 \value{
 Whether all argument conditions are satisfied

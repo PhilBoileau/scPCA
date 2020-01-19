@@ -20,7 +20,7 @@ the covariance matrix of the data.
 }
 \description{
 \code{covMat} computes the sample covariance matrix of a data
-  set. If a variable in the dataset has zero variance, then its corresponding
-  row and column in the covariance matrix are zero vectors.
+  set. If a variable in the dataset has zero variance, then its
+  corresponding row and column in the covariance matrix are zero vectors.
 }
 \keyword{internal}

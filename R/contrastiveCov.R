@@ -16,7 +16,6 @@
 #'   associated contrastive parameter in the \code{contrasts} vector.
 #'
 #' @keywords internal
-#'
 contrastiveCov <- function(target, background, contrasts, center, scale) {
   # get the covariance matrices of the target and background
   c_target <- covMat(target, center = center, scale = scale)
@@ -54,7 +53,6 @@ contrastiveCov <- function(target, background, contrasts, center, scale) {
 #' @importFrom BiocParallel bplapply
 #'
 #' @keywords internal
-#'
 bpContrastiveCov <- function(target, background, contrasts, center, scale) {
   # get the covariance matrices of the target and background
   c_target <- covMat(target, center = center, scale = scale)

@@ -35,7 +35,7 @@ A list of lists containing the cPCA results for each contrastive
     \item x - the list of rotated data, centred and scaled if requested,
     multiplied by the rotation matrix
     \item contrast - the list of contrastive parameters
-    \item penalty - set to zero, since the loadings are not penalized in cPCA
+    \item penalty - set to zero, since loadings are not penalized in cPCA
   }
 }
 \description{

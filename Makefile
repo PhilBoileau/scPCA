@@ -1,10 +1,6 @@
 md:
 	Rscript -e "rmarkdown::render('README.Rmd', output_file = 'README.md')"
 
-site:
-	Rscript -e "rmarkdown::render('README.Rmd', output_file = 'README.md')"
-	Rscript -e "pkgdown::build_site()"
-
 check:
 	Rscript -e "devtools::check()"
 
@@ -28,3 +24,6 @@ buildfast:
 
 style:
 	Rscript -e "styler::style_pkg()"
+
+pr: style doc check bioc md
+	echo "If all checks have passed, your PR is ready for submission."

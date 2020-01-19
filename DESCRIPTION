@@ -1,6 +1,6 @@
 Package: scPCA
 Title: Sparse Contrastive Principal Component Analysis
-Version: 1.1.4
+Version: 1.1.5
 Authors@R: c(
     person(given = "Philippe",
            family = "Boileau",
@@ -33,6 +33,7 @@ Imports:
     purrr,
     stringr,
     Rdpack,
+    matrixStats,
     BiocParallel,
     elasticnet,
     cluster,

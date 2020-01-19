@@ -6,9 +6,9 @@
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
-#' @param target_valid A holdout set of the target (experimental) data set, in a
-#'  standard format such as a \code{data.frame} or \code{matrix}. \code{NULL} by
-#'  default but used by \code{\link{cvSelectParams}} for cross-validated
+#' @param target_valid A holdout set of the target (experimental) data set, in
+#'  a standard format such as a \code{data.frame} or \code{matrix}. \code{NULL}
+#'  by default but used by \code{\link{cvSelectParams}} for cross-validated
 #'  selection of the contrastive and penalization parameters.
 #' @param center A \code{logical} indicating whether the target and background
 #'  data sets should be centered to mean zero.
@@ -28,11 +28,11 @@
 #'  clustering algorithm.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering, defaulting to 10.
-#' @param linkage_method A \code{character} specifying the agglomerative linkage
-#'   method to be used if \code{clust_method = "hclust"}. The options are
-#'   \code{ward.D2}, \code{single}, \code{complete},
-#'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
-#'   default is \code{complete}.
+#' @param linkage_method A \code{character} specifying the agglomerative
+#'   linkage method to be used if \code{clust_method = "hclust"}. The options
+#'   are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
+#'   \code{mcquitty}, \code{median}, and \code{centroid}. The default is
+#'   \code{complete}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -48,7 +48,6 @@
 #' @importFrom cluster pam silhouette
 #'
 #' @keywords internal
-#'
 fitGrid <- function(target, target_valid = NULL, center, scale,
                     c_contrasts, contrasts, penalties, n_eigen,
                     clust_method = c("kmeans", "pam", "hclust"),
@@ -91,7 +90,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
   loadings_mat <- unlist(loadings_mat, recursive = FALSE)
 
   # center and scale the target data
-  target <- scale(target, center, scale)
+  target <- safeColScale(target, center, scale)
 
   if (is.null(target_valid)) {
     # for each loadings matrix, project target onto constrastive subspace
@@ -103,7 +102,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
     )
   } else {
     # center and scale the holdout set of target data
-    target_valid <- scale(target_valid, center, scale)
+    target_valid <- safeColScale(target_valid, center, scale)
 
     # for each loadings matrix, project holdout target on constrastive subspace
     subspaces <- lapply(
@@ -172,7 +171,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)
-        )[, 3] 
+        )[, 3]
       }
       mean(sil_width)
     }
@@ -229,7 +228,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
-#'   
+#'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
 #'     \item rotation - the matrix of variable loadings
@@ -245,7 +244,6 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @importFrom BiocParallel bplapply
 #'
 #' @keywords internal
-#'
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
                       clust_method = c("kmeans", "pam", "hclust"),
@@ -288,7 +286,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
   loadings_mat <- unlist(loadings_mat, recursive = FALSE)
 
   # center and scale the target data
-  target <- scale(target, center, scale)
+  target <- safeColScale(target, center, scale)
 
   if (is.null(target_valid)) {
     # for each loadings matrix, project target onto constrastive subspace
@@ -300,7 +298,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
     )
   } else {
     # center and scale the holdout set of target data
-    target_valid <- scale(target_valid, center, scale)
+    target_valid <- safeColScale(target_valid, center, scale)
 
     # for each loadings matrix, project holdout target on constrastive subspace
     subspaces <- BiocParallel::bplapply(
@@ -376,7 +374,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)
-        )[, 3] 
+        )[, 3]
       }
       mean(sil_width)
     }
