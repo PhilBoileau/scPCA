@@ -14,7 +14,7 @@ authors:
     orcid: 0000-0002-7127-2789
     affiliation: 1, 2
   - name: Sandrine Dudoit
-    orcid: 0000-0002-6069-862
+    orcid: 0000-0002-6069-8629
     affiliation: 2, 3, 4
 affiliations:
   - name: Graduate Group in Biostatistics, University of California, Berkeley
