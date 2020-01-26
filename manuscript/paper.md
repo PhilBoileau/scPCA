@@ -1,30 +1,30 @@
 ---
 title: 'scPCA: A toolbox for (sparse) contrastive principal component analysis'
 tags:
-	- R
-	- dimensionality reduction
-	- computational biology
-	- unwanted variation
-	- sparsity
+  - R
+  - dimensionality reduction
+  - computational biology
+  - unwanted variation
+  - sparsity
 authors:
-	- name: Philippe Boileau
-		orcid: 0000-0002-4850-2507
-		affiliation: 1
-	- name: Nima Hejazi
-		orcid: 0000-0002-7127-2789
-		affiliation: 1, 2
-	- name: Sandrine Dudoit
-		orcid: 0000-0002-6069-862
-		affiliation: 2, 3, 4
+  - name: Philippe Boileau
+    orcid: 0000-0002-4850-2507
+    affiliation: 1
+  - name: Nima Hejazi
+    orcid: 0000-0002-7127-2789
+    affiliation: 1, 2
+  - name: Sandrine Dudoit
+    orcid: 0000-0002-6069-862
+    affiliation: 2, 3, 4
 affiliations:
-	- name: Graduate Group in Biostatistics, University of California, Berkeley
-		index: 1
-	- name: Center for Computational Biology, University of California, Berkeley
-		index: 2
-	- name: Department of Statistics, University of California, Berkeley
-		index: 3
-	- name: Division of Epidemiology and Biostatistics, School of Public Health, University of California, Berkeley
-		index: 4
+  - name: Graduate Group in Biostatistics, University of California, Berkeley
+    index: 1
+  - name: Center for Computational Biology, University of California, Berkeley
+    index: 2
+  - name: Department of Statistics, University of California, Berkeley
+    index: 3
+  - name: Division of Epidemiology and Biostatistics, School of Public Health, University of California, Berkeley
+    index: 4
 date: 22 January 2020
 bibliography: paper.bib
 ---
