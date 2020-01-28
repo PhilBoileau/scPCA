@@ -32,7 +32,7 @@ bibliography: paper.bib
 
 # Summary
 
-Data pre-processing and exploratory data analysis are crucial steps in the data science life-cycle, often relying on dimensionality reduction techniques to extract pertinent signal. As the collection of large and complex datasets becomes the norm, the need for methods that can successfully glean relevant information from among increasingly intricate technical artifacts is greater than ever. What's more, many of the most historically reliable and commonly-used methods have demonstrably poor performance, or even fail outright, in reducing the dimensionality of large and noisy datasets in a stable, interpretable, and relevant manner.
+Data pre-processing and exploratory data analysis are crucial steps in the data science life-cycle, often relying on dimensionality reduction techniques to extract pertinent signal. As the collection of large and complex datasets becomes the norm, the need for methods that can successfully glean pertinent information from among increasingly intricate technical artifacts is greater than ever. What's more, many of the most historically reliable and commonly used methods have demonstrably poor performance, or even fail outright, in reducing the dimensionality of large and noisy datasets in a stable, interpretable, and relevant manner.
 
 Principal component analysis (PCA) is one such method. Although popular for its interpretable results and ease of implementation, PCA’s performance on high-dimensional data often leaves much to be desired. Its performance has been characterized as unstable on large datasets [@Johnstone2009], and it has been shown to often emphasize unwanted variation (e.g., batch effects) in lieu of the signal of interest. 
 
