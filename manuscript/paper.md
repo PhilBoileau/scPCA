@@ -42,5 +42,10 @@ Although SPCA and cPCA have proven useful in resolving individual shortcomings o
 
 As the `scPCA` software package was specially designed for use in disentangling biological signal from technical noise in high-throughput sequencing data, a free and open-source software implementation has been made available via the Bioconductor Project [@gentleman2004bioconductor; @gentleman2006bioinformatics; @huber2015orchestrating] for the `R` language and environment for statistical computing [@R]. The `scPCA` package also implements cPCA, previously unavailable in the `R` language, in two flavors: (1) the semi-automated version of @Abid2018 and (2) the automated version formulated by @Boileau. In order to interface seamlessly with data structures common in computational biology, the `scPCA` package integrates fully with the `SingleCellExperiment` container class [@lun2018singlecellexperiment], utilizing the class to store the cPCA and scPCA representations generated via the `reducedDims` accessor method. Finally, to facilitate parallel computation, the `scPCA` package contains parallelized versions of each of its core subroutines, making use of the infrastructure provided by the [`BiocParallel`](https://bioconductor.org/packages/BiocParallel) package. In order to effectively utilize parallelization, one need only set `parallel = TRUE` in a call to the `scPCA` package, after having registered a particular parallelization backend, as per the `BiocParallel` documentation. 
 
+# Acknowledgments
+
+Philippe Boileau's contribution to this work was supported by the Fonds de recherche du Québec - Nature et technologies (B1X).
+
 # References
+
 
