@@ -33,26 +33,24 @@ bibliography: paper.bib
 
 Data pre-processing and exploratory data analysis are crucial steps in the data
 science life-cycle, often relying on dimensionality reduction techniques to
-extract pertinent signal. As the collection of large datasets becomes the norm,
-the need for methods that can successfully glean relevant information, from
-among increasingly sophisticated technical artifacts, is greater than in years
+extract pertinent signal. As the collection of large and complex datasets becomes
+the norm, the need for methods that can successfully glean relevant information
+from among increasingly sophisticated technical artifacts is greater than in years
 past. What's more, as collected datasets increase in complexity, many of the
-most reliable classical methods have been shown to provided degraded
-performance, or even fail outright, in reducing the dimensionality of large and
-noisy datasets.
+most historically reliable methods have demonstrably poor performance, or even
+fail outright, in reducing the dimensionality of large and noisy datasets.
 
 Principal component analysis (PCA) is one such method. Although popular for its
 interpretable results and ease of implementation, PCA’s performance on
 high-dimensional data often leaves much to be desired. Its performance has been
 characterized as unstable on large datasets [@Johnstone2009], and it has been
-shown to often erroneously identify technical variation in the presence of
-noise.
+shown to often emphasize technical variation in lieu of signal.
 
 Consequently, modifications of PCA have been developed to remedy these issues.
 Namely, sparse PCA (sPCA) [@Zou2006] was created to increase the stability of
 the principal component loadings and variable scores in high dimensions, while
-constrastive PCA (cPCA) [@Abid2018] has been proposed to leverage control data
-to capture biologically relevant information in high-dimensional settings.
+constrastive PCA (cPCA) [@Abid2018] leverages control data to capture biologically
+relevant information in high-dimensional settings.
 
 The `scPCA` `R` package implements sparse constrastive PCA (scPCA) [@Boileau], a
 combination of these methods, drawing on cPCA to remove technical effects and on
@@ -61,14 +59,14 @@ and data analysis, @Boileau provided practical demonstrations of scPCA's ability
 to extract stable, interpretable, and uncontaminated signal from
 high-dimensional biological data. Such demonstrations included the re-analysis
 of several publicly available protein expression, microarray gene expression,
-and single-cell transcriptome sequencing datasets [@Boileau].
+and single-cell transcriptome sequencing datasets.
 
 As the `scPCA` software package was specially designed for use in disentangling
 biological signal from technical noise in high-throughput sequencing data,
 a free and open-source software implementation has been made available via the
 Bioconductor Project [@gentleman2004bioconductor; @gentleman2006bioinformatics;
 @huber2015orchestrating] for the `R` language and environment for statistical
-computing [@R]. The `scPCA` package implements both cPCA, previously unavailable
+computing [@R]. The `scPCA` package also implements cPCA, previously unavailable
 in the `R` language, in two flavors: (1) the semi-automated version of @Abid2018
 and (2) the automated version formulated by @Boileau. In order to interface
 seamlessly with data structures common in computational biology, the `scPCA`
@@ -77,11 +75,10 @@ package integrates fully with the `SingleCellExperiment` container class
 representations generated via the `reducedDims` accessor method. Finally, to
 facilitate parallel computation, the `scPCA` package contains parallelized
 versions of each of its core subroutines, making use of the infrastructure
-provided by the [`BiocParallel`
-package](https://bioconductor.org/packages/BiocParallel) package. In order to
-effectively utilize paralleization, one need only set `parallel = TRUE` in
-a call to the `scPCA` package, after having registered a particular
-parallelization backend, as per the `BiocParallel` documentation.
+provided by the [`BiocParallel`package](https://bioconductor.org/packages/BiocParallel)
+package. In order to effectively utilize parallelization, one need only set
+`parallel = TRUE` in a call to the `scPCA` package, after having registered a
+particular parallelization backend, as per the `BiocParallel` documentation.
 
 # References
 
