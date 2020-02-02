@@ -21,12 +21,9 @@
 #' @param penalty A \code{numeric} indicating the L1 penalty parameter applied
 #'   to the loadings.
 #'
-#' @return A \code{p \times k} sparse loadings matrix, where \code{p} is the
+#' @return A \code{p x k} sparse loadings matrix, where \code{p} is the
 #'   number of features, and \code{k} is the number of sparse contrastive
 #'   components.
-#'
-#' @importFrom sparsepca spca rspca
-#' @importFrom elasticnet spca
 #'
 #' @keywords internal
 spcaWrapper <- function(alg, contrast_cov, k, penalty) {

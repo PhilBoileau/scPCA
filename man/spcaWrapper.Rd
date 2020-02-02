@@ -23,7 +23,7 @@ sparse contrastive components) to be computed.}
 to the loadings.}
 }
 \value{
-A \code{p \times k} sparse loadings matrix, where \code{p} is the
+A \code{p x k} sparse loadings matrix, where \code{p} is the
   number of features, and \code{k} is the number of sparse contrastive
   components.
 }
