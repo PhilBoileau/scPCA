@@ -25,16 +25,56 @@
 #'   number of features, and \code{k} is the number of sparse contrastive
 #'   components.
 #'
+#' @importFrom sparsepca spca rspca
+#' @importFrom elasticnet spca
+#'
 #' @keywords internal
 spcaWrapper <- function(alg, contrast_cov, k, penalty) {
   
   if (alg == "iterative") {
     
-  } else if (alg == "var_proj") {
+    loadings_mat <- elasticnet::spca(
+      contrast_cov,
+      K = k,
+      para = rep(penalty, k),
+      type = "Gram",
+      sparse = "penalty"
+    )$loadings
     
-  } else if (alg == "rand_var_proj") {
+  } else {
     
-  } 
+    # get the rootmatrix, perform thresholding
+    contrast_cov_eigen <- eigen(contrast_cov)
+    eig_values <- (contrast_cov_eigen$values + abs(contrast_cov_eigen$values))/2
+    right_sing_mat <- contrast_cov_eigen$vectors
+    contrast_cov <- right_sing_mat%*%diag(sqrt(eig_values))%*%t(right_sing_mat)
+    
+    if (alg == "var_proj") {
+    
+      loadings_mat <- sparsepca::spca(
+        contrast_cov,
+        k = k,
+        alpha = penalty,
+        beta = 1e-6,
+        center = FALSE,
+        scale = FALSE,
+        verbose = FALSE
+      )$loadings
+      
+    } else if (alg == "rand_var_proj") {
+    
+      loadings_mat <- sparsepca::rspca(
+        contrast_cov,
+        k = k,
+        alpha = penalty,
+        beta = 1e-6,
+        center = FALSE,
+        scale = FALSE,
+        verbose = FALSE
+      )$loadings
+    
+    }
+  }
   
-  return(loadings)
+  return(loadings_mat)
 }
