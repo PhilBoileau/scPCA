@@ -11,6 +11,7 @@ fitGrid(
   scale,
   c_contrasts,
   contrasts,
+  alg,
   penalties,
   n_eigen,
   clust_method = c("kmeans", "pam", "hclust"),
@@ -38,6 +39,13 @@ data sets should be scaled to unit variance.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters used
 to compute the contrastive covariances.}
+
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} for the randomized
+\insertRef{erichson2018sparse}{scPCA} result.}
 
 \item{penalties}{A \code{numeric} vector of the penalty terms.}
 

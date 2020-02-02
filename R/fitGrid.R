@@ -17,6 +17,12 @@
 #' @param c_contrasts A \code{list} of contrastive covariances.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters used
 #'  to compute the contrastive covariances.
+#' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
+#'   the contrastive loadings. Currently supports \code{iterative} for the
+#'   \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+#'   non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'   \code{rand_var_proj} for the randomized
+#'   \insertRef{erichson2018sparse}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -43,13 +49,12 @@
 #'     \item penalty - the optimal L1 penalty term
 #'   }
 #'
-#' @importFrom elasticnet spca
 #' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #'
 #' @keywords internal
 fitGrid <- function(target, target_valid = NULL, center, scale,
-                    c_contrasts, contrasts, penalties, n_eigen,
+                    c_contrasts, contrasts, alg, penalties, n_eigen,
                     clust_method = c("kmeans", "pam", "hclust"),
                     n_centers, max_iter = 10,
                     linkage_method = "complete") {
@@ -72,12 +77,12 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
               symmetric = TRUE
             )$vectors[, seq_len(n_eigen)]
           } else {
-            res <- elasticnet::spca(c_contrasts[[x]],
-              K = n_eigen,
-              para = rep(y, n_eigen),
-              type = "Gram",
-              sparse = "penalty"
-            )$loadings
+            res <- spcaWrapper(
+              alg = alg,
+              contrast_cov = c_contrasts[[x]],
+              k = n_eigen,
+              penalty = y
+            )
           }
           colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
           res
@@ -212,6 +217,12 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @param c_contrasts A \code{list} of contrastive covariances.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters used
 #'  to compute the contrastive covariances.
+#' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
+#'  the contrastive loadings. Currently supports \code{iterative} for the
+#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'  \code{rand_var_proj} fir the randomized
+#'  \insertRef{erichson2018sparse}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -238,7 +249,6 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'     \item penalty - the optimal L1 penalty term
 #'   }
 #'
-#' @importFrom elasticnet spca
 #' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
@@ -246,7 +256,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @keywords internal
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
-                      clust_method = c("kmeans", "pam", "hclust"),
+                      alg, clust_method = c("kmeans", "pam", "hclust"),
                       n_centers, max_iter = 10,
                       linkage_method = "complete") {
   # preliminaries
@@ -268,12 +278,12 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
               symmetric = TRUE
             )$vectors[, seq_len(n_eigen)]
           } else {
-            res <- elasticnet::spca(c_contrasts[[x]],
-              K = n_eigen,
-              para = rep(y, n_eigen),
-              type = "Gram",
-              sparse = "penalty"
-            )$loadings
+            res <- spcaWrapper(
+              alg = alg,
+              contrast_cov = c_contrasts[[x]],
+              k = n_eigen,
+              penalty = y
+            )
           }
           colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
           return(res)

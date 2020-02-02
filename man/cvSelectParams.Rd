@@ -11,6 +11,7 @@ cvSelectParams(
   center,
   scale,
   n_eigen,
+  alg = alg,
   contrasts,
   penalties,
   clust_method,
@@ -41,6 +42,13 @@ data sets should be scaled to unit variance.}
 \item{n_eigen}{A \code{numeric} indicating the number of eigenvectors (or
 sparse contrastive components) to be computed. The default is to compute
 two such eigenvectors.}
+
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} for the randomized
+\insertRef{erichson2018sparse}{scPCA} result.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique non-negative real number. The default is to use 40

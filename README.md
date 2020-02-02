@@ -39,17 +39,17 @@ noise. In tandem with the development of sequencing technology (e.g.,
 RNA-seq, scRNA-seq), many variants of PCA have been developed in
 attempts to remedy deficiencies in interpretability and stability that
 plague their classical variants. Such developments have included both
-sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006), which increases
-the stability and interpretability of principal component loadings in
-high dimensions, and, more recently, contrastive PCA (cPCA) (Abid et al.
-2018), which captures relevant information in the target (experimental)
-data set by eliminating technical noise through comparison to a
-so-called background data set. While SPCA and cPCA have both
-individually proven useful in resolving distinct shortcomings of PCA,
-neither is capable of simultaneously tackling the issues of
-interpretability, stability and relevance simultaneously. The `scPCA`
-package implements *sparse constrastive PCA*, to accomplish both of
-these tasks in the context of high-dimensional biological data. In
+sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006; Erichson et al.
+2018), which increases the stability and interpretability of principal
+component loadings in high dimensions, and, more recently, contrastive
+PCA (cPCA) (Abid et al. 2018), which captures relevant information in
+the target (experimental) data set by eliminating technical noise
+through comparison to a so-called background data set. While SPCA and
+cPCA have both individually proven useful in resolving distinct
+shortcomings of PCA, neither is capable of simultaneously tackling the
+issues of interpretability, stability and relevance simultaneously. The
+`scPCA` package implements *sparse constrastive PCA*, to accomplish both
+of these tasks in the context of high-dimensional biological data. In
 addition to implementing this newly developed technique, the `scPCA`
 package also implements cPCA and generalizations thereof.
 
@@ -130,6 +130,14 @@ See file `LICENSE` for details.
 Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
 “Exploring Patterns Enriched in a Dataset with Contrastive Principal
 Component Analysis.” *Nature Communications* 9 (1): 2134.
+
+</div>
+
+<div id="ref-erichson2018sparse">
+
+Erichson, N. Benjamin, Peng Zeng, Krithika Manohar, Steven L. Brunton,
+J. Nathan Kutz, and Aleksandr Y. Aravkin. 2018. “Sparse Principal
+Component Analysis via Variable Projection.” *ArXiv* abs/1804.00341.
 
 </div>
 

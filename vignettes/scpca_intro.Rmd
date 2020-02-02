@@ -19,6 +19,7 @@ library(ggplot2)
 library(ggpubr)
 library(elasticnet)
 library(scPCA)
+library(microbenchmark)
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -147,7 +148,7 @@ df_ls <- lapply(penalties, function(penalty) {
     as_tibble()
   return(spca_out)
 })
-df <- bind_rows(df_ls)
+df <- dplyr::bind_rows(df_ls)
 
 # plot the results of sPCA
 p_spca <- ggplot(df, aes(x = SPC1, y = SPC2, colour = label)) +
@@ -195,7 +196,7 @@ p_cpca
 The leading sparse contrastive components were also able to capture the
 variation of interest, though the clusters corresponding to the class labels
 are more loose than those of cPCA. Importantly, the first and second scPC
-contain only two and three non-zero loadings, respectively -- a significant
+possess only two and three non-zero loadings, respectively -- a significant
 improvement over cPCA, whose first and second cPCs each possess 30 non-zero
 loadings, in terms of interpretability. As with cPCA, the scPCA algorithm has
 demonstrated it's insensitivity to reasonable choices of `n_centers`
@@ -265,7 +266,7 @@ annotate_figure(
 
 ## Cross-Validation for Hyperparameter Tuning of cPCA and scPCA
 
-The hyperparemeters responsible for contrastiveness and sparsity of the cPCA and
+The hyperparameters responsible for contrastiveness and sparsity of the cPCA and
 scPCA embeddings provided in this package are selected through a 
 clustering-based hyperparameter tuning framework (detailed in [@boileau2020]).
 If the discovery of non-generalizable patterns in the data becomes a concern, a
@@ -323,7 +324,46 @@ ggarrange(
 )
 ```
 
+---
 
+# SPCA Optimization Frameworks
+
+The `scPCA` package provides three options with which to sparsify the loadings
+produced by cPCA:
+1. The traditional iterative SPCA algorithm by @zouzou2006sparse, implemented in the `elasticnet` package.
+2. The SPCA algorithm relying on variable projection by @erichson2018sparse, implemented in the `sparsepca` package.
+3. The randommized SPCA algorithm, which uses variable projection and random numerical linear algebra methods, by @erichson2018sparse, implemented in the `sparsepca` package.
+
+For historical reasons, the default SPCA algorithm used is that of
+@zouzou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
+We provide a comparison using the simulated data from Section 3 below:
+
+```{r microbenchmark_comparison}
+timing_scPCA <- microbenchmark(
+  "Zou et al." = scPCA(target = toy_df[, 1:30],
+                       background = background_df,
+                       n_centers = 4,
+                       alg = "iterative"),
+  "Erichson et al. SPCA" = scPCA(target = toy_df[, 1:30],
+                                 background = background_df,
+                                 n_centers = 4,
+                                 alg = "var_proj"),
+  "Erichson et al. RSPCA" = scPCA(target = toy_df[, 1:30],
+                                  background = background_df,
+                                  n_centers = 4,
+                                  alg = "rand_var_proj"),
+  times = 10
+)
+
+autoplot(timing_scPCA, log = TRUE) +
+  ggtitle("Running Time Comparison") +
+  theme_minimal()
+```
+
+The computational advantage of @erichson2018sparse's methods is clear. On larger
+datasets, the randomized version is demonstrably more efficient than its
+non-randomized counterpart
+[@erichson2018sparse].
 
 ---
 
