@@ -60,6 +60,13 @@ method to be used if \code{clust_method = "hclust"}. The options are
 \code{ward.D2}, \code{single}, \code{complete},
 \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 default is \code{complete}.}
+
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} fir the randomized
+\insertRef{erichson2018sparse}{scPCA} result.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:
