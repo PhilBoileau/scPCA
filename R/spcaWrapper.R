@@ -49,7 +49,13 @@ spcaWrapper <- function(alg, contrast_cov, k, penalty) {
     right_sing_mat <- contrast_cov_eigen$vectors
     contrast_cov <- right_sing_mat%*%diag(sqrt(eig_values))%*%t(right_sing_mat)
     
-    if (alg == "var_proj") {
+    # first check in contrastive loading matrix is a zero mat
+    if (all(contrast_cov == 0)) {
+      
+      loadings_mat <- matrix(data = 0, nrow = nrow(constrast_cov), ncol = k)
+    
+      # otherwise, perform spca
+    } else if (alg == "var_proj") {
     
       loadings_mat <- sparsepca::spca(
         contrast_cov,
