@@ -26,6 +26,12 @@
 #'  is expected to improve the robustness and generalization of the choice of
 #'  these parameters; however, it increases the time the procedure costs, thus,
 #'  the default is \code{NULL}, corresponding to no cross-validation.
+#' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
+#'  the contrastive loadings. Currently supports \code{iterative} for the
+#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'  \code{rand_var_proj} for the randomized
+#'  \insertRef{erichson2018sparse}{scPCA} result. Defaults to \code{iterative}.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -100,6 +106,7 @@
 #' )
 scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_eigen = 2, cv = NULL,
+                  alg = c("iterative", "var_proj", "rand_var_proj"),
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
                   clust_method = c("kmeans", "pam", "hclust"), n_centers,
@@ -107,6 +114,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   n_medoids = 8, parallel = FALSE) {
   # set defaults
   clust_method <- match.arg(clust_method)
+  alg <- match.arg(alg)
 
   # check arguments to function
   checkArgs(
@@ -125,6 +133,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       center = center,
       scale = scale,
       n_eigen = n_eigen,
+      alg = alg,
       contrasts = contrasts,
       penalties = penalties,
       clust_method = clust_method,
@@ -256,6 +265,12 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors (or
 #'  sparse contrastive components) to be computed. The default is to compute
 #'  two such eigenvectors.
+#' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
+#'  the contrastive loadings. Currently supports \code{iterative} for the
+#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'  \code{rand_var_proj} for the randomized
+#'  \insertRef{erichson2018sparse}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -286,7 +301,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
 #' @keywords internal
-selectParams <- function(target, background, center, scale, n_eigen,
+selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
                          max_iter, linkage_method, n_medoids, parallel) {
   # call parallelized function variants if so requested
@@ -304,7 +319,7 @@ selectParams <- function(target, background, center, scale, n_eigen,
       )
     } else {
       opt_params <- fitGrid(
-        target = target, center = center, scale = scale,
+        target = target, center = center, scale = scale, alg = alg,
         c_contrasts = c_contrasts, contrasts = contrasts,
         penalties = penalties, n_eigen = n_eigen,
         clust_method = clust_method, n_centers = n_centers,
@@ -326,10 +341,11 @@ selectParams <- function(target, background, center, scale, n_eigen,
     } else {
       opt_params <- bpFitGrid(
         target = target, center = center, scale = scale,
-        c_contrasts = c_contrasts, contrasts = contrasts,
-        penalties = penalties, n_eigen = n_eigen,
-        clust_method = clust_method, n_centers = n_centers,
-        max_iter = max_iter, linkage_method = linkage_method
+        alg = alg, c_contrasts = c_contrasts,
+        contrasts = contrasts, penalties = penalties,
+        n_eigen = n_eigen, clust_method = clust_method,
+        n_centers = n_centers, max_iter = max_iter,
+        linkage_method = linkage_method
       )
     }
   }
@@ -358,6 +374,12 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors (or
 #'  sparse contrastive components) to be computed. The default is to compute
 #'  two such eigenvectors.
+#' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
+#'  the contrastive loadings. Currently supports \code{iterative} for the
+#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'  \code{rand_var_proj} for the randomized
+#'  \insertRef{erichson2018sparse}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -391,8 +413,9 @@ selectParams <- function(target, background, center, scale, n_eigen,
 #'
 #' @keywords internal
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
-                           contrasts, penalties, clust_method, n_centers,
-                           max_iter, linkage_method, n_medoids, parallel) {
+                           alg = alg, contrasts, penalties, clust_method,
+                           n_centers, max_iter, linkage_method, n_medoids,
+                           parallel) {
   # make training and validation folds
   train_target <- origami::training(target, fold$target)
   valid_target <- origami::validation(target, fold$target)
@@ -417,6 +440,7 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         target = train_target,
         target_valid = valid_target,
         center = center, scale = scale,
+        alg = alg,
         c_contrasts = c_contrasts,
         contrasts = contrasts,
         penalties = penalties,
@@ -446,6 +470,7 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         scale = scale, c_contrasts = c_contrasts,
         contrasts = contrasts, penalties = penalties,
         n_eigen = n_eigen,
+        alg = alg,
         clust_method = clust_method,
         target_valid = valid_target,
         n_centers = n_centers,

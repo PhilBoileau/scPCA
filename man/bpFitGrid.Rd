@@ -13,6 +13,7 @@ bpFitGrid(
   contrasts,
   penalties,
   n_eigen,
+  alg,
   clust_method = c("kmeans", "pam", "hclust"),
   n_centers,
   max_iter = 10,
@@ -44,6 +45,13 @@ to compute the contrastive covariances.}
 \item{n_eigen}{A \code{numeric} indicating the number of eigenvectors to be
 computed.}
 
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} fir the randomized
+\insertRef{erichson2018sparse}{scPCA} result.}
+
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
 limited to either k-means, partitioning around medoids (PAM), and
@@ -60,13 +68,6 @@ method to be used if \code{clust_method = "hclust"}. The options are
 \code{ward.D2}, \code{single}, \code{complete},
 \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 default is \code{complete}.}
-
-\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
-the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} fir the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:

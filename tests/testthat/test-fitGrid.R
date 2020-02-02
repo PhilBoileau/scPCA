@@ -16,7 +16,7 @@ fit <- fitGrid(
   target = target, center = center, scale = scale,
   c_contrasts = c_contrasts, contrasts = contrasts,
   penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
-  clust_method = "kmeans"
+  clust_method = "kmeans", alg = "iterative"
 )
 
 test_that("The output is a list of length 4", {
@@ -47,62 +47,64 @@ test_that("All cluster methods (kmeans, pam, hclust) run without errors", {
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
-    n_centers = n_centers, clust_method = "kmeans"
+    n_centers = n_centers, clust_method = "kmeans",
+    alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
-    n_centers = n_centers, clust_method = "pam"
-  ))
-  expect_silent(fitGrid(
-    target = target, center = center, scale = scale,
-    c_contrasts = c_contrasts, contrasts = contrasts,
-    penalties = penalties, n_eigen = n_eigen,
-    n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "complete"
-  ))
-  expect_silent(fitGrid(
-    target = target, center = center, scale = scale,
-    c_contrasts = c_contrasts, contrasts = contrasts,
-    penalties = penalties, n_eigen = n_eigen,
-    n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "average"
+    n_centers = n_centers, clust_method = "pam",
+    alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "single"
+    linkage_method = "complete", alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "ward.D"
+    linkage_method = "average", alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "mcquitty"
+    linkage_method = "single", alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "median"
+    linkage_method = "ward.D", alg = "iterative"
   ))
   expect_silent(fitGrid(
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen,
     n_centers = n_centers, clust_method = "hclust",
-    linkage_method = "centroid"
+    linkage_method = "mcquitty", alg = "iterative"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "median", alg = "iterative"
+  ))
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen,
+    n_centers = n_centers, clust_method = "hclust",
+    linkage_method = "centroid", alg = "iterative"
   ))
 })
 
@@ -119,7 +121,7 @@ test_that("The following results are replicable/reproducible", {
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = c(1, 10, 100),
     penalties = c(0.1, 0.5, 1), n_eigen = n_eigen,
-    n_centers = 4, clust_method = "pam"
+    n_centers = 4, clust_method = "pam", alg = "iterative"
   )
 
   idx <- which.max(fit_pam$ave_sil_widths)
@@ -141,7 +143,7 @@ test_that("The parallelized analog matches the sequential variant exactly", {
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
-    clust_method = "kmeans"
+    clust_method = "kmeans", alg = "iterative"
   )
   register(SerialParam())
   set.seed(123)
@@ -149,7 +151,7 @@ test_that("The parallelized analog matches the sequential variant exactly", {
     target = target, center = center, scale = scale,
     c_contrasts = c_contrasts, contrasts = contrasts,
     penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
-    clust_method = "kmeans"
+    clust_method = "kmeans", alg = "iterative"
   )
   expect_equal(fit, bpfit)
 })

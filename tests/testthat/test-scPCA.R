@@ -16,7 +16,7 @@ test_that("scPCA outputs a list of length 6", {
     background = background_df,
     contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
     penalties = seq(0.1, 1, length.out = 3),
-    n_centers = 4
+    n_centers = 4, alg = "iterative"
   )
 
   expect_equal(length(scPCA_res), 6)

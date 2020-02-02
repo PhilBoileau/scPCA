@@ -11,7 +11,7 @@ spcaWrapper(alg, contrast_cov, k, penalty)
 the contrastive loadings. Currently supports \code{iterative} for the
 \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
 non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} fir the randomized
+\code{rand_var_proj} for the randomized
 \insertRef{erichson2018sparse}{scPCA} result.}
 
 \item{contrast_cov}{A contrastive covariance \code{matrix}.}

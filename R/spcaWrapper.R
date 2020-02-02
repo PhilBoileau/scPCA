@@ -13,7 +13,7 @@
 #'   the contrastive loadings. Currently supports \code{iterative} for the
 #'   \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
 #'   non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'   \code{rand_var_proj} fir the randomized
+#'   \code{rand_var_proj} for the randomized
 #'   \insertRef{erichson2018sparse}{scPCA} result.
 #' @param contrast_cov A contrastive covariance \code{matrix}.
 #' @param k A \code{numeric} indicating the number of eigenvectors (or
@@ -52,7 +52,7 @@ spcaWrapper <- function(alg, contrast_cov, k, penalty) {
     # first check in contrastive loading matrix is a zero mat
     if (all(contrast_cov == 0)) {
       
-      loadings_mat <- matrix(data = 0, nrow = nrow(constrast_cov), ncol = k)
+      loadings_mat <- matrix(data = 0, nrow = nrow(contrast_cov), ncol = k)
     
       # otherwise, perform spca
     } else if (alg == "var_proj") {

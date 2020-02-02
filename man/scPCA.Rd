@@ -11,6 +11,7 @@ scPCA(
   scale = FALSE,
   n_eigen = 2,
   cv = NULL,
+  alg = c("iterative", "var_proj", "rand_var_proj"),
   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
   penalties = seq(0.05, 1, length.out = 20),
   clust_method = c("kmeans", "pam", "hclust"),
@@ -45,6 +46,13 @@ over the grids of \code{contrasts} and \code{penalties}. Cross-validation
 is expected to improve the robustness and generalization of the choice of
 these parameters; however, it increases the time the procedure costs, thus,
 the default is \code{NULL}, corresponding to no cross-validation.}
+
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} for the randomized
+\insertRef{erichson2018sparse}{scPCA} result. Defaults to \code{iterative}.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique non-negative real number. The default is to use 40

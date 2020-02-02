@@ -11,6 +11,7 @@ fitGrid(
   scale,
   c_contrasts,
   contrasts,
+  alg,
   penalties,
   n_eigen,
   clust_method = c("kmeans", "pam", "hclust"),
@@ -39,6 +40,13 @@ data sets should be scaled to unit variance.}
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters used
 to compute the contrastive covariances.}
 
+\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
+the contrastive loadings. Currently supports \code{iterative} for the
+\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} for the randomized
+\insertRef{erichson2018sparse}{scPCA} result.}
+
 \item{penalties}{A \code{numeric} vector of the penalty terms.}
 
 \item{n_eigen}{A \code{numeric} indicating the number of eigenvectors to be
@@ -60,13 +68,6 @@ linkage method to be used if \code{clust_method = "hclust"}. The options
 are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
 \code{mcquitty}, \code{median}, and \code{centroid}. The default is
 \code{complete}.}
-
-\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
-the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} fir the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:
