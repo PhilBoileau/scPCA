@@ -195,19 +195,21 @@ p_cpca
 
 The leading sparse contrastive components were also able to capture the
 variation of interest, though the clusters corresponding to the class labels
-are more loose than those of cPCA. Importantly, the first and second scPC
-possess only two and three non-zero loadings, respectively -- a significant
-improvement over cPCA, whose first and second cPCs each possess 30 non-zero
-loadings, in terms of interpretability. As with cPCA, the scPCA algorithm has
-demonstrated it's insensitivity to reasonable choices of `n_centers`
-[@boileau2020].
+are more loose than those of cPCA. Importantly, the first and second loadings
+vectors possess only eight and seven non-zero loadings, respectively -- a
+significant improvement over cPCA, whose first and second cPCs each possess 30
+non-zero loadings, in terms of interpretability. As with cPCA, the scPCA
+algorithm has demonstrated it's insensitivity to reasonable choices of
+`n_centers` [@boileau2020].
 
 ```{r scPCA_sim}
 # run scPCA for using 40 logarithmically seperated contrastive parameter values
 # and possible 20 L1 penalty terms
 scpca_sim <- scPCA(target = toy_df[, 1:30],
                    background = background_df,
-                   n_centers = 4)
+                   n_centers = 4,
+                   penalties = exp(seq(log(0.01), log(0.5), length.out = 10)),
+                   alg = "var_proj")
 
 # create a dataframe to be plotted
 scpca_df <- scpca_sim$x %>%
@@ -238,7 +240,7 @@ p1 <- load_diff_df %>%
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
-  ylim(-1, 1) +
+  ylim(-1.2, 1.2) +
   ggtitle("First Component") +
   scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()
@@ -248,7 +250,7 @@ p2 <- load_diff_df %>%
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
-  ylim(-1, 1) +
+  ylim(-1.2, 1.2) +
   ggtitle("Second Component") +
   scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()
@@ -272,16 +274,17 @@ clustering-based hyperparameter tuning framework (detailed in [@boileau2020]).
 If the discovery of non-generalizable patterns in the data becomes a concern, a
 cross-validated approach to this tuning framework is made available. Below, we
 provide the results of the cPCA and scPCA algorithms whose hyperparemeters were
-selected using 5-fold cross-validation. We recommend using between 5-fold and
-10-fold cross-validation when using this framework, though the number of folds
-can vary with dataset size. Generally, smaller samples require fewer folds.
+selected using 3-fold cross-validation. We recommend using 5-fold
+cross-validation for larger datasets when using this framework, though the
+number of folds can vary with dataset size. Generally, smaller samples require
+fewer folds.
 
 ```{r cPCA_sim_cv}
 cpca_cv_sim <- scPCA(target = toy_df[, 1:30],
                      background = background_df,
                      penalties = 0,
                      n_centers = 4,
-                     cv = 5)
+                     cv = 3)
 
 # create a dataframe to be plotted
 cpca_cv_df <- cpca_cv_sim$x %>%
@@ -300,7 +303,9 @@ p_cpca_cv <- ggplot(cpca_cv_df, aes(x = cPC1, y = cPC2, colour = label)) +
 scpca_cv_sim <- scPCA(target = toy_df[, 1:30],
                       background = background_df,
                       n_centers = 4,
-                      cv = 5)
+                      cv = 3,
+                      penalties = exp(seq(log(0.01), log(0.5), length.out = 10)),
+                      alg = "var_proj")
 
 # create a dataframe to be plotted
 scpca_cv_df <- scpca_cv_sim$x %>%
@@ -338,7 +343,7 @@ For historical reasons, the default SPCA algorithm used is that of
 @zouzou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
 We provide a comparison using the simulated data from Section 3 below:
 
-```{r microbenchmark_comparison}
+```{r microbenchmark_comparison, warning=FALSE, message=FALSE}
 timing_scPCA <- microbenchmark(
   "Zou et al." = scPCA(target = toy_df[, 1:30],
                        background = background_df,
@@ -352,7 +357,7 @@ timing_scPCA <- microbenchmark(
                                   background = background_df,
                                   n_centers = 4,
                                   alg = "rand_var_proj"),
-  times = 10
+  times = 3
 )
 
 autoplot(timing_scPCA, log = TRUE) +
@@ -362,8 +367,7 @@ autoplot(timing_scPCA, log = TRUE) +
 
 The computational advantage of @erichson2018sparse's methods is clear. On larger
 datasets, the randomized version is demonstrably more efficient than its
-non-randomized counterpart
-[@erichson2018sparse].
+non-randomized counterpart [@erichson2018sparse].
 
 ---
 
@@ -452,7 +456,7 @@ so in two dimensions.
 ```{r perform_dimred, message=FALSE}
 # for both cPCA and scPCA, we'll set the penalties and contrasts arguments
 contrasts <- exp(seq(log(0.1), log(100), length.out = 5))
-penalties <- seq(0.2, 1, length.out = 3)
+penalties <- exp(seq(log(0.001), log(0.1), length.out = 3))
 
 # first, PCA
 pca_out <- prcomp(t(log1p(counts(tg_sce))), center = TRUE, scale. = TRUE)
@@ -475,7 +479,8 @@ scpca_out <- scPCA(t(log1p(counts(tg_sce))),
                    contrasts = contrasts,
                    penalties = penalties,
                    center = TRUE,
-                   scale = TRUE)
+                   scale = TRUE,
+                   alg = "var_proj")
 
 # store new representations in the SingleCellExperiment object
 reducedDims(tg_sce) <- SimpleList(PCA = pca_out$x[, 1:2],
