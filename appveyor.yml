@@ -32,7 +32,7 @@ build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r base64
   - travis-tool.sh install_github r-lib/remotes r-lib/covr
-  - travis-tool.sh install_r BiocManager testthat knitr
+  - travis-tool.sh install_r BiocManager testthat knitr elasticnet sparsepca
   - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics
   - travis-tool.sh install_bioc S4Vectors splatter SingleCellExperiment
   - travis-tool.sh install_bioc_deps

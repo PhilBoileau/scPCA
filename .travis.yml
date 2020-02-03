@@ -26,6 +26,8 @@ r_packages:
   - devtools
   - covr
   - BiocManager
+  - elasticnet
+  - sparsepca
 
 r_github_packages:
   - r-lib/sessioninfo
