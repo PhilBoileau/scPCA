@@ -28,6 +28,7 @@ r_packages:
   - BiocManager
   - elasticnet
   - sparsepca
+  - magick
 
 r_github_packages:
   - r-lib/sessioninfo
