@@ -47,6 +47,7 @@ r_packages:
   - elasticnet
   - sparsepca
   - magick
+  - Matrix
 
 r_github_packages:
   - r-lib/sessioninfo
