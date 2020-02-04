@@ -38,10 +38,7 @@ environment:
     PKGTYPE: both
 
   matrix:
-    - R_VERSION: bioc-release
-      R_ARCH: x64
-
-    - R_VERSION: bioc-devel
+    - R_VERSION: devel
       R_ARCH: x64
 
 build_script:
