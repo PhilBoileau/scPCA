@@ -16,7 +16,6 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc
 Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
-<!-- [![Bioc Downloads](http://bioconductor.org/shields/downloads/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html) -->
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
@@ -114,7 +113,7 @@ prior to submitting a pull request.
 
 ## License
 
-© 2019 [Philippe Boileau](https://pboileau.ca/)
+© 2019-2020 [Philippe Boileau](https://pboileau.ca/)
 
 The contents of this repository are distributed under the MIT license.
 See file `LICENSE` for details.
