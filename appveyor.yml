@@ -46,7 +46,7 @@ build_script:
   - travis-tool.sh install_r BiocManager testthat knitr
   - travis-tool.sh install_github r-lib/remotes r-lib/covr
   - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics S4Vectors
-  - travis-tool.sh install_r matrixStats elasticnet sparsepca
+  - travis-tool.sh install_r matrixStats elasticnet sparsepca dplyr purrr Rdpack kernlab origami ggpubr microbenchmark Matrix
   - travis-tool.sh install_bioc splatter SingleCellExperiment
 
 test_script:
