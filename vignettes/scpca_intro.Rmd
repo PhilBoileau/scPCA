@@ -81,7 +81,7 @@ A brief comparison of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
 observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each
 observation is classified as belonging to one of four classes. This label is
-known is known a priori. A background data set comprised of the same number of
+known a priori. A background data set is comprised of the same number of
 variables as the target data set.
 
 The target data was simulated as follows:
@@ -199,7 +199,7 @@ are more loose than those of cPCA. Importantly, the first and second loadings
 vectors possess only eight and seven non-zero loadings, respectively -- a
 significant improvement over cPCA, whose first and second cPCs each possess 30
 non-zero loadings, in terms of interpretability. As with cPCA, the scPCA
-algorithm has demonstrated it's insensitivity to reasonable choices of
+algorithm has demonstrated its insensitivity to reasonable choices of
 `n_centers` [@boileau2020].
 
 ```{r scPCA_sim}
