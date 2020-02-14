@@ -16,6 +16,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc
 Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
+[![status](https://joss.theoj.org/papers/7f0f1271ede7aba120d71c9b5a14c865/status.svg)](https://joss.theoj.org/papers/7f0f1271ede7aba120d71c9b5a14c865)
 [![MIT
 license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
