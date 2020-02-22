@@ -14,23 +14,16 @@ vignette: >
 # Introduction
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-library(dplyr)
-library(ggplot2)
-library(ggpubr)
-library(elasticnet)
-library(scPCA)
-library(microbenchmark)
-
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 Data pre-processing and exploratory data analysis and are two important steps in
-the data science life-cycle. As data sets become larger and the signal weaker,
+the data science life-cycle. As datasets become larger and the signal weaker,
 their importance increases. Thus, methods that are capable of extracting the
-signal from such data sets is badly needed. Often, these steps rely on
+signal from such datasets is badly needed. Often, these steps rely on
 dimensionality reduction techniques to isolate pertinent information in data.
 However, many of the most commonly-used methods fail to reduce the dimensions of
-these large and noisy data sets successfully.
+these large and noisy datasets successfully.
 
 Principal component analysis (PCA) is one such method. Although popular for its
 interpretable results and ease of implementation, PCA's performance on
@@ -42,7 +35,8 @@ Fortunately, modifications of PCA have been developed to remedy these issues.
 Namely, sparse PCA (sPCA) was created to increase the stability of the principal
 component loadings and variable scores in high dimensions, and constrastive PCA
 (cPCA) was proposed as a method for capturing relevant information in the
-high-dimensional data [@abid2018exploring].
+high-dimensional data by harnessing variation in control data
+[@abid2018exploring].
 
 Although sPCA and cPCA have proven useful in resolving individual shortcomings
 of PCA, neither is capable of tackling the issues of stability and relevance
@@ -77,12 +71,21 @@ remotes::install_github("PhilBoileau/scPCA")
 
 # Comparing PCA, SPCA, cPCA and scPCA
 
+```{r load_libs, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(elasticnet)
+library(scPCA)
+library(microbenchmark)
+```
+
 A brief comparison of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
 observations and `r ncol(toy_df) - 1` continuous variables. Additionally, each
 observation is classified as belonging to one of four classes. This label is
-known a priori. A background data set is comprised of the same number of
-variables as the target data set.
+known a priori. A background dataset is comprised of the same number of
+variables as the target dataset, representing control data.
 
 The target data was simulated as follows:
 
@@ -138,7 +141,7 @@ groups.
 # perform sPCA on toy_df for a range of L1 penalty terms
 penalties <- exp(seq(log(10), log(1000), length.out = 6))
 df_ls <- lapply(penalties, function(penalty) {
-  spca_sim_p <- spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
+  spca_sim_p <- elasticnet::spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
                      type = "predictor", sparse = "penalty")$loadings
   spca_sim_p <- as.matrix(toy_df[, 1:30]) %*% spca_sim_p
   spca_out <- list("SPC1" = spca_sim_p[, 1],
@@ -162,7 +165,7 @@ p_spca
 ## Contrastive PCA (cPCA)
 
 The first two contrastive principal components of cPCA successfully captured
-the variation of interest in the data with the help of the background data set.
+the variation of interest in the data with the help of the background dataset.
 To fit contrastive PCA with the `scPCA` function of this package, simply select
 no penalization (by setting argument `penalties = 0`), and specify the expected
 number of clusters in the data. Here, we set the number of clusters to 4
@@ -335,12 +338,12 @@ ggarrange(
 
 The `scPCA` package provides three options with which to sparsify the loadings
 produced by cPCA:
-1. The traditional iterative SPCA algorithm by @zouzou2006sparse, implemented in the `elasticnet` package.
+1. The traditional iterative SPCA algorithm by @zou2006sparse, implemented in the `elasticnet` package.
 2. The SPCA algorithm relying on variable projection by @erichson2018sparse, implemented in the `sparsepca` package.
-3. The randommized SPCA algorithm, which uses variable projection and random numerical linear algebra methods, by @erichson2018sparse, implemented in the `sparsepca` package.
+3. The randomized SPCA algorithm, which uses variable projection and random numerical linear algebra methods, by @erichson2018sparse, implemented in the `sparsepca` package.
 
 For historical reasons, the default SPCA algorithm used is that of
-@zouzou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
+@zou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
 We provide a comparison using the simulated data from Section 3 below:
 
 ```{r microbenchmark_comparison, warning=FALSE, message=FALSE}
@@ -366,8 +369,10 @@ autoplot(timing_scPCA, log = TRUE) +
 ```
 
 The computational advantage of @erichson2018sparse's methods is clear. On larger
-datasets, the randomized version is demonstrably more efficient than its
-non-randomized counterpart [@erichson2018sparse].
+datasets, the scPCA method relying on the randomized version of SPCA is
+demonstrably more efficient than its non-randomized counterparts, as well as
+other commonly-used dimensionality reduction techniques like t-Distributed
+Stochastic Neighbor Embedding [@vanDerMaaten2008][@boileau2020]. 
 
 ---
 
@@ -376,7 +381,7 @@ non-randomized counterpart [@erichson2018sparse].
 We now turn to discussing how the tools in the `scPCA` package can be used more
 readily with data structures common in computational biology by examining their
 integration with the `SingleCellExperiment` container class. For our example, we
-will use `splatter` to simulate a scRNA-seq data set using the Splatter
+will use `splatter` to simulate a scRNA-seq dataset using the Splatter
 framework [@zappia2017splatter]. This method simulates a scRNA-seq count matrix
 by way of a gamma-Poisson hierarchical model, where the mean expression level of
 gene $g_i,\; i = 1, \ldots, p$ is sampled from a gamma distribution, and the
@@ -388,8 +393,11 @@ cells and 500 genes. The cells are evenly split among three biological groups.
 The samples in two of these groups possess genes that are highly differentially
 expressed when compared to those in other groups; they comprise the target data.
 The genes of the third group of cells are less differentially expressed to the
-genes in the target data, and so it is considered the background data set. A
-large batch effect is simulated to confound the biological signal.
+genes in the target data, and so this group is considered the background
+dataset. A large batch effect is simulated to confound the biological signal.
+In practice, cells that make up the background dataset are pre-defined based on
+experimental design, e.g. cells assumed to not contain the biological signal of
+interest. For an example, see @boileau2020.
 
 ```{r sce_setup, message=FALSE}
 library(splatter)
@@ -416,7 +424,7 @@ variable genes. We then split the simulated data into target and background data
 sets. Our goal here is to demonstrate a typical assessment of scRNA-seq data
 (and data from similar assays) using the tools made available in the `scPCA`
 package. A standard analysis would follow a workflow largely similar to the one
-below, though without such a computationally convenient data set.
+below, though without such a computationally convenient dataset.
 
 ```{r make_sce_subs, message=FALSE}
 # rank genes by variance
