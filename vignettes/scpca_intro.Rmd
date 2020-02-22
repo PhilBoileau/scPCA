@@ -14,13 +14,6 @@ vignette: >
 # Introduction
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-library(dplyr)
-library(ggplot2)
-library(ggpubr)
-library(elasticnet)
-library(scPCA)
-library(microbenchmark)
-
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -76,6 +69,15 @@ remotes::install_github("PhilBoileau/scPCA")
 ---
 
 # Comparing PCA, SPCA, cPCA and scPCA
+
+```{r load_libs, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(elasticnet)
+library(scPCA)
+library(microbenchmark)
+```
 
 A brief comparison of PCA, SPCA, cPCA and scPCA is provided below. All four
 methods are applied to a simulated target dataset consisting of `r nrow(toy_df)`
@@ -138,7 +140,7 @@ groups.
 # perform sPCA on toy_df for a range of L1 penalty terms
 penalties <- exp(seq(log(10), log(1000), length.out = 6))
 df_ls <- lapply(penalties, function(penalty) {
-  spca_sim_p <- spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
+  spca_sim_p <- elasticnet::spca(toy_df[, 1:30], K = 2, para = rep(penalty, 2),
                      type = "predictor", sparse = "penalty")$loadings
   spca_sim_p <- as.matrix(toy_df[, 1:30]) %*% spca_sim_p
   spca_out <- list("SPC1" = spca_sim_p[, 1],
@@ -335,12 +337,12 @@ ggarrange(
 
 The `scPCA` package provides three options with which to sparsify the loadings
 produced by cPCA:
-1. The traditional iterative SPCA algorithm by @zouzou2006sparse, implemented in the `elasticnet` package.
+1. The traditional iterative SPCA algorithm by @zou2006sparse, implemented in the `elasticnet` package.
 2. The SPCA algorithm relying on variable projection by @erichson2018sparse, implemented in the `sparsepca` package.
 3. The randommized SPCA algorithm, which uses variable projection and random numerical linear algebra methods, by @erichson2018sparse, implemented in the `sparsepca` package.
 
 For historical reasons, the default SPCA algorithm used is that of
-@zouzou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
+@zou2006sparse. However, @erichson2018sparse's methods are noticeably faster.
 We provide a comparison using the simulated data from Section 3 below:
 
 ```{r microbenchmark_comparison, warning=FALSE, message=FALSE}
