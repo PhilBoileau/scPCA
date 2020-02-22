@@ -369,8 +369,10 @@ autoplot(timing_scPCA, log = TRUE) +
 ```
 
 The computational advantage of @erichson2018sparse's methods is clear. On larger
-datasets, the randomized version is demonstrably more efficient than its
-non-randomized counterpart [@erichson2018sparse].
+datasets, the scPCA method relying on the randomized version of SPCA is
+demonstrably more efficient than its non-randomized counterparts, as well as
+other commonly-used dimensionality reduction techniques like t-Distributed
+Stochastic Neighbor Embedding [@vanDerMaaten2008][@boileau2020].
 
 ---
 
@@ -393,7 +395,7 @@ expressed when compared to those in other groups; they comprise the target data.
 The genes of the third group of cells are less differentially expressed to the
 genes in the target data, and so this group is considered the background
 dataset. A large batch effect is simulated to confound the biological signal.
-In practice, cells that comprise the background dataset are pre-defined based on
+In practice, cells that make up the background dataset are pre-defined based on
 experimental design, e.g. cells assumed to not contain the biological signal of
 interest. For an example, see @boileau2020.
 
