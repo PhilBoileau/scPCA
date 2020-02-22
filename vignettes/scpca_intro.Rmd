@@ -372,7 +372,7 @@ The computational advantage of @erichson2018sparse's methods is clear. On larger
 datasets, the scPCA method relying on the randomized version of SPCA is
 demonstrably more efficient than its non-randomized counterparts, as well as
 other commonly-used dimensionality reduction techniques like t-Distributed
-Stochastic Neighbor Embedding [@vanDerMaaten2008][@boileau2020].
+Stochastic Neighbor Embedding [@vanDerMaaten2008][@boileau2020]. 
 
 ---
 
