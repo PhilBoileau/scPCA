@@ -114,6 +114,31 @@ prior to submitting a pull request.
 
 ---
 
+## Citation
+
+Please cite the first paper below after using the `scPCA` R software
+package. Please also make sure to cite the appropriate articles
+describing the statistical methodology.
+
+```
+@manual{boileau2020scPCAbioc,
+  title = {{scPCA}: Sparse contrastive principal component analysis},
+  author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
+  year = {2020},
+  note = {R package version 1.1.9},
+  url = {https://bioconductor.org/scPCA},
+}
+
+@article{boileau2020scPCA,
+  journal = {bioRxiv},
+  title = {Exploring high-dimensional biological data with sparse contrastive principal component analysis},
+  author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
+  year = {2019+},
+}
+```
+
+---
+
 ## License
 
 &copy; 2019-2020 [Philippe Boileau](https://pboileau.ca/)
