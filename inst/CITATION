@@ -14,6 +14,20 @@ bibentry(bibtype = "Manual",
          note = note,
          doi = "",
          url = "https://bioconductor.org/scPCA")
+         
+bibentry(bibtype = "Article",
+         journal = "Journal of Open Source Software",
+         title = "scPCA: A toolbox for sparse contrastive principal component analysis in R",
+         author = c(person("Philippe ", "Boileau"),
+                    person("Nima", "Hejazi", "S"),
+                    person("Sandrine", "Dudoit")),
+         publisher = "The Open Journal",
+         volume = "5",
+         number = "46",
+         page = "2079",
+         year = "2020",
+         doi = "10.21105/joss.02079",
+         url = "https://doi.org/10.21105/joss.02079")
 
 bibentry(bibtype = "Article",
          journal = "bioRxiv",

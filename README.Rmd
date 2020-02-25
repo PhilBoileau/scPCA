@@ -23,7 +23,6 @@ knitr::opts_chunk$set(
 [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/scPCA.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/scPCA)
 [![Bioc Time](http://bioconductor.org/shields/years-in-bioc/scPCA.svg)](https://bioconductor.org/packages/release/bioc/html/scPCA.html)
 [![status](https://joss.theoj.org/papers/7f0f1271ede7aba120d71c9b5a14c865/status.svg)](https://joss.theoj.org/papers/7f0f1271ede7aba120d71c9b5a14c865)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3686201.svg)](https://doi.org/10.5281/zenodo.3686201)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 > Sparse Contrastive Principal Component Analysis for Computational Biology
@@ -128,6 +127,19 @@ describing the statistical methodology.
   year = {2020},
   note = {R package version 1.1.9},
   url = {https://bioconductor.org/scPCA},
+}
+
+@article{boileau2020scPCAjoss,
+  doi = {10.21105/joss.02079},
+  url = {https://doi.org/10.21105/joss.02079},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {46},
+  pages = {2079},
+  author = {Philippe Boileau and Nima Hejazi and Sandrine Dudoit},
+  title = {scPCA: A toolbox for sparse contrastive principal component analysis in R},
+  journal = {Journal of Open Source Software}
 }
 
 @article{boileau2020scPCA,
