@@ -16,6 +16,6 @@
 + New vignette section comparing performance of SPCA algorithms
 + Improvements to code coverage
 
-# Changes in version 1.1.12
+# Changes in version 1.1.12 (2020-04-21)
 + Updated citations
 + Fixed typos in documentation
