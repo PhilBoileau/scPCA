@@ -38,20 +38,20 @@ experimental data, often subject to batch effects and other technical
 noise. In tandem with the development of sequencing technology (e.g.,
 RNA-seq, scRNA-seq), many variants of PCA have been developed in
 attempts to remedy deficiencies in interpretability and stability that
-plague their classical variants. Such developments have included both
-sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006; Erichson et al.
-2018), which increases the stability and interpretability of principal
-component loadings in high dimensions, and, more recently, contrastive
-PCA (cPCA) (Abid et al. 2018), which captures relevant information in
-the target (experimental) data set by eliminating technical noise
-through comparison to a so-called background data set. While SPCA and
-cPCA have both individually proven useful in resolving distinct
-shortcomings of PCA, neither is capable of simultaneously tackling the
-issues of interpretability, stability and relevance simultaneously. The
-`scPCA` package implements *sparse constrastive PCA*, to accomplish both
-of these tasks in the context of high-dimensional biological data. In
-addition to implementing this newly developed technique, the `scPCA`
-package also implements cPCA and generalizations thereof.
+plague the original method. Such developments have included both various
+forms of sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006; Erichson
+et al. 2018), which increase the stability and interpretability of
+principal component loadings in high dimensions, and, more recently,
+contrastive PCA (cPCA) (Abid et al. 2018), which captures relevant
+information in the target (experimental) data set by eliminating
+technical noise through comparison to a so-called background data set.
+While SPCA and cPCA have both individually proven useful in resolving
+distinct shortcomings of PCA, neither is capable of simultaneously
+tackling the issues of interpretability, stability and relevance
+simultaneously. The `scPCA` package implements *sparse constrastive PCA*
+to accomplish these tasks in the context of high-dimensional biological
+data. In addition to implementing this newly developed technique, the
+`scPCA` package implements cPCA and generalizations thereof.
 
 -----
 
@@ -140,10 +140,16 @@ describing the statistical methodology.
     }
     
     @article{boileau2020scPCA,
-      journal = {bioRxiv},
-      title = {Exploring high-dimensional biological data with sparse contrastive principal component analysis},
-      author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
-      year = {2019+},
+        author = {Boileau, Philippe and Hejazi, Nima S and Dudoit, Sandrine},
+        title = "{Exploring High-Dimensional Biological Data with Sparse Contrastive Principal Component Analysis}",
+        journal = {Bioinformatics},
+        year = {2020},
+        month = {03},
+        issn = {1367-4803},
+        doi = {10.1093/bioinformatics/btaa176},
+        url = {https://doi.org/10.1093/bioinformatics/btaa176},
+        note = {btaa176},
+        eprint = {https://academic.oup.com/bioinformatics/article-pdf/doi/10.1093/bioinformatics/btaa176/32914142/btaa176.pdf},
     }
 
 -----

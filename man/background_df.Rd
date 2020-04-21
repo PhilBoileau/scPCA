@@ -4,12 +4,14 @@
 \name{background_df}
 \alias{background_df}
 \title{Simulated Background Data for cPCA and scPCA}
-\format{A simple \code{data.frame}.}
+\format{
+A simple \code{data.frame}.
+}
 \usage{
 data(background_df)
 }
 \description{
-The background data consisting of 400 observations and 3 variables was
+The background data consisting of 400 observations and 30 variables was
 simulated as follows:
 \itemize{
   \item Each of the first 10 variables was drawn from $N(0, 10)$

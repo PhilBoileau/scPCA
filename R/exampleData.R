@@ -27,7 +27,7 @@
 
 #' Simulated Background Data for cPCA and scPCA
 #'
-#' The background data consisting of 400 observations and 3 variables was
+#' The background data consisting of 400 observations and 30 variables was
 #' simulated as follows:
 #' \itemize{
 #'   \item Each of the first 10 variables was drawn from $N(0, 10)$

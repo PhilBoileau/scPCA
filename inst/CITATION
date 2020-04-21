@@ -10,9 +10,7 @@ bibentry(bibtype = "Manual",
          author = c(person("Philippe ", "Boileau"),
                     person("Nima", "Hejazi", "S"),
                     person("Sandrine", "Dudoit")),
-         year = year,
-         note = note,
-         doi = "",
+         year = 2020,
          url = "https://bioconductor.org/scPCA")
          
 bibentry(bibtype = "Article",
@@ -30,11 +28,12 @@ bibentry(bibtype = "Article",
          url = "https://doi.org/10.21105/joss.02079")
 
 bibentry(bibtype = "Article",
-         journal = "bioRxiv",
+         journal = "Bioinformatics",
          title = "Exploring high-dimensional biological data with sparse contrastive principal component analysis",
          author = c(person("Philippe ", "Boileau"),
                     person("Nima", "Hejazi", "S"),
                     person("Sandrine", "Dudoit")),
-         year = "2019+",
-         doi = "",
-         url = "")
+         year = 2020,
+         month = 03,
+         doi = "10.1093/bioinformatics/btaa176",
+         url = "https://doi.org/10.1093/bioinformatics/btaa176")

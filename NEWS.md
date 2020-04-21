@@ -9,9 +9,13 @@
 + Misc. big fixes
 + Improvements to code coverage
 
-# Changes in version 1.3.0 (2020-02-02)
+# Changes in version 1.1.11 (2020-02-02)
 + Added more SPCA algorithm options
   - SPCA via variable projection
   - Randomized SPCA via variable projection
 + New vignette section comparing performance of SPCA algorithms
 + Improvements to code coverage
+
+# Changes in version 1.1.12
++ Updated citations
++ Fixed typos in documentation
