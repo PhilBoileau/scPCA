@@ -21,4 +21,4 @@
 + Fixed typos in documentation
 
 # Cahnges in version 1.1.14 (2020-04-26)
-+ Fixing 
++ Fixing broken link in an internal function documentation page.
