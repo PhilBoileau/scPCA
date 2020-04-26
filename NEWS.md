@@ -19,3 +19,6 @@
 # Changes in version 1.1.12 (2020-04-21)
 + Updated citations
 + Fixed typos in documentation
+
+# Cahnges in version 1.1.14 (2020-04-26)
++ Fixing 

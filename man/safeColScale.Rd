@@ -24,7 +24,7 @@ the input \code{X}.}
 
 \item{tol}{A tolerance level for the lowest column variance (or standard
 deviation) value to be tolerated when scaling is desired. The default is
-set to \code{double.eps} of machine precision \code{\link[base]{.Machine}}.}
+set to \code{double.eps} of machine precision \code{.Machine}.}
 
 \item{eps}{The desired lower bound of the estimated variance for a given
 column. When the lowest estimate falls below \code{tol}, it is truncated
