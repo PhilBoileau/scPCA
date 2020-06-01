@@ -29,7 +29,6 @@ before_install:
   - sudo apt-get -y install libtesseract-dev
   - sudo apt-get -y install libleptonica-dev
   - sudo apt-get -y install tesseract-ocr-eng
-  - sudo apt-get -y install r-cran-rgdal
   - sudo apt-get -y install libfftw3-dev
   - sudo apt-get -y install cargo
 
