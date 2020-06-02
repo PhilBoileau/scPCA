@@ -20,5 +20,8 @@
 + Updated citations
 + Fixed typos in documentation
 
-# Cahnges in version 1.1.14 (2020-04-26)
+# Changes in version 1.1.14 (2020-04-26)
 + Fixing broken link in an internal function documentation page.
+
+# Changes in version 1.1.15 (2020-06-02)
++ Fixing travis CI settings
