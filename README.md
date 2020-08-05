@@ -34,24 +34,27 @@ Dudoit](https://statistics.berkeley.edu/~sandrine/)
 The exploration and analysis of modern high-dimensional biological data
 regularly involves the use of dimension reduction techniques in order to
 tease out meaningful and interpretable information from complex
-experimental data, often subject to batch effects and other technical
-noise. In tandem with the development of sequencing technology (e.g.,
-RNA-seq, scRNA-seq), many variants of PCA have been developed in
-attempts to remedy deficiencies in interpretability and stability that
-plague the original method. Such developments have included both various
-forms of sparse PCA (SPCA) (Zou, Hastie, and Tibshirani 2006; Erichson
-et al. 2018), which increase the stability and interpretability of
-principal component loadings in high dimensions, and, more recently,
-contrastive PCA (cPCA) (Abid et al. 2018), which captures relevant
-information in the target (experimental) data set by eliminating
-technical noise through comparison to a so-called background data set.
-While SPCA and cPCA have both individually proven useful in resolving
-distinct shortcomings of PCA, neither is capable of simultaneously
-tackling the issues of interpretability, stability and relevance
-simultaneously. The `scPCA` package implements *sparse constrastive PCA*
-to accomplish these tasks in the context of high-dimensional biological
-data. In addition to implementing this newly developed technique, the
-`scPCA` package implements cPCA and generalizations thereof.
+experimental data, often subject to batch effects and other noise. In
+tandem with the development of sequencing technology (e.g., RNA-seq,
+scRNA-seq), many variants of PCA have been developed in attempts to
+remedy deficiencies in interpretability and stability that plague vanila
+PCA.
+
+Such developments have included both various forms of sparse PCA (SPCA)
+(Zou, Hastie, and Tibshirani 2006; Erichson et al. 2018), which increase
+the stability and interpretability of principal component loadings in
+high dimensions, and, more recently, contrastive PCA (cPCA) (Abid et al.
+2018), which captures relevant information in the target (experimental)
+data set by eliminating technical noise through comparison to a
+so-called background data set. While SPCA and cPCA have both
+individually proven useful in resolving distinct shortcomings of PCA,
+neither is capable of simultaneously tackling the issues of
+interpretability, stability and relevance simultaneously. The `scPCA`
+package implements *sparse constrastive PCA* (Boileau, Hejazi, and
+Dudoit 2020) to accomplish these tasks in the context of
+high-dimensional biological data. In addition to implementing this newly
+developed technique, the `scPCA` package implements cPCA and
+generalizations thereof.
 
 -----
 
@@ -118,14 +121,6 @@ Please cite the first paper below after using the `scPCA` R software
 package. Please also make sure to cite the appropriate articles
 describing the statistical methodology.
 
-    @manual{boileau2020scPCAbioc,
-      title = {{scPCA}: Sparse contrastive principal component analysis},
-      author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
-      year = {2020},
-      note = {R package version 1.1.9},
-      url = {https://bioconductor.org/scPCA},
-    }
-    
     @article{boileau2020scPCAjoss,
       doi = {10.21105/joss.02079},
       url = {https://doi.org/10.21105/joss.02079},
@@ -137,6 +132,14 @@ describing the statistical methodology.
       author = {Philippe Boileau and Nima Hejazi and Sandrine Dudoit},
       title = {scPCA: A toolbox for sparse contrastive principal component analysis in R},
       journal = {Journal of Open Source Software}
+    }
+    
+    @manual{boileau2020scPCAbioc,
+      title = {{scPCA}: Sparse contrastive principal component analysis},
+      author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
+      year = {2020},
+      note = {R package version 1.1.9},
+      url = {https://bioconductor.org/scPCA},
     }
     
     @article{boileau2020scPCA,
@@ -172,6 +175,15 @@ See file `LICENSE` for details.
 Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
 “Exploring Patterns Enriched in a Dataset with Contrastive Principal
 Component Analysis.” *Nature Communications* 9 (1): 2134.
+
+</div>
+
+<div id="ref-boileau2020">
+
+Boileau, Philippe, Nima S Hejazi, and Sandrine Dudoit. 2020. “Exploring
+High-Dimensional Biological Data with Sparse Contrastive Principal
+Component Analysis.” *Bioinformatics*, March.
+<https://doi.org/10.1093/bioinformatics/btaa176>.
 
 </div>
 
