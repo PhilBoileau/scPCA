@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Data pre-processing and exploratory data analysis and are two important steps in
 the data science life-cycle. As datasets become larger and the signal weaker,
-their importance increases. Thus, methods that are capable of extracting the
+their importance increases. Methods capable of extracting the
 signal from such datasets is badly needed. Often, these steps rely on
 dimensionality reduction techniques to isolate pertinent information in data.
 However, many of the most commonly-used methods fail to reduce the dimensions of
@@ -27,13 +27,13 @@ these large and noisy datasets successfully.
 
 Principal component analysis (PCA) is one such method. Although popular for its
 interpretable results and ease of implementation, PCA's performance on
-high-dimensional often leaves much to be desired. Its results on these large
+high-dimensional data often leaves much to be desired. Its results on these large
 datasets have been found to be unstable, and it is often unable to identify
 variation that is contextually meaningful.
 
-Fortunately, modifications of PCA have been developed to remedy these issues.
+Modifications of PCA have been developed to remedy these issues.
 Namely, sparse PCA (sPCA) was created to increase the stability of the principal
-component loadings and variable scores in high dimensions, and constrastive PCA
+component loadings and variable scores in high dimensions, and contrastive PCA
 (cPCA) was proposed as a method for capturing relevant information in the
 high-dimensional data by harnessing variation in control data
 [@abid2018exploring].
@@ -41,9 +41,9 @@ high-dimensional data by harnessing variation in control data
 Although sPCA and cPCA have proven useful in resolving individual shortcomings
 of PCA, neither is capable of tackling the issues of stability and relevance
 simultaneously. The `scPCA` package implements a combination of these methods,
-dubbed sparse constrastive PCA (scPCA) [@boileau2020], which draws on cPCA to
+dubbed sparse contrastive PCA (scPCA) [@boileau2020], which draws on cPCA to
 remove technical effects and on SPCA for sparsification of the loadings, thereby
-extracting stable, interpretable, and relevant uncontaminated signal from
+extracting stable, interpretable, and relevant signal from
 high-dimensional biological data. cPCA, previously unavailable to `R` users, is
 also implemented.
 
@@ -277,10 +277,8 @@ clustering-based hyperparameter tuning framework (detailed in [@boileau2020]).
 If the discovery of non-generalizable patterns in the data becomes a concern, a
 cross-validated approach to this tuning framework is made available. Below, we
 provide the results of the cPCA and scPCA algorithms whose hyperparemeters were
-selected using 3-fold cross-validation. We recommend using 5-fold
-cross-validation for larger datasets when using this framework, though the
-number of folds can vary with dataset size. Generally, smaller samples require
-fewer folds.
+selected using 3-fold cross-validation. We recommend using more folds for
+larger datasets when using this heuristic.
 
 ```{r cPCA_sim_cv}
 cpca_cv_sim <- scPCA(target = toy_df[, 1:30],
@@ -370,9 +368,9 @@ autoplot(timing_scPCA, log = TRUE) +
 
 The computational advantage of @erichson2018sparse's methods is clear. On larger
 datasets, the scPCA method relying on the randomized version of SPCA is
-demonstrably more efficient than its non-randomized counterparts, as well as
-other commonly-used dimensionality reduction techniques like t-Distributed
-Stochastic Neighbor Embedding [@vanDerMaaten2008][@boileau2020]. 
+demonstrably more efficient than its non-randomized counterparts [@boileau2020],
+as well as other commonly-used dimensionality reduction techniques like
+t-Distributed Stochastic Neighbor Embedding [@vanDerMaaten2008]. 
 
 ---
 
@@ -578,7 +576,7 @@ standard analysis of genomic data, use of this parallelization will be crucial,
 thus, each of the core subroutines of `scPCA` has an equivalent parallelized
 variant that makes use of the infrastructure provided by the [`BiocParallel`
 package](https://bioconductor.org/packages/BiocParallel). In order to make
-effective use of this paralleization, one need only set `parallel = TRUE` in a
+effective use of this parallelization, one need only set `parallel = TRUE` in a
 call to `scPCA` after having registered a particular parallelization back-end
 for parallel evaluation as described in the `BiocParallel` documentation. An
 example of this form of parallelization follows:
