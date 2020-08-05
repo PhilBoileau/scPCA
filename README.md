@@ -37,8 +37,8 @@ tease out meaningful and interpretable information from complex
 experimental data, often subject to batch effects and other noise. In
 tandem with the development of sequencing technology (e.g., RNA-seq,
 scRNA-seq), many variants of PCA have been developed in attempts to
-remedy deficiencies in interpretability and stability that plague vanila
-PCA.
+remedy deficiencies in interpretability and stability that plague
+vanilla PCA.
 
 Such developments have included both various forms of sparse PCA (SPCA)
 (Zou, Hastie, and Tibshirani 2006; Erichson et al. 2018), which increase
@@ -50,11 +50,11 @@ so-called background data set. While SPCA and cPCA have both
 individually proven useful in resolving distinct shortcomings of PCA,
 neither is capable of simultaneously tackling the issues of
 interpretability, stability and relevance simultaneously. The `scPCA`
-package implements *sparse constrastive PCA* (Boileau, Hejazi, and
-Dudoit 2020) to accomplish these tasks in the context of
-high-dimensional biological data. In addition to implementing this newly
-developed technique, the `scPCA` package implements cPCA and
-generalizations thereof.
+package implements *sparse contrastive PCA* (Boileau, Hejazi, and Dudoit
+2020) to accomplish these tasks in the context of high-dimensional
+biological data. In addition to implementing this newly developed
+technique, the `scPCA` package implements cPCA and generalizations
+thereof.
 
 -----
 
