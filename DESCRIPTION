@@ -1,6 +1,6 @@
 Package: scPCA
 Title: Sparse Contrastive Principal Component Analysis
-Version: 1.3.1
+Version: 1.3.2
 Authors@R: c(
     person(given = "Philippe",
            family = "Boileau",
@@ -21,8 +21,8 @@ Authors@R: c(
 Description: A toolbox for sparse contrastive principal component analysis
     (scPCA) of high-dimensional biological data. scPCA combines the stability
     and interpretability of sparse PCA with contrastive PCA's ability to
-    disentangle biological signal from techical noise through the use of control
-    data. Also implements and extends cPCA.
+    disentangle biological signal from unwanted variation through the use of
+    control data. Also implements and extends cPCA.
 Depends: R (>= 3.6)
 Imports:
     stats,
@@ -58,7 +58,7 @@ BugReports: https://github.com/PhilBoileau/scPCA/issues
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 RdMacros: Rdpack
 biocViews:
     PrincipalComponent,

@@ -41,7 +41,7 @@ two such eigenvectors.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
+\insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
 non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
 \code{rand_var_proj} for the randomized
 \insertRef{erichson2018sparse}{scPCA} result.}
@@ -54,7 +54,7 @@ logarithmically spaced values between 0.1 and 1000.}
 loadings. The default is to use 20 equidistant values between 0.05 and 1.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
-use for choosing the optimal constrastive parameter. Currently, this is
+use for choosing the optimal contrastive parameter. Currently, this is
 limited to either k-means, partitioning around medoids (PAM), and
 hierarchical clustering. The default is k-means clustering.}
 

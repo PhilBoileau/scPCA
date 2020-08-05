@@ -2,7 +2,7 @@
 % Please edit documentation in R/scPCA.R
 \name{scPCA}
 \alias{scPCA}
-\title{Sparse Constrastive Principal Component Analysis}
+\title{Sparse Contrastive Principal Component Analysis}
 \usage{
 scPCA(
   target,
@@ -27,51 +27,52 @@ scPCA(
 as a \code{data.frame} or \code{matrix}.}
 
 \item{background}{The background data set, in a standard format such as a
-\code{data.frame} or \code{matrix}. Note that the number of features must
-match the number of features in the target data.}
+\code{data.frame} or \code{matrix}. The features must match the features of
+the target data set.}
 
 \item{center}{A \code{logical} indicating whether the target and background
-data sets should be centered to mean zero.}
+data sets' features should be centered to mean zero.}
 
 \item{scale}{A \code{logical} indicating whether the target and background
-data sets should be scaled to unit variance.}
+data sets' features should be scaled to unit variance.}
 
 \item{n_eigen}{A \code{numeric} indicating the number of eigenvectors (or
-sparse contrastive components) to be computed. The default is to compute
-two such eigenvectors.}
+(sparse) contrastive components) to be computed. Two eigenvectors are
+computed by default.}
 
 \item{cv}{A \code{numeric} indicating the number of cross-validation folds
 to use in choosing the optimal contrastive and penalization parameters from
 over the grids of \code{contrasts} and \code{penalties}. Cross-validation
 is expected to improve the robustness and generalization of the choice of
-these parameters; however, it increases the time the procedure costs, thus,
-the default is \code{NULL}, corresponding to no cross-validation.}
+these parameters. However, it increases the time the procedure costs.
+The default is therefore \code{NULL}, corresponding to no cross-validation.}
 
-\item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
-the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} for the randomized
-\insertRef{erichson2018sparse}{scPCA} result. Defaults to \code{iterative}.}
+\item{alg}{A \code{character} indicating the sparse PCA algorithm used to
+sparsify the contrastive loadings. Currently supports \code{iterative} for
+the \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for
+the non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\code{rand_var_proj} for the randomized \insertRef{erichson2018sparse}{scPCA}
+implementation. Defaults to \code{iterative}.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
-element must be a unique non-negative real number. The default is to use 40
-logarithmically spaced values between 0.1 and 1000.}
+element must be a unique, non-negative real number. By default, 40
+logarithmically spaced values between 0.1 and 1000 are used.}
 
 \item{penalties}{A \code{numeric} vector of the L1 penalty terms on the
 loadings. The default is to use 20 equidistant values between 0.05 and 1.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
-use for choosing the optimal constrastive parameter. Currently, this is
+use for choosing the optimal contrastive parameter. Currently, this is
 limited to either k-means, partitioning around medoids (PAM), and
 hierarchical clustering. The default is k-means clustering.}
 
 \item{n_centers}{A \code{numeric} giving the number of centers to use in the
-clustering algorithm. If set to 1, cPCA, as first proposed by Abid et al.,
-is performed, regardless of what the \code{penalties} argument is set to.}
+clustering algorithm. If set to 1, cPCA, as first proposed by
+\insertRef{erichson2018sparse}{scPCA}, is performed, regardless of what the
+\code{penalties} argument is set to.}
 
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
-be used in k-means clustering, defaulting to 10.}
+be used in k-means clustering. Defaults to 10.}
 
 \item{linkage_method}{A \code{character} specifying the agglomerative
 linkage method to be used if \code{clust_method = "hclust"}. The options
@@ -89,23 +90,34 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 \value{
 A list containing the following components:
   \itemize{
-    \item rotation - the matrix of variable loadings
-    \item x - the rotated data, centred and scaled if requested, multiplied
-      by the rotation matrix
-    \item contrast - the optimal contrastive parameter
-    \item penalty - the optimal L1 penalty term
-    \item center - whether the target dataset was centered
-    \item scale - whether the target dataset was scaled
+    \item \code{rotation}: The matrix of variable loadings if \code{n_centers}
+      is larger than one. Otherwise, a list of rotation matrices is returned,
+      one for each medoid. The number of medoids is specified by
+      \code{n_medoids}.
+    \item \code{x}: The rotated data, centred and scaled if requested,
+      multiplied by the rotation matrix if \code{n_centers} is larger than
+      one. Otherwise, a list of rotated data matrices is returned, one for
+      each medoid. The number of medoids is specified by \code{n_medoids}.
+    \item contrast: The optimal contrastive parameter.
+    \item penalty: The optimal L1 penalty term.
+    \item center: A logical indicating whether the target dataset was centered.
+    \item scale: A logical indicating whether the target dataset was scaled.
   }
 }
 \description{
 Given target and background data frames or matrices,
  \code{scPCA} will perform the sparse contrastive principal component
  analysis (scPCA) of the target data for a given number of eigenvectors, a
- vector of real-valued contrast parameters and a vector of penalty terms.
- For more information on the contrastive PCA method, consult
- \insertRef{abid2018exploring}{scPCA}. Sparse PCA is performed via the
- method of \insertRef{zou2006sparse}{scPCA}.
+ vector of real-valued contrast parameters, and a vector of sparsity inducing
+ penalty terms.
+ 
+ If instead you wish to perform contrastive principal component analysis
+ (cPCA), set the \code{penalties} argument to \code{0}. So long as the
+ \code{n_centers} parameter is larger than one, the automated hyperparameter
+ tuning heuristic described in \insertRef{boileau2020}{scPCA} is used.
+ Otherwise, the semi-automated approach of
+ \insertRef{abid2018exploring}{scPCA} is used to select the appropriate
+ hyperparameter.
 }
 \examples{
 # perform cPCA on the simulated data set

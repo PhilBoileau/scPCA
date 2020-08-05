@@ -25,3 +25,7 @@
 
 # Changes in version 1.1.15 (2020-06-02)
 + Fixing travis CI settings
+
+# Changes in version 1.3.2 (2020-08-05)
++ Updated scPCA function documentation
++ Corrected pelling mistakes
