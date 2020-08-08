@@ -101,3 +101,36 @@ test_that("The parallelized analog matches the sequential variant exactly", {
   )
   expect_equal(scPCA_res, scPCA_bpres)
 })
+
+
+test_that("n_centers need not be passed when contrasts is a single number", {
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 4
+  ))
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 1
+  ))
+  cPCA_res1 <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 4
+  )
+  cPCA_res2 <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 1
+  )
+  expect_identical(cPCA_res1, cPCA_res2)
+})

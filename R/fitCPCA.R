@@ -18,7 +18,7 @@
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
-#'  consider.
+#'  consider. Not used if  \code{contrasts} is a single value.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -48,10 +48,10 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       )$vectors[, seq_len(n_eigen)]
     }
   )
-
+  
   # center and scale the target data
   target <- safeColScale(target, center, scale)
-
+  
   # for each loadings matrix, project target onto constrastive subspace
   spaces <- lapply(
     seq_len(num_contrasts),
@@ -59,69 +59,82 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       as.matrix(target) %*% loadings_mat[[x]]
     }
   )
-
-  # produce the QR decomposition of these projections, extract Q
-  qr_decomps <- lapply(
-    seq_len(num_contrasts),
-    function(x) {
-      qr.Q(qr(spaces[[x]]))
-    }
-  )
-
-  # populate affinity matrix for spectral clustering using the principal angles
-  aff_vect <- lapply(
-    seq(from = 1, to = num_contrasts - 1),
-    function(i) {
-      do.call(c, lapply(
-        seq(from = i + 1, to = num_contrasts),
-        function(j) {
-          Q_i <- qr_decomps[[i]]
-          Q_j <- qr_decomps[[j]]
-          d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
-          d[1] * d[2]
-        }
-      ))
-    }
-  )
-
-  aff_mat <- diag(x = 0.5, nrow = num_contrasts)
-  aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
-  aff_mat <- t(aff_mat)
-
-  # fix any computation errors, see numpy.nan_to_num
-  aff_mat[is.nan(aff_mat)] <- 0
-  aff_mat[is.na(aff_mat)] <- 0
-  aff_mat[is.infinite(aff_mat)] <- 1000
-  aff_mat <- t(aff_mat) + aff_mat
-
-  # perfrom spectral clustering using the affinity matrix
-  spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
-    centers = n_medoids
-  )
-
-  # identify the alpha medoids of the spectral clustering
-  contrast_medoids <- do.call(c, lapply(
-    seq_len(n_medoids),
-    function(x) {
-      sub_index <- which(spec_clust == x)
-      sub_aff_mat <- aff_mat[sub_index, sub_index]
-      if (is.matrix(sub_aff_mat)) {
-        aff_sums <- colSums(sub_aff_mat)
-        contrasts[sub_index[which.max(aff_sums)]]
-      } else {
-        contrasts[sub_index]
+  
+  if (num_contrasts == 1) {
+    
+    out <- list(
+      rotation = loadings_mat[[1]],
+      x = spaces[[1]],
+      contrast = contrasts,
+      penalty = 0
+    )
+  
+  } else {
+  
+    # produce the QR decomposition of these projections, extract Q
+    qr_decomps <- lapply(
+      seq_len(num_contrasts),
+      function(x) {
+        qr.Q(qr(spaces[[x]]))
       }
-    }
-  ))
-
-  # create the lists of contrastive parameter medoids, loadings and projections
-  med_index <- which(contrasts %in% contrast_medoids)
-  out <- list(
-    rotation = loadings_mat[med_index],
-    x = spaces[med_index],
-    contrast = contrasts[med_index],
-    penalty = rep(0, length(med_index))
-  )
+    )
+  
+    # populate affinity matrix for spectral clustering using the principal angles
+    aff_vect <- lapply(
+      seq(from = 1, to = num_contrasts - 1),
+      function(i) {
+        do.call(c, lapply(
+          seq(from = i + 1, to = num_contrasts),
+          function(j) {
+            Q_i <- qr_decomps[[i]]
+            Q_j <- qr_decomps[[j]]
+            d <- svd(x = t(Q_i) %*% Q_j, nu = 0, nv = 0)$d
+            d[1] * d[2]
+          }
+        ))
+      }
+    )
+  
+    aff_mat <- diag(x = 0.5, nrow = num_contrasts)
+    aff_mat[lower.tri(aff_mat, diag = FALSE)] <- unlist(aff_vect)
+    aff_mat <- t(aff_mat)
+  
+    # fix any computation errors, see numpy.nan_to_num
+    aff_mat[is.nan(aff_mat)] <- 0
+    aff_mat[is.na(aff_mat)] <- 0
+    aff_mat[is.infinite(aff_mat)] <- 1000
+    aff_mat <- t(aff_mat) + aff_mat
+  
+    # perfrom spectral clustering using the affinity matrix
+    spec_clust <- kernlab::specc(kernlab::as.kernelMatrix(aff_mat),
+      centers = n_medoids
+    )
+  
+    # identify the alpha medoids of the spectral clustering
+    contrast_medoids <- do.call(c, lapply(
+      seq_len(n_medoids),
+      function(x) {
+        sub_index <- which(spec_clust == x)
+        sub_aff_mat <- aff_mat[sub_index, sub_index]
+        if (is.matrix(sub_aff_mat)) {
+          aff_sums <- colSums(sub_aff_mat)
+          contrasts[sub_index[which.max(aff_sums)]]
+        } else {
+          contrasts[sub_index]
+        }
+      }
+    ))
+  
+    # create the lists of contrastive parameter medoids, loadings and projections
+    med_index <- which(contrasts %in% contrast_medoids)
+    out <- list(
+      rotation = loadings_mat[med_index],
+      x = spaces[med_index],
+      contrast = contrasts[med_index],
+      penalty = rep(0, length(med_index))
+    )
+  }
+  
   return(out)
 }
 

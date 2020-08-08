@@ -155,7 +155,14 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       n_medoids = n_medoids,
       parallel = parallel
     )
-    if (n_centers > 1) {
+    if (length(contrasts) == 1 && penalties == 0) {
+      opt_params <- list(
+        rotation = opt_params$rotation,
+        x = opt_params$x,
+        contrast = opt_params$contrast,
+        penalty = 0
+      )
+    } else if (n_centers > 1) {
       max_idx <- which.max(opt_params$ave_sil_widths)
       opt_params <- list(
         rotation = opt_params$rotation[[max_idx]],
@@ -319,13 +326,13 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
                          max_iter, linkage_method, n_medoids, parallel) {
   # call parallelized function variants if so requested
-  if (!parallel) {
+  if (!parallel || (penalties == 0 && length(contrasts) == 1)) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = target, background = background, contrasts = contrasts,
       center = center, scale = scale
     )
-    if (n_centers == 1) {
+    if (n_centers == 1 || (penalties == 0 && length(contrasts) == 1)) {
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
