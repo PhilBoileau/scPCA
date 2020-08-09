@@ -19,7 +19,8 @@ cvSelectParams(
   max_iter,
   linkage_method,
   n_medoids,
-  parallel
+  parallel,
+  clusters
 )
 }
 \arguments{
@@ -81,6 +82,11 @@ consider if \code{n_centers} is set to 1. The default is 8 such medoids.}
 \item{parallel}{A \code{logical} indicating whether to invoke parallel
 processing via the \pkg{BiocParallel} infrastructure. The default is
 \code{FALSE} for sequential evaluation.}
+
+\item{clusters}{A \code{numeric} vector of cluster labels for observations in
+the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+identify the optimal set of hyperparameters when fitting the scPCA and the
+automated version of cPCA.}
 }
 \value{
 Output structure matching either that of \code{\link{fitCPCA}} or

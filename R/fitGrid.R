@@ -39,6 +39,10 @@
 #'   are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
 #'   \code{mcquitty}, \code{median}, and \code{centroid}. The default is
 #'   \code{complete}.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'   identify the optimal set of hyperparameters when fitting the scPCA and the
+#'   automated version of cPCA.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -57,7 +61,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
                     c_contrasts, contrasts, alg, penalties, n_eigen,
                     clust_method = c("kmeans", "pam", "hclust"),
                     n_centers, max_iter = 10,
-                    linkage_method = "complete") {
+                    linkage_method = "complete", clusters = NULL) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -156,7 +160,12 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
   # get the objective function results for each space from clustering algorithm
   ave_sil_widths <- do.call(c, lapply(
     norm_subspaces, function(subspace) {
-      if (clust_method == "pam") {
+      if (!is.null(clusters)) {
+        sil_width <- cluster::silhouette(
+          clusters,
+          stats::dist(subspace)
+        )[, 3]
+      } else if (clust_method == "pam") {
         clust_res <- cluster::pam(x = subspace, k = n_centers)
       } else if (clust_method == "kmeans") {
         clust_res <- stats::kmeans(
@@ -172,7 +181,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
           dist_matrix
         )[, 3]
       }
-      if (clust_method %in% c("kmeans", "pam")) {
+      if (clust_method %in% c("kmeans", "pam") && is.null(clusters)) {
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)
@@ -239,6 +248,10 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   \code{ward.D2}, \code{single}, \code{complete},
 #'   \code{average}, \code{mcquitty}, \code{median}, and \code{centroid}. The
 #'   default is \code{complete}.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'   identify the optimal set of hyperparameters when fitting the scPCA and the
+#'   automated version of cPCA.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -258,7 +271,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
                       alg, clust_method = c("kmeans", "pam", "hclust"),
                       n_centers, max_iter = 10,
-                      linkage_method = "complete") {
+                      linkage_method = "complete", clusters = NULL) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -364,7 +377,12 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
   ave_sil_widths <- BiocParallel::bplapply(
     norm_subspaces,
     function(subspace) {
-      if (clust_method == "pam") {
+      if (!is.null(clusters)) {
+        sil_width <- cluster::silhouette(
+          clusters,
+          stats::dist(subspace)
+        )[, 3]
+      } else if (clust_method == "pam") {
         clust_res <- cluster::pam(x = subspace, k = n_centers)
       } else if (clust_method == "kmeans") {
         clust_res <- stats::kmeans(
@@ -380,7 +398,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
           dist_matrix
         )[, 3]
       }
-      if (clust_method %in% c("kmeans", "pam")) {
+      if (clust_method %in% c("kmeans", "pam") && is.null(clusters)) {
         sil_width <- cluster::silhouette(
           clust_res$cluster,
           stats::dist(subspace)

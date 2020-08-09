@@ -134,3 +134,23 @@ test_that("n_centers need not be passed when contrasts is a single number", {
   )
   expect_identical(cPCA_res1, cPCA_res2)
 })
+
+test_that("Users can provide cluster labels, bypassing clustering step", {
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(0.5, 1, 2, 3, 5),
+    penalties = 0,
+    n_centers = 4,
+    clusters = toy_df[, 31]
+  ))
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(0.5, 1),
+    penalties = c(0.1, 0.5, 1),
+    alg = "rand_var_proj",
+    n_centers = 4,
+    clusters = toy_df[, 31]
+  ))
+})

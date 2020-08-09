@@ -482,6 +482,19 @@ test_that("The following results are replicable/reproducible", {
   )
 })
 
+test_that("The grid can be fit using user-defined clusterings", {
+  expect_silent(fitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
+    clust_method = "kmeans", alg = "iterative", clusters = toy_df[, 31]))
+  expect_silent(bpFitGrid(
+    target = target, center = center, scale = scale,
+    c_contrasts = c_contrasts, contrasts = contrasts,
+    penalties = penalties, n_eigen = n_eigen, n_centers = n_centers,
+    clust_method = "kmeans", alg = "iterative", clusters = toy_df[, 31]))
+})
+
 test_that("The parallelized analog matches the sequential variant exactly", {
   set.seed(123)
   fit <- fitGrid(

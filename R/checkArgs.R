@@ -24,6 +24,10 @@
 #'  are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
 #'  \code{mcquitty}, \code{median}, and \code{centroid}. The default is
 #'  \code{complete}.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'  identify the optimal set of hyperparameters when fitting the scPCA and the
+#'  automated version of cPCA.
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
@@ -33,7 +37,8 @@
 #'
 #' @return Whether all argument conditions are satisfied
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
-                      penalties, clust_method, linkage_method) {
+                      penalties, clust_method, linkage_method, clusters) {
+  
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
     tibble::is_tibble(target) ||
@@ -78,5 +83,11 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
   # check that the linkage method is not ward.D is not selected
   if (clust_method == "hclust") {
     assertthat::assert_that(linkage_method != "ward.D")
+  }
+  
+  # check that the clusters argument has the same length as the target
+  if (!is.null(clusters)) {
+    assertthat::assert_that(is.numeric(clusters))
+    assertthat::assert_that(length(clusters) == nrow(target))
   }
 }

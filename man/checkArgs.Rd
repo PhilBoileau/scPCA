@@ -13,7 +13,8 @@ checkArgs(
   contrasts,
   penalties,
   clust_method,
-  linkage_method
+  linkage_method,
+  clusters
 )
 }
 \arguments{
@@ -46,6 +47,11 @@ linkage method to be used if \code{clust_method = "hclust"}. The options
 are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
 \code{mcquitty}, \code{median}, and \code{centroid}. The default is
 \code{complete}.}
+
+\item{clusters}{A \code{numeric} vector of cluster labels for observations in
+the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+identify the optimal set of hyperparameters when fitting the scPCA and the
+automated version of cPCA.}
 }
 \value{
 Whether all argument conditions are satisfied

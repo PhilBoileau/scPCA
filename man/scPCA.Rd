@@ -19,7 +19,8 @@ scPCA(
   max_iter = 10,
   linkage_method = "complete",
   n_medoids = 8,
-  parallel = FALSE
+  parallel = FALSE,
+  clusters = NULL
 )
 }
 \arguments{
@@ -92,6 +93,14 @@ length 2 or more. The default is 8 medoids.}
 \item{parallel}{A \code{logical} indicating whether to invoke parallel
 processing via the \pkg{BiocParallel} infrastructure. The default is
 \code{FALSE} for sequential evaluation.}
+
+\item{clusters}{A \code{numeric} vector of cluster labels for observations in
+the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+identify the optimal set of hyperparameters when fitting the scPCA and the
+automated version of cPCA. If a \code{numeric} vector is provided, the
+\code{n_centers} argument should be larger than 1, and the
+\code{clust_method}, \code{max_iter}, \code{linkage_method}, and
+\code{n_medoids} arguments can be safely ignored.}
 }
 \value{
 A list containing the following components:
