@@ -25,7 +25,7 @@ to compute the contrastive covariances.}
 computed.}
 
 \item{n_medoids}{A \code{numeric} indicating the number of medoids to
-consider.}
+consider. Not used if  \code{contrasts} is a single value.}
 }
 \value{
 A list of lists containing the cPCA results for each contrastive
