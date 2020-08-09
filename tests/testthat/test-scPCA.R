@@ -20,7 +20,6 @@ test_that("scPCA outputs a list of length 6", {
   )
   expect_equal(length(scPCA_res), 6)
   
-  
   set.seed(978)
   cv_cPCA_res <- scPCA(
     target = toy_df[, 1:30],

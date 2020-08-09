@@ -180,7 +180,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel,
       clusters = clusters
     )
-    if (length(contrasts) == 1 && penalties == 0) {
+    if (length(contrasts) == 1 && length(penalties) == 1 && penalties[1] == 0) {
       opt_params <- list(
         rotation = opt_params$rotation,
         x = opt_params$x,
@@ -270,7 +270,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel,
       clusters = clusters
     )
-    if (n_centers > 1 && penalties == 0) {
+    if (n_centers > 1 && length(penalties) == 1 && penalties[1] == 0) {
       opt_params <- list(
         rotation = fit_cv_opt_params$rotation,
         x = fit_cv_opt_params$x,
@@ -366,13 +366,15 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
                          clusters) {
   
   # call parallelized function variants if so requested
-  if (!parallel || (penalties == 0 && length(contrasts) == 1)) {
+  if (!parallel || (length(penalties) == 1 && penalties[1] == 0
+                    && length(contrasts) == 1)) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = target, background = background, contrasts = contrasts,
       center = center, scale = scale
     )
-    if (n_centers == 1 || (penalties == 0 && length(contrasts) == 1)) {
+    if (n_centers == 1 || (length(penalties) == 1 && penalties[1] == 0
+                           && length(contrasts) == 1)) {
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
