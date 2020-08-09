@@ -121,6 +121,16 @@
 #'   n_centers = 4
 #' )
 #'
+#' # perform cPCA on the simulated data set with known clusters
+#' scPCA(
+#'   target = toy_df[, 1:30],
+#'   background = background_df,
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+#'   penalties = 0,
+#'   n_centers = 4,
+#'   clusters = toy_df[, 31]
+#' )
+#'
 #' # cPCA as implemented in Abid et al.
 #' scPCA(
 #'   target = toy_df[, 1:30],
@@ -260,7 +270,14 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel,
       clusters = clusters
     )
-    if (n_centers > 1) {
+    if (n_centers > 1 && penalties == 0) {
+      opt_params <- list(
+        rotation = fit_cv_opt_params$rotation,
+        x = fit_cv_opt_params$x,
+        contrast = fit_cv_opt_params$contrast,
+        penalty = fit_cv_opt_params$penalty
+      )
+    } else if (n_centers > 1) {
       opt_params <- list(
         rotation = fit_cv_opt_params$rotation[[1]],
         x = fit_cv_opt_params$x[[1]],

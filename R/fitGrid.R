@@ -110,6 +110,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
       }
     )
   } else {
+    
     # center and scale the holdout set of target data
     target_valid <- safeColScale(target_valid, center, scale)
 

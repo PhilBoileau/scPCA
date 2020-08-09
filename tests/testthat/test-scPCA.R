@@ -147,8 +147,8 @@ test_that("Users can provide cluster labels, bypassing clustering step", {
   expect_silent(scPCA(
     target = toy_df[, 1:30],
     background = background_df,
-    contrasts = c(0.5, 1),
-    penalties = c(0.1, 0.5, 1),
+    contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+    penalties = seq(0.1, 1, length.out = 3),
     alg = "rand_var_proj",
     n_centers = 4,
     clusters = toy_df[, 31]

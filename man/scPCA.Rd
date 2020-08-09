@@ -153,6 +153,16 @@ scPCA(
   n_centers = 4
 )
 
+# perform cPCA on the simulated data set with known clusters
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+  penalties = 0,
+  n_centers = 4,
+  clusters = toy_df[, 31]
+)
+
 # cPCA as implemented in Abid et al.
 scPCA(
   target = toy_df[, 1:30],
