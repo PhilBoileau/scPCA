@@ -290,7 +290,7 @@ cpca_cv_sim <- scPCA(target = toy_df[, 1:30],
 # create a dataframe to be plotted
 cpca_cv_df <- cpca_cv_sim$x %>%
   as_tibble() %>%
-  mutate(label = toy_df[, 31] %>% as.character)
+  dplyr::mutate(label = toy_df[, 31] %>% as.character)
 colnames(cpca_cv_df) <- c("cPC1", "cPC2", "label")
 
 # plot the results

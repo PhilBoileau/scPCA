@@ -20,7 +20,6 @@ test_that("scPCA outputs a list of length 6", {
   )
   expect_equal(length(scPCA_res), 6)
   
-  
   set.seed(978)
   cv_cPCA_res <- scPCA(
     target = toy_df[, 1:30],
@@ -100,4 +99,57 @@ test_that("The parallelized analog matches the sequential variant exactly", {
     n_centers = 4, parallel = TRUE
   )
   expect_equal(scPCA_res, scPCA_bpres)
+})
+
+
+test_that("n_centers need not be passed when contrasts is a single number", {
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 4
+  ))
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 1
+  ))
+  cPCA_res1 <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 4
+  )
+  cPCA_res2 <- scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+    n_centers = 1
+  )
+  expect_identical(cPCA_res1, cPCA_res2)
+})
+
+test_that("Users can provide cluster labels, bypassing clustering step", {
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(0.5, 1, 2, 3, 5),
+    penalties = 0,
+    n_centers = 4,
+    clusters = toy_df[, 31]
+  ))
+  expect_silent(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+    penalties = seq(0.1, 1, length.out = 3),
+    alg = "rand_var_proj",
+    n_centers = 4,
+    clusters = toy_df[, 31]
+  ))
 })

@@ -40,9 +40,14 @@
 #'  implementation. Defaults to \code{iterative}.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique, non-negative real number. By default, 40
-#'  logarithmically spaced values between 0.1 and 1000 are used.
+#'  logarithmically spaced values between 0.1 and 1000 are used. If a single
+#'  value is provided and \code{penalties} is set to 0, then \code{n_centers},
+#'  \code{clust_method}, \code{max_iter}, \code{linkage_method},
+#'  \code{n_medoids}, and \code{parallel} can be safely ignored.
 #' @param penalties A \code{numeric} vector of the L1 penalty terms on the
 #'  loadings. The default is to use 20 equidistant values between 0.05 and 1.
+#'  If \code{penalties} is set to 0, then cPCA is performed in place of scPCA.
+#'  See \code{contrasts} and \code{n_centers} arguments for more infotmation.
 #' @param clust_method A \code{character} specifying the clustering method to
 #'  use for choosing the optimal contrastive parameter. Currently, this is
 #'  limited to either k-means, partitioning around medoids (PAM), and
@@ -59,10 +64,18 @@
 #'   \code{mcquitty}, \code{median}, and \code{centroid}. The default is
 #'   \code{complete}.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
-#'  consider if \code{n_centers} is set to 1. The default is 8 such medoids.
+#'  consider if \code{n_centers} is set to 1 and \code{contrasts} is a vector of
+#'  length 2 or more. The default is 8 medoids.
 #' @param parallel A \code{logical} indicating whether to invoke parallel
 #'  processing via the \pkg{BiocParallel} infrastructure. The default is
 #'  \code{FALSE} for sequential evaluation.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'  identify the optimal set of hyperparameters when fitting the scPCA and the
+#'  automated version of cPCA. If a \code{numeric} vector is provided, the
+#'  \code{n_centers} argument should be larger than 1, and the
+#'  \code{clust_method}, \code{max_iter}, \code{linkage_method}, and
+#'  \code{n_medoids} arguments can be safely ignored.
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -108,6 +121,16 @@
 #'   n_centers = 4
 #' )
 #'
+#' # perform cPCA on the simulated data set with known clusters
+#' scPCA(
+#'   target = toy_df[, 1:30],
+#'   background = background_df,
+#'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+#'   penalties = 0,
+#'   n_centers = 4,
+#'   clusters = toy_df[, 31]
+#' )
+#'
 #' # cPCA as implemented in Abid et al.
 #' scPCA(
 #'   target = toy_df[, 1:30],
@@ -123,7 +146,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   penalties = seq(0.05, 1, length.out = 20),
                   clust_method = c("kmeans", "pam", "hclust"), n_centers,
                   max_iter = 10, linkage_method = "complete",
-                  n_medoids = 8, parallel = FALSE) {
+                  n_medoids = 8, parallel = FALSE, clusters = NULL) {
   # set defaults
   clust_method <- match.arg(clust_method)
   alg <- match.arg(alg)
@@ -131,7 +154,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   # check arguments to function
   checkArgs(
     target, background, center, scale, n_eigen,
-    contrasts, penalties, clust_method, linkage_method
+    contrasts, penalties, clust_method, linkage_method,
+    clusters
   )
 
   # set target and background data sets to be matrices if from Matrix package
@@ -153,9 +177,17 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       max_iter = max_iter,
       linkage_method = linkage_method,
       n_medoids = n_medoids,
-      parallel = parallel
+      parallel = parallel,
+      clusters = clusters
     )
-    if (n_centers > 1) {
+    if (length(contrasts) == 1 && length(penalties) == 1 && penalties[1] == 0) {
+      opt_params <- list(
+        rotation = opt_params$rotation,
+        x = opt_params$x,
+        contrast = opt_params$contrast,
+        penalty = 0
+      )
+    } else if (n_centers > 1) {
       max_idx <- which.max(opt_params$ave_sil_widths)
       opt_params <- list(
         rotation = opt_params$rotation[[max_idx]],
@@ -194,6 +226,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel,
+      clusters = clusters,
       use_future = FALSE,
       .combine = FALSE
     )
@@ -234,9 +267,17 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       max_iter = max_iter,
       linkage_method = linkage_method,
       n_medoids = n_medoids,
-      parallel = parallel
+      parallel = parallel,
+      clusters = clusters
     )
-    if (n_centers > 1) {
+    if (n_centers > 1 && length(penalties) == 1 && penalties[1] == 0) {
+      opt_params <- list(
+        rotation = fit_cv_opt_params$rotation,
+        x = fit_cv_opt_params$x,
+        contrast = fit_cv_opt_params$contrast,
+        penalty = fit_cv_opt_params$penalty
+      )
+    } else if (n_centers > 1) {
       opt_params <- list(
         rotation = fit_cv_opt_params$rotation[[1]],
         x = fit_cv_opt_params$x[[1]],
@@ -309,6 +350,10 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #' @param parallel A \code{logical} indicating whether to invoke parallel
 #'  processing via the \pkg{BiocParallel} infrastructure. The default is
 #'  \code{FALSE} for sequential evaluation.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'  identify the optimal set of hyperparameters when fitting the scPCA and the
+#'  automated version of cPCA.
 #'
 #' @return Output structure matching either that of \code{\link{fitCPCA}} or
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
@@ -317,15 +362,19 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #' @keywords internal
 selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
-                         max_iter, linkage_method, n_medoids, parallel) {
+                         max_iter, linkage_method, n_medoids, parallel,
+                         clusters) {
+  
   # call parallelized function variants if so requested
-  if (!parallel) {
+  if (!parallel || (length(penalties) == 1 && penalties[1] == 0
+                    && length(contrasts) == 1)) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = target, background = background, contrasts = contrasts,
       center = center, scale = scale
     )
-    if (n_centers == 1) {
+    if (n_centers == 1 || (length(penalties) == 1 && penalties[1] == 0
+                           && length(contrasts) == 1)) {
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
@@ -337,7 +386,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
         c_contrasts = c_contrasts, contrasts = contrasts,
         penalties = penalties, n_eigen = n_eigen,
         clust_method = clust_method, n_centers = n_centers,
-        max_iter = max_iter, linkage_method = linkage_method
+        max_iter = max_iter, linkage_method = linkage_method,
+        clusters = clusters
       )
     }
   } else {
@@ -418,6 +468,10 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #' @param parallel A \code{logical} indicating whether to invoke parallel
 #'  processing via the \pkg{BiocParallel} infrastructure. The default is
 #'  \code{FALSE} for sequential evaluation.
+#' @param clusters A \code{numeric} vector of cluster labels for observations in
+#'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+#'  identify the optimal set of hyperparameters when fitting the scPCA and the
+#'  automated version of cPCA.
 #'
 #' @importFrom origami training validation
 #'
@@ -429,7 +483,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            alg = alg, contrasts, penalties, clust_method,
                            n_centers, max_iter, linkage_method, n_medoids,
-                           parallel) {
+                           parallel, clusters) {
+  
   # make training and validation folds
   train_target <- origami::training(target, fold$target)
   valid_target <- origami::validation(target, fold$target)

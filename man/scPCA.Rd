@@ -19,7 +19,8 @@ scPCA(
   max_iter = 10,
   linkage_method = "complete",
   n_medoids = 8,
-  parallel = FALSE
+  parallel = FALSE,
+  clusters = NULL
 )
 }
 \arguments{
@@ -56,10 +57,15 @@ implementation. Defaults to \code{iterative}.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique, non-negative real number. By default, 40
-logarithmically spaced values between 0.1 and 1000 are used.}
+logarithmically spaced values between 0.1 and 1000 are used. If a single
+value is provided and \code{penalties} is set to 0, then \code{n_centers},
+\code{clust_method}, \code{max_iter}, \code{linkage_method},
+\code{n_medoids}, and \code{parallel} can be safely ignored.}
 
 \item{penalties}{A \code{numeric} vector of the L1 penalty terms on the
-loadings. The default is to use 20 equidistant values between 0.05 and 1.}
+loadings. The default is to use 20 equidistant values between 0.05 and 1.
+If \code{penalties} is set to 0, then cPCA is performed in place of scPCA.
+See \code{contrasts} and \code{n_centers} arguments for more infotmation.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal contrastive parameter. Currently, this is
@@ -81,11 +87,20 @@ are \code{ward.D2}, \code{single}, \code{complete}, \code{average},
 \code{complete}.}
 
 \item{n_medoids}{A \code{numeric} indicating the number of medoids to
-consider if \code{n_centers} is set to 1. The default is 8 such medoids.}
+consider if \code{n_centers} is set to 1 and \code{contrasts} is a vector of
+length 2 or more. The default is 8 medoids.}
 
 \item{parallel}{A \code{logical} indicating whether to invoke parallel
 processing via the \pkg{BiocParallel} infrastructure. The default is
 \code{FALSE} for sequential evaluation.}
+
+\item{clusters}{A \code{numeric} vector of cluster labels for observations in
+the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
+identify the optimal set of hyperparameters when fitting the scPCA and the
+automated version of cPCA. If a \code{numeric} vector is provided, the
+\code{n_centers} argument should be larger than 1, and the
+\code{clust_method}, \code{max_iter}, \code{linkage_method}, and
+\code{n_medoids} arguments can be safely ignored.}
 }
 \value{
 A list containing the following components:
@@ -136,6 +151,16 @@ scPCA(
   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
   penalties = seq(0.1, 1, length.out = 3),
   n_centers = 4
+)
+
+# perform cPCA on the simulated data set with known clusters
+scPCA(
+  target = toy_df[, 1:30],
+  background = background_df,
+  contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+  penalties = 0,
+  n_centers = 4,
+  clusters = toy_df[, 31]
 )
 
 # cPCA as implemented in Abid et al.

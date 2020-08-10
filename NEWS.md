@@ -29,3 +29,7 @@
 # Changes in version 1.3.2 (2020-08-05)
 + Updated scPCA function documentation
 + Corrected pelling mistakes
+
+# Changes in version 1.3.3 (2020-08-08)
++ The n_centers argument no longer matters when When the contrasts argument is of length 1 and the penalty term is set to 0.
++ Users can now pass in their own cluster labels
