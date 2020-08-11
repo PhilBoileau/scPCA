@@ -2,6 +2,7 @@
 
 export(scPCA)
 importFrom(BiocParallel,bplapply)
+importFrom(RSpectra,eigs_sym)
 importFrom(Rdpack,reprompt)
 importFrom(assertthat,assert_that)
 importFrom(assertthat,is.count)
