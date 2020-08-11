@@ -32,6 +32,7 @@
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom Rdpack reprompt
+#' @importFrom RSpectra eigs_sym
 #'
 #' @keywords internal
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
@@ -43,9 +44,11 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- eigen(c_contrasts[[x]],
-        symmetric = TRUE
-      )$vectors[, seq_len(n_eigen)]
+      res <- RSpectra::eigs_sym(
+        c_contrasts[[x]],
+        k = n_eigen,
+        which = "LA"
+      )$vectors
     }
   )
   
@@ -177,6 +180,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom BiocParallel bplapply
 #' @importFrom Rdpack reprompt
+#' @importFrom RSpectra eigs_sym
 #'
 #' @keywords internal
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
@@ -188,9 +192,11 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- eigen(c_contrasts[[x]],
-        symmetric = TRUE
-      )$vectors[, seq_len(n_eigen)]
+      res <- RSpectra::eigs_sym(
+        c_contrasts[[x]],
+        k = n_eigen,
+        which = "LA"
+      )$vectors
     }
   )
 
