@@ -12,7 +12,7 @@
 #'
 #' @return the covariance matrix of the data.
 #'
-#' @importFrom stats cov var
+#' @importFrom coop covar
 #'
 #' @keywords internal
 covMat <- function(data, center = TRUE, scale = TRUE) {
@@ -22,7 +22,7 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
 
   # center the data matrix if required
   if (center) {
-    data <- as.data.frame(safeColScale(data, center = TRUE, scale = FALSE))
+    data <- safeColScale(data, center = TRUE, scale = FALSE)
   }
 
   # scale the matrix if required
@@ -32,6 +32,6 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
   }
 
   # compute the covariance matrix of the data
-  cov_mat <- stats::cov(data)
+  cov_mat <- coop::covar(data)
   return(cov_mat)
 }

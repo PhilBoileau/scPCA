@@ -33,3 +33,8 @@
 # Changes in version 1.3.3 (2020-08-08)
 + The n_centers argument no longer matters when When the contrasts argument is of length 1 and the penalty term is set to 0.
 + Users can now pass in their own cluster labels
+
+# Changes in version 1.3.4 (2020-08-12)
++ Replaced calls to base::eigen by RSpectra::eigs_sym to speed up eigendecompositions of contrastive covariance matrices. cPCA is now performed much more quickly when only whishing to compute a handful of leading contrastive principal components.
++ Replaced calls to stats::cov by coop::covar to speed up computation of large sample covariance matrices.
++ In future updates, we'd like to explore using the DelayedArray framework to support the analysis of larger datasets.
