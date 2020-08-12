@@ -43,7 +43,7 @@ environment:
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r base64
-  - travis-tool.sh install_r BiocManager testthat knitr Rspectra coop
+  - travis-tool.sh install_r BiocManager testthat knitr RSpectra coop
   - travis-tool.sh install_github r-lib/remotes r-lib/covr
   - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics S4Vectors
   - travis-tool.sh install_r matrixStats elasticnet sparsepca dplyr purrr Rdpack kernlab origami ggpubr microbenchmark Matrix
