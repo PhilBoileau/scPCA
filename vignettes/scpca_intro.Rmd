@@ -199,7 +199,7 @@ p_cpca
 The leading sparse contrastive components were also able to capture the
 variation of interest, though the clusters corresponding to the class labels
 are more loose than those of cPCA. Importantly, the first and second loadings
-vectors possess only eight and seven non-zero loadings, respectively -- a
+vectors possess only eight and six non-zero loadings, respectively -- a
 significant improvement over cPCA, whose first and second cPCs each possess 30
 non-zero loadings, in terms of interpretability. As with cPCA, the scPCA
 algorithm has demonstrated its insensitivity to reasonable choices of
@@ -243,7 +243,7 @@ p1 <- load_diff_df %>%
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
-  ylim(-1.2, 1.2) +
+  ylim(-1.4, 1.4) +
   ggtitle("First Component") +
   scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()
@@ -253,7 +253,7 @@ p2 <- load_diff_df %>%
   geom_bar(stat = "identity") +
   xlab("") +
   ylab("") +
-  ylim(-1.2, 1.2) +
+  ylim(-1.4, 1.4) +
   ggtitle("Second Component") +
   scale_fill_discrete(name = "Method", labels = c("cPCA", "scPCA")) +
   theme_minimal()

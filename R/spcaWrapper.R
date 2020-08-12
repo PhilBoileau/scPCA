@@ -21,6 +21,8 @@
 #' @param penalty A \code{numeric} indicating the L1 penalty parameter applied
 #'   to the loadings.
 #'
+#' @importFrom RSpectra eigs_sym
+#'
 #' @return A \code{p x k} sparse loadings matrix, where \code{p} is the
 #'   number of features, and \code{k} is the number of sparse contrastive
 #'   components.
@@ -41,9 +43,14 @@ spcaWrapper <- function(alg, contrast_cov, k, penalty) {
   } else {
     
     # get the rootmatrix, perform thresholding
-    contrast_cov_eigen <- eigen(contrast_cov)
+    contrast_cov_eigen <- RSpectra::eigs_sym(
+      contrast_cov,
+      k = k,
+      which = "LA"
+    )
     eig_values <- (contrast_cov_eigen$values + abs(contrast_cov_eigen$values))/2
     right_sing_mat <- contrast_cov_eigen$vectors
+    # compute the root matrix
     contrast_cov <- right_sing_mat%*%diag(sqrt(eig_values))%*%t(right_sing_mat)
     
     # first check in contrastive loading matrix is a zero mat

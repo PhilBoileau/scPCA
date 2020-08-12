@@ -55,6 +55,7 @@
 #'
 #' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
+#' @importFrom RSpectra eigs_sym
 #'
 #' @keywords internal
 fitGrid <- function(target, target_valid = NULL, center, scale,
@@ -77,9 +78,10 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- eigen(c_contrasts[[x]],
-              symmetric = TRUE
-            )$vectors[, seq_len(n_eigen)]
+            res <- RSpectra::eigs_sym(c_contrasts[[x]],
+              k = n_eigen,
+              which = "LA"
+            )$vectors
           } else {
             res <- spcaWrapper(
               alg = alg,
@@ -266,6 +268,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
+#' @importFrom RSpectra eigs_sym
 #'
 #' @keywords internal
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
@@ -288,9 +291,11 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- eigen(c_contrasts[[x]],
-              symmetric = TRUE
-            )$vectors[, seq_len(n_eigen)]
+            res <- RSpectra::eigs_sym(
+              c_contrasts[[x]],
+              k = n_eigen,
+              which = "LA"
+            )$vectors
           } else {
             res <- spcaWrapper(
               alg = alg,
