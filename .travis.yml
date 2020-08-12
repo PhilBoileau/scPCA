@@ -41,6 +41,8 @@ r_packages:
   - magick
   - Matrix
   - matrixStats
+  - coop
+  - RSpectra
 
 r_github_packages:
   - r-lib/sessioninfo
