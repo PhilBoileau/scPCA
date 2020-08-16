@@ -10,9 +10,11 @@ contrasts <- c(0, 1, 10, 100)
 c_contrasts <- contrastiveCov(target, background, contrasts, TRUE, TRUE)
 n_eigen <- 2
 n_medoids <- 2
+eigdecomp_tol <- 1e-10
+eigdecomp_iter <- 1000
 fit <- fitCPCA(
   target, center, scale, c_contrasts, contrasts,
-  n_eigen, n_medoids
+  n_eigen, n_medoids, eigdecomp_tol, eigdecomp_iter
 )
 
 test_that(paste(
@@ -48,13 +50,13 @@ test_that("The parallelized analog matches the sequential variant exactly", {
   # fit sequential variant
   fit <- fitCPCA(
     target, center, scale, c_contrasts, contrasts,
-    n_eigen, n_medoids
+    n_eigen, n_medoids, eigdecomp_tol, eigdecomp_iter
   )
   # fit parallelized variant
   register(SerialParam())
   bpfit <- bpFitCPCA(
     target, center, scale, c_contrasts, contrasts,
-    n_eigen, n_medoids
+    n_eigen, n_medoids, eigdecomp_tol, eigdecomp_iter
   )
   expect_equal(fit, bpfit)
 })

@@ -28,6 +28,10 @@
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. 
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
@@ -37,7 +41,8 @@
 #'
 #' @return Whether all argument conditions are satisfied
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
-                      penalties, clust_method, linkage_method, clusters) {
+                      penalties, clust_method, linkage_method, clusters,
+                      eigdecomp_tol, eigdecomp_iter) {
   
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
@@ -90,4 +95,10 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
     assertthat::assert_that(is.numeric(clusters))
     assertthat::assert_that(length(clusters) == nrow(target))
   }
+  
+  # check that eigendecompostion parameters are positive
+  assertthat::assert_that(is.numeric(eigdecomp_tol))
+  assertthat::assert_that(eigdecomp_tol > 0)
+  assertthat::assert_that(is.numeric(eigdecomp_iter))
+  assertthat::assert_that(eigdecomp_iter > 0)
 }

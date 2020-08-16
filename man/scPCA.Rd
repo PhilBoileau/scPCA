@@ -20,7 +20,9 @@ scPCA(
   linkage_method = "complete",
   n_medoids = 8,
   parallel = FALSE,
-  clusters = NULL
+  clusters = NULL,
+  eigdecomp_tol = 1e-10,
+  eigdecomp_iter = 1000
 )
 }
 \arguments{
@@ -102,6 +104,13 @@ automated version of cPCA. If a \code{numeric} vector is provided, the
 \code{n_centers} argument should be larger than 1, and the
 \code{clust_method}, \code{max_iter}, \code{linkage_method}, and
 \code{n_medoids} arguments can be safely ignored.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations. Defaults to \code{1e-10}.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations. Defaults to
+\code{1000}.}
 }
 \value{
 A list containing the following components:

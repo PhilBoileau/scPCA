@@ -43,6 +43,11 @@
 #'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'   identify the optimal set of hyperparameters when fitting the scPCA and the
 #'   automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'   eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'   interations performed by eigendecompositon calculations. Defaults to
+#'   \code{1000}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -62,7 +67,8 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
                     c_contrasts, contrasts, alg, penalties, n_eigen,
                     clust_method = c("kmeans", "pam", "hclust"),
                     n_centers, max_iter = 10,
-                    linkage_method = "complete", clusters = NULL) {
+                    linkage_method = "complete", clusters = NULL,
+                    eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -80,7 +86,8 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
           if (y == 0) {
             res <- RSpectra::eigs_sym(c_contrasts[[x]],
               k = n_eigen,
-              which = "LA"
+              which = "LA",
+              opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
             )$vectors
           } else {
             res <- spcaWrapper(
@@ -255,6 +262,11 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'   identify the optimal set of hyperparameters when fitting the scPCA and the
 #'   automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'   eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'   interations performed by eigendecompositon calculations. Defaults to
+#'   \code{1000}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -275,7 +287,8 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
                       alg, clust_method = c("kmeans", "pam", "hclust"),
                       n_centers, max_iter = 10,
-                      linkage_method = "complete", clusters = NULL) {
+                      linkage_method = "complete", clusters = NULL,
+                      eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -294,7 +307,8 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
             res <- RSpectra::eigs_sym(
               c_contrasts[[x]],
               k = n_eigen,
-              which = "LA"
+              which = "LA",
+              opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
             )$vectors
           } else {
             res <- spcaWrapper(

@@ -19,6 +19,11 @@
 #'  computed.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider. Not used if  \code{contrasts} is a single value.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -36,7 +41,7 @@
 #'
 #' @keywords internal
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                    n_medoids) {
+                    n_medoids, eigdecomp_tol, eigdecomp_iter) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -47,7 +52,8 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       res <- RSpectra::eigs_sym(
         c_contrasts[[x]],
         k = n_eigen,
-        which = "LA"
+        which = "LA",
+        opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
       )$vectors
     }
   )
@@ -166,6 +172,11 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'  computed.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -184,7 +195,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'
 #' @keywords internal
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                      n_medoids) {
+                      n_medoids, eigdecomp_tol, eigdecomp_iter) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -195,7 +206,8 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
       res <- RSpectra::eigs_sym(
         c_contrasts[[x]],
         k = n_eigen,
-        which = "LA"
+        which = "LA",
+        opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
       )$vectors
     }
   )
