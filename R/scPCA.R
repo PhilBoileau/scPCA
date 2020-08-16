@@ -9,10 +9,10 @@
 #'  If instead you wish to perform contrastive principal component analysis
 #'  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
 #'  \code{n_centers} parameter is larger than one, the automated hyperparameter
-#'  tuning heuristic described in \insertRef{boileau2020}{scPCA} is used.
-#'  Otherwise, the semi-automated approach of
-#'  \insertRef{abid2018exploring}{scPCA} is used to select the appropriate
-#'  hyperparameter.
+#'  tuning heuristic described in \insertCite{boileau2020;textual}{scPCA} is
+#'  used. Otherwise, the semi-automated approach of
+#'  \insertCite{abid2018exploring;textual}{scPCA} is used to select the
+#'  appropriate hyperparameter.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -34,10 +34,11 @@
 #'  The default is therefore \code{NULL}, corresponding to no cross-validation.
 #' @param alg A \code{character} indicating the sparse PCA algorithm used to
 #'  sparsify the contrastive loadings. Currently supports \code{iterative} for
-#'  the \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for
-#'  the non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized \insertRef{erichson2018sparse}{scPCA}
-#'  implementation. Defaults to \code{iterative}.
+#'  the \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} implementation. Defaults to
+#'  \code{iterative}.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique, non-negative real number. By default, 40
 #'  logarithmically spaced values between 0.1 and 1000 are used. If a single
@@ -54,8 +55,8 @@
 #'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by
-#'  \insertRef{erichson2018sparse}{scPCA}, is performed, regardless of what the
-#'  \code{penalties} argument is set to.
+#'  \insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+#'  what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering. Defaults to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative
@@ -76,6 +77,8 @@
 #'  \code{n_centers} argument should be larger than 1, and the
 #'  \code{clust_method}, \code{max_iter}, \code{linkage_method}, and
 #'  \code{n_medoids} arguments can be safely ignored.
+#' @param precision A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculation.
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -100,6 +103,9 @@
 #' @importFrom stringr str_detect
 #' @importFrom tibble as_tibble
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @export
 #'
 #' @examples
@@ -322,10 +328,10 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  two such eigenvectors.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -359,6 +365,9 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @keywords internal
 selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
@@ -440,10 +449,10 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'  two such eigenvectors.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -479,6 +488,9 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @keywords internal
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            alg = alg, contrasts, penalties, clust_method,

@@ -42,10 +42,10 @@ two such eigenvectors.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} for the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} for the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique non-negative real number. The default is to use 40
@@ -93,5 +93,8 @@ Output structure matching either that of \code{\link{fitCPCA}} or
 A wrapper function for fitting various internal functions to
  select the optimal setting of the contrastive and penalization parameters.
  For internal use only.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

@@ -50,10 +50,11 @@ The default is therefore \code{NULL}, corresponding to no cross-validation.}
 
 \item{alg}{A \code{character} indicating the sparse PCA algorithm used to
 sparsify the contrastive loadings. Currently supports \code{iterative} for
-the \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for
-the non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} for the randomized \insertRef{erichson2018sparse}{scPCA}
-implementation. Defaults to \code{iterative}.}
+the \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} for the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} implementation. Defaults to
+\code{iterative}.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique, non-negative real number. By default, 40
@@ -74,8 +75,8 @@ hierarchical clustering. The default is k-means clustering.}
 
 \item{n_centers}{A \code{numeric} giving the number of centers to use in the
 clustering algorithm. If set to 1, cPCA, as first proposed by
-\insertRef{erichson2018sparse}{scPCA}, is performed, regardless of what the
-\code{penalties} argument is set to.}
+\insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+what the \code{penalties} argument is set to.}
 
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
 be used in k-means clustering. Defaults to 10.}
@@ -129,10 +130,10 @@ Given target and background data frames or matrices,
  If instead you wish to perform contrastive principal component analysis
  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
  \code{n_centers} parameter is larger than one, the automated hyperparameter
- tuning heuristic described in \insertRef{boileau2020}{scPCA} is used.
- Otherwise, the semi-automated approach of
- \insertRef{abid2018exploring}{scPCA} is used to select the appropriate
- hyperparameter.
+ tuning heuristic described in \insertCite{boileau2020;textual}{scPCA} is
+ used. Otherwise, the semi-automated approach of
+ \insertCite{abid2018exploring;textual}{scPCA} is used to select the
+ appropriate hyperparameter.
 }
 \examples{
 # perform cPCA on the simulated data set
@@ -171,4 +172,7 @@ scPCA(
   penalties = 0,
   n_centers = 1
 )
+}
+\references{
+\insertAllCited{}
 }
