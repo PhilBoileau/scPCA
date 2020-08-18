@@ -19,10 +19,11 @@
 #'  to compute the contrastive covariances.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'   the contrastive loadings. Currently supports \code{iterative} for the
-#'   \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-#'   non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'   \insertCite{zou2006sparse;textual}{scPCA} implemententation,
+#'   \code{var_proj} for the non-randomized
+#'   \insertCite{erichson2018sparse;textual}{scPCA} solution, and
 #'   \code{rand_var_proj} for the randomized
-#'   \insertRef{erichson2018sparse}{scPCA} result.
+#'   \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -43,6 +44,11 @@
 #'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'   identify the optimal set of hyperparameters when fitting the scPCA and the
 #'   automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'   eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'   interations performed by eigendecompositon calculations. Defaults to
+#'   \code{1000}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -57,12 +63,16 @@
 #' @importFrom cluster pam silhouette
 #' @importFrom RSpectra eigs_sym
 #'
+#' @references
+#'   \insertAllCited{}
+#'
 #' @keywords internal
 fitGrid <- function(target, target_valid = NULL, center, scale,
                     c_contrasts, contrasts, alg, penalties, n_eigen,
                     clust_method = c("kmeans", "pam", "hclust"),
                     n_centers, max_iter = 10,
-                    linkage_method = "complete", clusters = NULL) {
+                    linkage_method = "complete", clusters = NULL,
+                    eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -78,19 +88,31 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- RSpectra::eigs_sym(c_contrasts[[x]],
-              k = n_eigen,
-              which = "LA"
-            )$vectors
+            withCallingHandlers(
+              res <- RSpectra::eigs_sym(c_contrasts[[x]],
+                k = n_eigen,
+                which = "LA",
+                opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+              )$vectors,
+              warning = function(w) {
+                warning(paste0(
+                  "\nFor contrastive parameter = ",
+                  round(contrasts[[x]], 3), ":\n")
+                )
+              }
+            )
           } else {
             res <- spcaWrapper(
               alg = alg,
+              contrast = contrasts[[x]],
               contrast_cov = c_contrasts[[x]],
               k = n_eigen,
-              penalty = y
+              penalty = y,
+              eigdecomp_tol = eigdecomp_tol,
+              eigdecomp_iter = eigdecomp_iter
             )
           }
-          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
+          colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
           res
         }
       )
@@ -231,10 +253,10 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'  to compute the contrastive covariances.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} fir the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implemententation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} fir the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -255,6 +277,11 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'   the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'   identify the optimal set of hyperparameters when fitting the scPCA and the
 #'   automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'   eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'   interations performed by eigendecompositon calculations. Defaults to
+#'   \code{1000}.
 #'
 #' @return A list similar to that output by \code{\link[stats]{prcomp}}:
 #'   \itemize{
@@ -270,12 +297,16 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @importFrom BiocParallel bplapply
 #' @importFrom RSpectra eigs_sym
 #'
+#' @references
+#'   \insertAllCited{}
+#'
 #' @keywords internal
 bpFitGrid <- function(target, target_valid = NULL, center, scale,
                       c_contrasts, contrasts, penalties, n_eigen,
                       alg, clust_method = c("kmeans", "pam", "hclust"),
                       n_centers, max_iter = 10,
-                      linkage_method = "complete", clusters = NULL) {
+                      linkage_method = "complete", clusters = NULL,
+                      eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # preliminaries
   num_contrasts <- length(contrasts)
   num_penal <- length(penalties)
@@ -291,20 +322,32 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- RSpectra::eigs_sym(
-              c_contrasts[[x]],
-              k = n_eigen,
-              which = "LA"
-            )$vectors
+            withCallingHandlers(
+              res <- RSpectra::eigs_sym(
+                c_contrasts[[x]],
+                k = n_eigen,
+                which = "LA",
+                opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+              )$vectors,
+              warning = function(w) {
+                warning(paste0(
+                  "\nFor contrastive parameter = ",
+                  round(contrasts[[x]], 3), ":\n")
+                )
+              }
+            )
           } else {
             res <- spcaWrapper(
               alg = alg,
+              contrast = contrasts[[x]],
               contrast_cov = c_contrasts[[x]],
               k = n_eigen,
-              penalty = y
+              penalty = y,
+              eigdecomp_tol = eigdecomp_tol,
+              eigdecomp_iter = eigdecomp_iter
             )
           }
-          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
+          colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
           return(res)
         }
       )

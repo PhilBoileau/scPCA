@@ -4,7 +4,7 @@
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method of \insertRef{abid2018exploring}{scPCA}.
+#'   method of \insertCite{abid2018exploring;textual}{scPCA}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -19,6 +19,11 @@
 #'  computed.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider. Not used if  \code{contrasts} is a single value.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -30,13 +35,16 @@
 #'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
 #'
+#' @references
+#'   \insertAllCited{}
+#'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom Rdpack reprompt
 #' @importFrom RSpectra eigs_sym
 #'
 #' @keywords internal
 fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                    n_medoids) {
+                    n_medoids, eigdecomp_tol, eigdecomp_iter) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -44,11 +52,20 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- RSpectra::eigs_sym(
-        c_contrasts[[x]],
-        k = n_eigen,
-        which = "LA"
-      )$vectors
+      withCallingHandlers(
+        res <- RSpectra::eigs_sym(
+          c_contrasts[[x]],
+          k = n_eigen,
+          which = "LA",
+          opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+        )$vectors,
+        warning = function(w) {
+          warning(paste0(
+            "\nFor contrastive parameter = ",
+            round(contrasts[[x]], 3), ":\n")
+          )
+        }
+      )
     }
   )
   
@@ -149,8 +166,8 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method by Abid et al. \insertRef{abid2018exploring}{scPCA}. Analogous
-#'   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
+#'   method by Abid et al. \insertCite{abid2018exploring;textual}{scPCA}.
+#'   Analogous to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
 #'   \code{\link[BiocParallel]{bplapply}}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
@@ -166,6 +183,11 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'  computed.
 #' @param n_medoids A \code{numeric} indicating the number of medoids to
 #'  consider.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return A list of lists containing the cPCA results for each contrastive
 #'   parameter deemed to be a medoid.
@@ -177,6 +199,9 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
 #'
+#' @references
+#'   \insertAllCited{}
+#'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom BiocParallel bplapply
 #' @importFrom Rdpack reprompt
@@ -184,7 +209,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'
 #' @keywords internal
 bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
-                      n_medoids) {
+                      n_medoids, eigdecomp_tol, eigdecomp_iter) {
   # preliminaries
   num_contrasts <- length(contrasts)
 
@@ -192,11 +217,20 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- RSpectra::eigs_sym(
-        c_contrasts[[x]],
-        k = n_eigen,
-        which = "LA"
-      )$vectors
+      withCallingHandlers(
+        res <- RSpectra::eigs_sym(
+          c_contrasts[[x]],
+          k = n_eigen,
+          which = "LA",
+          opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+        )$vectors,
+        warning = function(w) {
+          warning(paste0(
+            "\nFor contrastive parameter = ",
+            round(contrasts[[x]], 3), ":\n")
+          )
+        }
+      )
     }
   )
 

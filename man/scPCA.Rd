@@ -15,12 +15,14 @@ scPCA(
   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
   penalties = seq(0.05, 1, length.out = 20),
   clust_method = c("kmeans", "pam", "hclust"),
-  n_centers,
+  n_centers = NULL,
   max_iter = 10,
   linkage_method = "complete",
   n_medoids = 8,
   parallel = FALSE,
-  clusters = NULL
+  clusters = NULL,
+  eigdecomp_tol = 1e-10,
+  eigdecomp_iter = 1000
 )
 }
 \arguments{
@@ -50,10 +52,11 @@ The default is therefore \code{NULL}, corresponding to no cross-validation.}
 
 \item{alg}{A \code{character} indicating the sparse PCA algorithm used to
 sparsify the contrastive loadings. Currently supports \code{iterative} for
-the \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for
-the non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} for the randomized \insertRef{erichson2018sparse}{scPCA}
-implementation. Defaults to \code{iterative}.}
+the \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} for the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} implementation. Defaults to
+\code{iterative}.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique, non-negative real number. By default, 40
@@ -74,8 +77,8 @@ hierarchical clustering. The default is k-means clustering.}
 
 \item{n_centers}{A \code{numeric} giving the number of centers to use in the
 clustering algorithm. If set to 1, cPCA, as first proposed by
-\insertRef{erichson2018sparse}{scPCA}, is performed, regardless of what the
-\code{penalties} argument is set to.}
+\insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+what the \code{penalties} argument is set to.}
 
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to
 be used in k-means clustering. Defaults to 10.}
@@ -98,9 +101,15 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
 automated version of cPCA. If a \code{numeric} vector is provided, the
-\code{n_centers} argument should be larger than 1, and the
-\code{clust_method}, \code{max_iter}, \code{linkage_method}, and
-\code{n_medoids} arguments can be safely ignored.}
+\code{n_centers}, \code{clust_method}, \code{max_iter},
+\code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations. Defaults to \code{1e-10}.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations. Defaults to
+\code{1000}.}
 }
 \value{
 A list containing the following components:
@@ -129,10 +138,10 @@ Given target and background data frames or matrices,
  If instead you wish to perform contrastive principal component analysis
  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
  \code{n_centers} parameter is larger than one, the automated hyperparameter
- tuning heuristic described in \insertRef{boileau2020}{scPCA} is used.
- Otherwise, the semi-automated approach of
- \insertRef{abid2018exploring}{scPCA} is used to select the appropriate
- hyperparameter.
+ tuning heuristic described in \insertCite{boileau2020;textual}{scPCA} is
+ used. Otherwise, the semi-automated approach of
+ \insertCite{abid2018exploring;textual}{scPCA} is used to select the
+ appropriate hyperparameter.
 }
 \examples{
 # perform cPCA on the simulated data set
@@ -159,7 +168,6 @@ scPCA(
   background = background_df,
   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
   penalties = 0,
-  n_centers = 4,
   clusters = toy_df[, 31]
 )
 
@@ -171,4 +179,7 @@ scPCA(
   penalties = 0,
   n_centers = 1
 )
+}
+\references{
+\insertAllCited{}
 }

@@ -4,7 +4,17 @@
 \alias{fitCPCA}
 \title{Contrastive Principal Component Analysis}
 \usage{
-fitCPCA(target, center, scale, c_contrasts, contrasts, n_eigen, n_medoids)
+fitCPCA(
+  target,
+  center,
+  scale,
+  c_contrasts,
+  contrasts,
+  n_eigen,
+  n_medoids,
+  eigdecomp_tol,
+  eigdecomp_iter
+)
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
@@ -26,6 +36,13 @@ computed.}
 
 \item{n_medoids}{A \code{numeric} indicating the number of medoids to
 consider. Not used if  \code{contrasts} is a single value.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations. Defaults to \code{1e-10}.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations. Defaults to
+\code{1000}.}
 }
 \value{
 A list of lists containing the cPCA results for each contrastive
@@ -43,6 +60,9 @@ Given target and background dataframes or matrices, \code{cPCA}
   will perform contrastive principal component analysis (cPCA) of the target
   data for a given number of eigenvectors and a vector of real valued
   contrast parameters. This is identical to the implementation of cPCA
-  method of \insertRef{abid2018exploring}{scPCA}.
+  method of \insertCite{abid2018exploring;textual}{scPCA}.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

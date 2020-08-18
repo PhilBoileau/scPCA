@@ -9,10 +9,10 @@
 #'  If instead you wish to perform contrastive principal component analysis
 #'  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
 #'  \code{n_centers} parameter is larger than one, the automated hyperparameter
-#'  tuning heuristic described in \insertRef{boileau2020}{scPCA} is used.
-#'  Otherwise, the semi-automated approach of
-#'  \insertRef{abid2018exploring}{scPCA} is used to select the appropriate
-#'  hyperparameter.
+#'  tuning heuristic described in \insertCite{boileau2020;textual}{scPCA} is
+#'  used. Otherwise, the semi-automated approach of
+#'  \insertCite{abid2018exploring;textual}{scPCA} is used to select the
+#'  appropriate hyperparameter.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -34,10 +34,11 @@
 #'  The default is therefore \code{NULL}, corresponding to no cross-validation.
 #' @param alg A \code{character} indicating the sparse PCA algorithm used to
 #'  sparsify the contrastive loadings. Currently supports \code{iterative} for
-#'  the \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for
-#'  the non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized \insertRef{erichson2018sparse}{scPCA}
-#'  implementation. Defaults to \code{iterative}.
+#'  the \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} implementation. Defaults to
+#'  \code{iterative}.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique, non-negative real number. By default, 40
 #'  logarithmically spaced values between 0.1 and 1000 are used. If a single
@@ -54,8 +55,8 @@
 #'  hierarchical clustering. The default is k-means clustering.
 #' @param n_centers A \code{numeric} giving the number of centers to use in the
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by
-#'  \insertRef{erichson2018sparse}{scPCA}, is performed, regardless of what the
-#'  \code{penalties} argument is set to.
+#'  \insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+#'  what the \code{penalties} argument is set to.
 #' @param max_iter A \code{numeric} giving the maximum number of iterations to
 #'   be used in k-means clustering. Defaults to 10.
 #' @param linkage_method A \code{character} specifying the agglomerative
@@ -73,9 +74,13 @@
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA. If a \code{numeric} vector is provided, the
-#'  \code{n_centers} argument should be larger than 1, and the
-#'  \code{clust_method}, \code{max_iter}, \code{linkage_method}, and
-#'  \code{n_medoids} arguments can be safely ignored.
+#'  \code{n_centers}, \code{clust_method}, \code{max_iter},
+#'  \code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -100,6 +105,9 @@
 #' @importFrom stringr str_detect
 #' @importFrom tibble as_tibble
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @export
 #'
 #' @examples
@@ -127,7 +135,6 @@
 #'   background = background_df,
 #'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
 #'   penalties = 0,
-#'   n_centers = 4,
 #'   clusters = toy_df[, 31]
 #' )
 #'
@@ -144,9 +151,10 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   alg = c("iterative", "var_proj", "rand_var_proj"),
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
-                  clust_method = c("kmeans", "pam", "hclust"), n_centers,
-                  max_iter = 10, linkage_method = "complete",
-                  n_medoids = 8, parallel = FALSE, clusters = NULL) {
+                  clust_method = c("kmeans", "pam", "hclust"),
+                  n_centers = NULL, max_iter = 10, linkage_method = "complete",
+                  n_medoids = 8, parallel = FALSE, clusters = NULL,
+                  eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # set defaults
   clust_method <- match.arg(clust_method)
   alg <- match.arg(alg)
@@ -155,9 +163,14 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   checkArgs(
     target, background, center, scale, n_eigen,
     contrasts, penalties, clust_method, linkage_method,
-    clusters
+    clusters, eigdecomp_tol, eigdecomp_iter, n_centers
   )
 
+  # set a dummy value for clusters when cluster labels are passed in
+  if (!is.null(clusters)) {
+    n_centers <- 2
+  }
+  
   # set target and background data sets to be matrices if from Matrix package
   target <- coerceMatrix(target)
   background <- coerceMatrix(background)
@@ -178,7 +191,9 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel,
-      clusters = clusters
+      clusters = clusters,
+      eigdecomp_tol = eigdecomp_tol,
+      eigdecomp_iter = eigdecomp_iter
     )
     if (length(contrasts) == 1 && length(penalties) == 1 && penalties[1] == 0) {
       opt_params <- list(
@@ -227,6 +242,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       n_medoids = n_medoids,
       parallel = parallel,
       clusters = clusters,
+      eigdecomp_tol = eigdecomp_tol,
+      eigdecomp_iter = eigdecomp_iter,
       use_future = FALSE,
       .combine = FALSE
     )
@@ -268,7 +285,9 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       linkage_method = linkage_method,
       n_medoids = n_medoids,
       parallel = parallel,
-      clusters = clusters
+      clusters = clusters,
+      eigdecomp_tol = eigdecomp_tol,
+      eigdecomp_iter = eigdecomp_iter
     )
     if (n_centers > 1 && length(penalties) == 1 && penalties[1] == 0) {
       opt_params <- list(
@@ -322,10 +341,10 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  two such eigenvectors.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -354,16 +373,24 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @return Output structure matching either that of \code{\link{fitCPCA}} or
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @keywords internal
 selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
                          max_iter, linkage_method, n_medoids, parallel,
-                         clusters) {
+                         clusters, eigdecomp_tol, eigdecomp_iter) {
   
   # call parallelized function variants if so requested
   if (!parallel || (length(penalties) == 1 && penalties[1] == 0
@@ -378,7 +405,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
-        n_eigen = n_eigen, n_medoids = n_medoids
+        n_eigen = n_eigen, n_medoids = n_medoids,
+        eigdecomp_tol = eigdecomp_tol, eigdecomp_iter = eigdecomp_iter
       )
     } else {
       opt_params <- fitGrid(
@@ -387,7 +415,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
         penalties = penalties, n_eigen = n_eigen,
         clust_method = clust_method, n_centers = n_centers,
         max_iter = max_iter, linkage_method = linkage_method,
-        clusters = clusters
+        clusters = clusters, eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter = eigdecomp_iter
       )
     }
   } else {
@@ -400,7 +429,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
       opt_params <- bpFitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,
-        n_eigen = n_eigen, n_medoids = n_medoids
+        n_eigen = n_eigen, n_medoids = n_medoids,
+        eigdecomp_tol = eigdecomp_tol, eigdecomp_iter = eigdecomp_iter
       )
     } else {
       opt_params <- bpFitGrid(
@@ -409,7 +439,8 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
         contrasts = contrasts, penalties = penalties,
         n_eigen = n_eigen, clust_method = clust_method,
         n_centers = n_centers, max_iter = max_iter,
-        linkage_method = linkage_method
+        linkage_method = linkage_method, clusters = clusters,
+        eigdecomp_tol = eigdecomp_tol, eigdecomp_iter = eigdecomp_iter
       )
     }
   }
@@ -440,10 +471,10 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'  two such eigenvectors.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} for the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} for the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param contrasts A \code{numeric} vector of the contrastive parameters. Each
 #'  element must be a unique non-negative real number. The default is to use 40
 #'  logarithmically spaced values between 0.1 and 1000.
@@ -472,6 +503,11 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations. Defaults to \code{1e-10}.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. Defaults to
+#'  \code{1000}.
 #'
 #' @importFrom origami training validation
 #'
@@ -479,11 +515,14 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
 #'  \code{\link{bpFitCPCA}} and \code{link{bpFitGrid}}, respectively).
 #'
+#' @references
+#'   \insertAllCited{}
+#'   
 #' @keywords internal
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            alg = alg, contrasts, penalties, clust_method,
                            n_centers, max_iter, linkage_method, n_medoids,
-                           parallel, clusters) {
+                           parallel, clusters, eigdecomp_tol, eigdecomp_iter) {
   
   # make training and validation folds
   train_target <- origami::training(target, fold$target)
@@ -502,7 +541,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         target = train_target, center = center,
         scale = scale, c_contrasts = c_contrasts,
         contrasts = contrasts, n_eigen = n_eigen,
-        n_medoids = n_medoids
+        n_medoids = n_medoids, eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter =  eigdecomp_iter
       )
     } else {
       opt_params <- fitGrid(
@@ -517,7 +557,10 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         clust_method = clust_method,
         n_centers = n_centers,
         max_iter = max_iter,
-        linkage_method = linkage_method
+        linkage_method = linkage_method,
+        clusters = clusters,
+        eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter =  eigdecomp_iter
       )
     }
   } else {
@@ -531,7 +574,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         target = train_target, center = center,
         scale = scale, c_contrasts = c_contrasts,
         contrasts = contrasts, n_eigen = n_eigen,
-        n_medoids = n_medoids
+        n_medoids = n_medoids, eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter =  eigdecomp_iter
       )
     } else {
       opt_params <- bpFitGrid(
@@ -544,7 +588,10 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
         target_valid = valid_target,
         n_centers = n_centers,
         max_iter = max_iter,
-        linkage_method = linkage_method
+        linkage_method = linkage_method,
+        clusters = clusters,
+        eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter =  eigdecomp_iter
       )
     }
   }

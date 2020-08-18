@@ -28,16 +28,28 @@
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'  eigendecompositon calculations.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'  interations performed by eigendecompositon calculations. 
+#' @param n_centers A \code{numeric} giving the number of centers to use in the
+#'  clustering algorithm. If set to 1, cPCA, as first proposed by
+#'  \insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+#'  what the \code{penalties} argument is set to.
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
 #' @importFrom tibble is_tibble
 #'
 #' @keywords internal
+#' 
+#' @references
+#'   \insertAllCited{}
 #'
 #' @return Whether all argument conditions are satisfied
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
-                      penalties, clust_method, linkage_method, clusters) {
+                      penalties, clust_method, linkage_method, clusters,
+                      eigdecomp_tol, eigdecomp_iter, n_centers) {
   
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
@@ -89,5 +101,14 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
   if (!is.null(clusters)) {
     assertthat::assert_that(is.numeric(clusters))
     assertthat::assert_that(length(clusters) == nrow(target))
+  } else {
+    assertthat::assert_that(!is.null(n_centers))
+    assertthat::assert_that(n_centers > 0)
   }
+  
+  # check that eigendecompostion parameters are positive
+  assertthat::assert_that(is.numeric(eigdecomp_tol))
+  assertthat::assert_that(eigdecomp_tol > 0)
+  assertthat::assert_that(is.numeric(eigdecomp_iter))
+  assertthat::assert_that(eigdecomp_iter > 0)
 }

@@ -4,23 +4,41 @@
 \alias{spcaWrapper}
 \title{Sparse PCA Wrapper}
 \usage{
-spcaWrapper(alg, contrast_cov, k, penalty)
+spcaWrapper(
+  alg,
+  contrast_cov,
+  contrast,
+  k,
+  penalty,
+  eigdecomp_tol,
+  eigdecomp_iter
+)
 }
 \arguments{
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\insertCite{zou2006sparse;textual}{scPCA} implemententation,
+\code{var_proj} for the non-randomized
+\insertCite{erichson2018sparse;textual}{scPCA} solution, and
 \code{rand_var_proj} for the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{contrast_cov}{A contrastive covariance \code{matrix}.}
+
+\item{contrast}{A \code{numeric} contrastive parameter used
+to compute the contrastive covariance matrix.}
 
 \item{k}{A \code{numeric} indicating the number of eigenvectors (or
 sparse contrastive components) to be computed.}
 
 \item{penalty}{A \code{numeric} indicating the L1 penalty parameter applied
 to the loadings.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations.}
 }
 \value{
 A \code{p x k} sparse loadings matrix, where \code{p} is the
@@ -32,9 +50,12 @@ This wrapper function specifies which implementation of sparse
   pricincipal component analysis (SPCA) is used to sparsify the loadings of
   the contrastive covariance matrix. Currently, the \code{scPCA} package
   supports the iterative algorithm detailed by
-  \insertRef{zou2006sparse}{scPCA}, and
-  \insertRef{erichson2018sparse}{scPCA}'s randomized and non-randomized
+  \insertCite{zou2006sparse;textual}{scPCA}, and
+  \insertCite{erichson2018sparse;textual}{scPCA}'s randomized and non-randomized
   versions of SPCA solved via variable projection. These methods are
   implemented in the \pkg{elasticnet} and \pkg{sparsepca} packages.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

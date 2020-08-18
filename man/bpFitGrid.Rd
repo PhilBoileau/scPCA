@@ -18,7 +18,9 @@ bpFitGrid(
   n_centers,
   max_iter = 10,
   linkage_method = "complete",
-  clusters = NULL
+  clusters = NULL,
+  eigdecomp_tol = 1e-10,
+  eigdecomp_iter = 1000
 )
 }
 \arguments{
@@ -48,10 +50,10 @@ computed.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} fir the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{zou2006sparse;textual}{scPCA} implemententation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} fir the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
@@ -74,6 +76,13 @@ default is \code{complete}.}
 the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
 automated version of cPCA.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations. Defaults to \code{1e-10}.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations. Defaults to
+\code{1000}.}
 }
 \value{
 A list similar to that output by \code{\link[stats]{prcomp}}:
@@ -91,5 +100,8 @@ This function is used to automatically select the optimal
   algorithm and average silhouette width. Analogous to \code{\link{fitGrid}},
   but replaces all \code{lapply} calls by
   \code{\link[BiocParallel]{bplapply}}.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

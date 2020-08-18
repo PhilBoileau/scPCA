@@ -20,7 +20,9 @@ cvSelectParams(
   linkage_method,
   n_medoids,
   parallel,
-  clusters
+  clusters,
+  eigdecomp_tol,
+  eigdecomp_iter
 )
 }
 \arguments{
@@ -46,10 +48,10 @@ two such eigenvectors.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implementation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} for the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{zou2006sparse;textual}{scPCA} implementation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} for the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{contrasts}{A \code{numeric} vector of the contrastive parameters. Each
 element must be a unique non-negative real number. The default is to use 40
@@ -87,6 +89,13 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
 automated version of cPCA.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations. Defaults to \code{1e-10}.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations. Defaults to
+\code{1000}.}
 }
 \value{
 Output structure matching either that of \code{\link{fitCPCA}} or
@@ -97,5 +106,8 @@ Output structure matching either that of \code{\link{fitCPCA}} or
 A wrapper function for fitting various internal functions to
  select the optimal setting of the contrastive and penalization parameters
  via cross-validation. For internal use only.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}
