@@ -4,7 +4,7 @@
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method of \insertRef{abid2018exploring}{scPCA}.
+#'   method of \insertCite{abid2018exploring;textual}{scPCA}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
 #'  as a \code{data.frame} or \code{matrix}.
@@ -34,6 +34,9 @@
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
+#'
+#' @references
+#'   \insertAllCited{}
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom Rdpack reprompt
@@ -163,8 +166,8 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'   will perform contrastive principal component analysis (cPCA) of the target
 #'   data for a given number of eigenvectors and a vector of real valued
 #'   contrast parameters. This is identical to the implementation of cPCA
-#'   method by Abid et al. \insertRef{abid2018exploring}{scPCA}. Analogous
-#'   to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
+#'   method by Abid et al. \insertCite{abid2018exploring;textual}{scPCA}.
+#'   Analogous to \code{\link{fitCPCA}}, but replaces all \code{lapply} calls by
 #'   \code{\link[BiocParallel]{bplapply}}.
 #'
 #' @param target The target (experimental) data set, in a standard format such
@@ -195,6 +198,9 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 #'     \item contrast - the list of contrastive parameters
 #'     \item penalty - set to zero, since loadings are not penalized in cPCA
 #'   }
+#'
+#' @references
+#'   \insertAllCited{}
 #'
 #' @importFrom kernlab specc as.kernelMatrix
 #' @importFrom BiocParallel bplapply

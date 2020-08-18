@@ -74,4 +74,7 @@ Whether all argument conditions are satisfied
 Checks whether or not the all arguments in the \code{scPCA}
   functions are input properly.
 }
+\references{
+\insertAllCited{}
+}
 \keyword{internal}

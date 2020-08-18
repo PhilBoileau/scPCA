@@ -50,10 +50,10 @@ computed.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-\code{rand_var_proj} fir the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{zou2006sparse;textual}{scPCA} implemententation, \code{var_proj}
+for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+solution, and \code{rand_var_proj} fir the randomized
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{clust_method}{A \code{character} specifying the clustering method to
 use for choosing the optimal constrastive parameter. Currently, this is
@@ -100,5 +100,8 @@ This function is used to automatically select the optimal
   algorithm and average silhouette width. Analogous to \code{\link{fitGrid}},
   but replaces all \code{lapply} calls by
   \code{\link[BiocParallel]{bplapply}}.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

@@ -45,10 +45,11 @@ to compute the contrastive covariances.}
 
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
 the contrastive loadings. Currently supports \code{iterative} for the
-\insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+\insertCite{zou2006sparse;textual}{scPCA} implemententation,
+\code{var_proj} for the non-randomized
+\insertCite{erichson2018sparse;textual}{scPCA} solution, and
 \code{rand_var_proj} for the randomized
-\insertRef{erichson2018sparse}{scPCA} result.}
+\insertCite{erichson2018sparse;textual}{scPCA} result.}
 
 \item{penalties}{A \code{numeric} vector of the penalty terms.}
 
@@ -98,5 +99,8 @@ A list similar to that output by \code{\link[stats]{prcomp}}:
 This function is used to automatically select the optimal
   contrastive parameter and L1 penalty term for scPCA based on a clustering
   algorithm and average silhouette width.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

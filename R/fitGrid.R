@@ -19,10 +19,11 @@
 #'  to compute the contrastive covariances.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'   the contrastive loadings. Currently supports \code{iterative} for the
-#'   \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-#'   non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
+#'   \insertCite{zou2006sparse;textual}{scPCA} implemententation,
+#'   \code{var_proj} for the non-randomized
+#'   \insertCite{erichson2018sparse;textual}{scPCA} solution, and
 #'   \code{rand_var_proj} for the randomized
-#'   \insertRef{erichson2018sparse}{scPCA} result.
+#'   \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -61,6 +62,9 @@
 #' @importFrom stats kmeans dist hclust cutree
 #' @importFrom cluster pam silhouette
 #' @importFrom RSpectra eigs_sym
+#'
+#' @references
+#'   \insertAllCited{}
 #'
 #' @keywords internal
 fitGrid <- function(target, target_valid = NULL, center, scale,
@@ -249,10 +253,10 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #'  to compute the contrastive covariances.
 #' @param alg A \code{character} indicating the SPCA algorithm used to sparsify
 #'  the contrastive loadings. Currently supports \code{iterative} for the
-#'  \insertRef{zou2006sparse}{scPCA} implemententation, \code{var_proj} for the
-#'  non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
-#'  \code{rand_var_proj} fir the randomized
-#'  \insertRef{erichson2018sparse}{scPCA} result.
+#'  \insertCite{zou2006sparse;textual}{scPCA} implemententation, \code{var_proj}
+#'  for the non-randomized \insertCite{erichson2018sparse;textual}{scPCA}
+#'  solution, and \code{rand_var_proj} fir the randomized
+#'  \insertCite{erichson2018sparse;textual}{scPCA} result.
 #' @param penalties A \code{numeric} vector of the penalty terms.
 #' @param n_eigen A \code{numeric} indicating the number of eigenvectors to be
 #'  computed.
@@ -292,6 +296,9 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
 #' @importFrom cluster pam silhouette
 #' @importFrom BiocParallel bplapply
 #' @importFrom RSpectra eigs_sym
+#'
+#' @references
+#'   \insertAllCited{}
 #'
 #' @keywords internal
 bpFitGrid <- function(target, target_valid = NULL, center, scale,

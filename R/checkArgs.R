@@ -42,6 +42,9 @@
 #' @importFrom tibble is_tibble
 #'
 #' @keywords internal
+#' 
+#' @references
+#'   \insertAllCited{}
 #'
 #' @return Whether all argument conditions are satisfied
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
