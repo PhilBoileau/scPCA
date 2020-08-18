@@ -49,12 +49,20 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- lapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- RSpectra::eigs_sym(
-        c_contrasts[[x]],
-        k = n_eigen,
-        which = "LA",
-        opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
-      )$vectors
+      withCallingHandlers(
+        res <- RSpectra::eigs_sym(
+          c_contrasts[[x]],
+          k = n_eigen,
+          which = "LA",
+          opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+        )$vectors,
+        warning = function(w) {
+          warning(paste0(
+            "\nFor contrastive parameter = ",
+            round(contrasts[[x]], 3), ":\n")
+          )
+        }
+      )
     }
   )
   
@@ -203,12 +211,20 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   loadings_mat <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
-      res <- RSpectra::eigs_sym(
-        c_contrasts[[x]],
-        k = n_eigen,
-        which = "LA",
-        opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
-      )$vectors
+      withCallingHandlers(
+        res <- RSpectra::eigs_sym(
+          c_contrasts[[x]],
+          k = n_eigen,
+          which = "LA",
+          opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+        )$vectors,
+        warning = function(w) {
+          warning(paste0(
+            "\nFor contrastive parameter = ",
+            round(contrasts[[x]], 3), ":\n")
+          )
+        }
+      )
     }
   )
 

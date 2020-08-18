@@ -15,11 +15,17 @@
 #'   non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
 #'   \code{rand_var_proj} for the randomized
 #'   \insertRef{erichson2018sparse}{scPCA} result.
+#' @param contrast A \code{numeric} contrastive parameter used
+#'   to compute the contrastive covariance matrix.
 #' @param contrast_cov A contrastive covariance \code{matrix}.
 #' @param k A \code{numeric} indicating the number of eigenvectors (or
 #'   sparse contrastive components) to be computed.
 #' @param penalty A \code{numeric} indicating the L1 penalty parameter applied
 #'   to the loadings.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
+#'   eigendecompositon calculations.
+#' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
+#'   interations performed by eigendecompositon calculations.
 #'
 #' @importFrom RSpectra eigs_sym
 #'
@@ -28,7 +34,8 @@
 #'   components.
 #'
 #' @keywords internal
-spcaWrapper <- function(alg, contrast_cov, k, penalty) {
+spcaWrapper <- function(alg, contrast_cov, contrast, k, penalty,
+                        eigdecomp_tol, eigdecomp_iter) {
   
   if (alg == "iterative") {
     
@@ -43,10 +50,19 @@ spcaWrapper <- function(alg, contrast_cov, k, penalty) {
   } else {
     
     # get the rootmatrix, perform thresholding
-    contrast_cov_eigen <- RSpectra::eigs_sym(
-      contrast_cov,
-      k = k,
-      which = "LA"
+    contrast_cov_eigen <- withCallingHandlers(
+      res <- RSpectra::eigs_sym(
+        contrast_cov,
+        k = k,
+        which = "LA",
+        opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+      ),
+      warning = function(w) {
+        warning(paste0(
+          "\nFor contrastive parameter = ", round(contrast, 3),
+          "and L1 penalty parameter = ", round(penalty, 5), ":\n")
+        )
+      }
     )
     eig_values <- (contrast_cov_eigen$values + abs(contrast_cov_eigen$values))/2
     right_sing_mat <- contrast_cov_eigen$vectors

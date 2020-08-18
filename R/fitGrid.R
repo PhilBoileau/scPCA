@@ -84,17 +84,28 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- RSpectra::eigs_sym(c_contrasts[[x]],
-              k = n_eigen,
-              which = "LA",
-              opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
-            )$vectors
+            withCallingHandlers(
+              res <- RSpectra::eigs_sym(c_contrasts[[x]],
+                k = n_eigen,
+                which = "LA",
+                opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+              )$vectors,
+              warning = function(w) {
+                warning(paste0(
+                  "\nFor contrastive parameter = ",
+                  round(contrasts[[x]], 3), ":\n")
+                )
+              }
+            )
           } else {
             res <- spcaWrapper(
               alg = alg,
+              contrast = contrasts[[x]],
               contrast_cov = c_contrasts[[x]],
               k = n_eigen,
-              penalty = y
+              penalty = y,
+              eigdecomp_tol = eigdecomp_tol,
+              eigdecomp_iter = eigdecomp_iter
             )
           }
           colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
@@ -304,18 +315,29 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
         penalties,
         function(y) {
           if (y == 0) {
-            res <- RSpectra::eigs_sym(
-              c_contrasts[[x]],
-              k = n_eigen,
-              which = "LA",
-              opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
-            )$vectors
+            withCallingHandlers(
+              res <- RSpectra::eigs_sym(
+                c_contrasts[[x]],
+                k = n_eigen,
+                which = "LA",
+                opts = list(tol = eigdecomp_tol, maxitr = eigdecomp_iter)
+              )$vectors,
+              warning = function(w) {
+                warning(paste0(
+                  "\nFor contrastive parameter = ",
+                  round(contrasts[[x]], 3), ":\n")
+                )
+              }
+            )
           } else {
             res <- spcaWrapper(
               alg = alg,
+              contrast = contrasts[[x]],
               contrast_cov = c_contrasts[[x]],
               k = n_eigen,
-              penalty = y
+              penalty = y,
+              eigdecomp_tol = eigdecomp_tol,
+              eigdecomp_iter = eigdecomp_iter
             )
           }
           colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))

@@ -4,7 +4,15 @@
 \alias{spcaWrapper}
 \title{Sparse PCA Wrapper}
 \usage{
-spcaWrapper(alg, contrast_cov, k, penalty)
+spcaWrapper(
+  alg,
+  contrast_cov,
+  contrast,
+  k,
+  penalty,
+  eigdecomp_tol,
+  eigdecomp_iter
+)
 }
 \arguments{
 \item{alg}{A \code{character} indicating the SPCA algorithm used to sparsify
@@ -16,11 +24,20 @@ non-randomized \insertRef{erichson2018sparse}{scPCA} solution, and
 
 \item{contrast_cov}{A contrastive covariance \code{matrix}.}
 
+\item{contrast}{A \code{numeric} contrastive parameter used
+to compute the contrastive covariance matrix.}
+
 \item{k}{A \code{numeric} indicating the number of eigenvectors (or
 sparse contrastive components) to be computed.}
 
 \item{penalty}{A \code{numeric} indicating the L1 penalty parameter applied
 to the loadings.}
+
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
+eigendecompositon calculations.}
+
+\item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
+interations performed by eigendecompositon calculations.}
 }
 \value{
 A \code{p x k} sparse loadings matrix, where \code{p} is the
