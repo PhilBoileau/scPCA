@@ -97,7 +97,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
               penalty = y
             )
           }
-          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
+          colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
           res
         }
       )
@@ -318,7 +318,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
               penalty = y
             )
           }
-          colnames(res) <- paste0("V", as.character(seq_len(n_eigen)))
+          colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
           return(res)
         }
       )
