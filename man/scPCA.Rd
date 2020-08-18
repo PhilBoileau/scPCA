@@ -15,7 +15,7 @@ scPCA(
   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
   penalties = seq(0.05, 1, length.out = 20),
   clust_method = c("kmeans", "pam", "hclust"),
-  n_centers,
+  n_centers = NULL,
   max_iter = 10,
   linkage_method = "complete",
   n_medoids = 8,
@@ -101,9 +101,8 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
 automated version of cPCA. If a \code{numeric} vector is provided, the
-\code{n_centers} argument should be larger than 1, and the
-\code{clust_method}, \code{max_iter}, \code{linkage_method}, and
-\code{n_medoids} arguments can be safely ignored.}
+\code{n_centers}, \code{clust_method}, \code{max_iter},
+\code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.}
 
 \item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
 eigendecompositon calculations. Defaults to \code{1e-10}.}
@@ -169,7 +168,6 @@ scPCA(
   background = background_df,
   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
   penalties = 0,
-  n_centers = 4,
   clusters = toy_df[, 31]
 )
 

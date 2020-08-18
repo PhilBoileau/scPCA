@@ -74,9 +74,8 @@
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA. If a \code{numeric} vector is provided, the
-#'  \code{n_centers} argument should be larger than 1, and the
-#'  \code{clust_method}, \code{max_iter}, \code{linkage_method}, and
-#'  \code{n_medoids} arguments can be safely ignored.
+#'  \code{n_centers}, \code{clust_method}, \code{max_iter},
+#'  \code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.
 #' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
 #'  eigendecompositon calculations. Defaults to \code{1e-10}.
 #' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
@@ -136,7 +135,6 @@
 #'   background = background_df,
 #'   contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
 #'   penalties = 0,
-#'   n_centers = 4,
 #'   clusters = toy_df[, 31]
 #' )
 #'
@@ -153,8 +151,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   alg = c("iterative", "var_proj", "rand_var_proj"),
                   contrasts = exp(seq(log(0.1), log(1000), length.out = 40)),
                   penalties = seq(0.05, 1, length.out = 20),
-                  clust_method = c("kmeans", "pam", "hclust"), n_centers,
-                  max_iter = 10, linkage_method = "complete",
+                  clust_method = c("kmeans", "pam", "hclust"),
+                  n_centers = NULL, max_iter = 10, linkage_method = "complete",
                   n_medoids = 8, parallel = FALSE, clusters = NULL,
                   eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
   # set defaults
@@ -165,9 +163,14 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   checkArgs(
     target, background, center, scale, n_eigen,
     contrasts, penalties, clust_method, linkage_method,
-    clusters, eigdecomp_tol, eigdecomp_iter
+    clusters, eigdecomp_tol, eigdecomp_iter, n_centers
   )
 
+  # set a dummy value for clusters when cluster labels are passed in
+  if (!is.null(clusters)) {
+    n_centers <- 2
+  }
+  
   # set target and background data sets to be matrices if from Matrix package
   target <- coerceMatrix(target)
   background <- coerceMatrix(background)

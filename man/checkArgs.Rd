@@ -16,7 +16,8 @@ checkArgs(
   linkage_method,
   clusters,
   eigdecomp_tol,
-  eigdecomp_iter
+  eigdecomp_iter,
+  n_centers
 )
 }
 \arguments{
@@ -60,6 +61,11 @@ eigendecompositon calculations.}
 
 \item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
 interations performed by eigendecompositon calculations.}
+
+\item{n_centers}{A \code{numeric} giving the number of centers to use in the
+clustering algorithm. If set to 1, cPCA, as first proposed by
+\insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+what the \code{penalties} argument is set to.}
 }
 \value{
 Whether all argument conditions are satisfied
