@@ -99,7 +99,6 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
   
   # check that the clusters argument has the same length as the target
   if (!is.null(clusters)) {
-    assertthat::assert_that(is.numeric(clusters))
     assertthat::assert_that(length(clusters) == nrow(target))
   } else if (length(penalties) != 1 && length(contrasts) != 1) {
     assertthat::assert_that(!is.null(n_centers))

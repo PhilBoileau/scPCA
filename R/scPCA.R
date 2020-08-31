@@ -73,7 +73,7 @@
 #' @param clusters A \code{numeric} vector of cluster labels for observations in
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
-#'  automated version of cPCA. If a \code{numeric} vector is provided, the
+#'  automated version of cPCA. If a vector is provided, the
 #'  \code{n_centers}, \code{clust_method}, \code{max_iter},
 #'  \code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.
 #' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
@@ -167,8 +167,15 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   )
 
   # set a dummy value for clusters when cluster labels are passed in
-  if (!is.null(clusters) || length(penalties) == 1 && length(contrasts) == 1) {
+  if (!is.null(clusters)) {
     n_centers <- 2
+  }
+  
+  # coerce clusters argument to an integer
+  if (is.factor(clusters)) {
+    clusters <- as.numeric(clusters)
+  } else if (is.character(clusters)) {
+    clusters <- as.numeric(as.factor(clusters))
   }
   
   # set target and background data sets to be matrices if from Matrix package
@@ -399,7 +406,17 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
       target = target, background = background, contrasts = contrasts,
       center = center, scale = scale
     )
-    if (n_centers == 1 || (length(penalties) == 1 && penalties[1] == 0
+    if (length(penalties) == 1 && penalties[1] != 0 && length(contrasts) == 1) {
+      opt_params <- fitGrid(
+        target = target, center = center, scale = scale, alg = alg,
+        c_contrasts = c_contrasts, contrasts = contrasts,
+        penalties = penalties, n_eigen = n_eigen,
+        clust_method = clust_method, n_centers = n_centers,
+        max_iter = max_iter, linkage_method = linkage_method,
+        clusters = clusters, eigdecomp_tol = eigdecomp_tol,
+        eigdecomp_iter = eigdecomp_iter
+      )
+    } else if (n_centers == 1 || (length(penalties) == 1 && penalties[1] == 0
          && length(contrasts) == 1)) {
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,

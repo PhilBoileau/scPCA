@@ -100,7 +100,7 @@ processing via the \pkg{BiocParallel} infrastructure. The default is
 \item{clusters}{A \code{numeric} vector of cluster labels for observations in
 the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
-automated version of cPCA. If a \code{numeric} vector is provided, the
+automated version of cPCA. If a vector is provided, the
 \code{n_centers}, \code{clust_method}, \code{max_iter},
 \code{linkage_method}, and \code{n_medoids} arguments can be safely ignored.}
 

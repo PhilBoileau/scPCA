@@ -276,10 +276,16 @@ test_that("Catches cluster assignments that don't match requirements", {
     clust_method, linkage_method , clusters = toy_df[1:25, 31],
     eigdecomp_tol, eigdecomp_iter, n_centers
   ))
-  expect_error(checkArgs(
+  expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, contrasts, penalties,
     clust_method, linkage_method , clusters = as.character(toy_df[, 31]),
+    eigdecomp_tol, eigdecomp_iter, n_centers
+  ))
+  expect_silent(checkArgs(
+    toy_df[, 1:30], background_df, center,
+    scale, n_eigen, contrasts, penalties,
+    clust_method, linkage_method , clusters = as.factor(toy_df[, 31]),
     eigdecomp_tol, eigdecomp_iter, n_centers
   ))
 })
