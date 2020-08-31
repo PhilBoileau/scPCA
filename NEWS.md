@@ -39,7 +39,11 @@
 + Replaced calls to stats::cov by coop::covar to speed up computation of large sample covariance matrices.
 + In future updates, we'd like to explore using the DelayedArray framework to support the analysis of larger datasets.
 
-# Changes in version 1.3.4 (2020-08-18)
+# Changes in version 1.3.5 (2020-08-18)
 + Fixed citations in docs
 + Provided more detailed warning when RSpectra::eigs_sym fails to converge
 + Included argumetns in scPCA to control RSpectra::eigs_sym convergence: error tolerance and max number of iterations
+
+# Changes in version 1.3.6 (2020-08-30)
++ Fixed issue where n_centers was required when only one penalty and contrast term were provided
++ Users can now pass factors and character vectors to the clusters argument.
