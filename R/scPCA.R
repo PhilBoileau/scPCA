@@ -166,16 +166,16 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     clusters, eigdecomp_tol, eigdecomp_iter, n_centers
   )
 
-  # set a dummy value for clusters when cluster labels are passed in
   if (!is.null(clusters)) {
+    # set a dummy value for clusters when cluster labels are passed in
     n_centers <- 2
-  }
-  
-  # coerce clusters argument to an integer
-  if (is.factor(clusters)) {
-    clusters <- as.numeric(clusters)
-  } else if (is.character(clusters)) {
-    clusters <- as.numeric(as.factor(clusters))
+    
+    # coerce clusters argument to an integer
+    if (is.factor(clusters)) {
+      clusters <- as.numeric(clusters)
+    } else if (is.character(clusters)) {
+      clusters <- as.numeric(as.factor(clusters))
+    }
   }
   
   # set target and background data sets to be matrices if from Matrix package
@@ -202,10 +202,19 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       eigdecomp_tol = eigdecomp_tol,
       eigdecomp_iter = eigdecomp_iter
     )
-    if (length(contrasts) == 1 && length(penalties) == 1) {
+    if (length(contrasts) == 1 && length(penalties) == 1 &&
+        penalties[[1]] == 0) {
       opt_params <- list(
         rotation = opt_params$rotation,
         x = opt_params$x,
+        contrast = opt_params$contrast,
+        penalty = opt_params$penalty
+      )
+    } else if (length(contrasts) == 1 && length(penalties) == 1 &&
+               penalties[[1]] != 0) {
+      opt_params <- list(
+        rotation = opt_params$rotation[[1]],
+        x = opt_params$x[[1]],
         contrast = opt_params$contrast,
         penalty = opt_params$penalty
       )
