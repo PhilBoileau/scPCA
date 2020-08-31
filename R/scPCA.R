@@ -167,7 +167,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   )
 
   # set a dummy value for clusters when cluster labels are passed in
-  if (!is.null(clusters)) {
+  if (!is.null(clusters) || length(penalties) == 1 && length(contrasts) == 1) {
     n_centers <- 2
   }
   
@@ -195,12 +195,12 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       eigdecomp_tol = eigdecomp_tol,
       eigdecomp_iter = eigdecomp_iter
     )
-    if (length(contrasts) == 1 && length(penalties) == 1 && penalties[1] == 0) {
+    if (length(contrasts) == 1 && length(penalties) == 1) {
       opt_params <- list(
         rotation = opt_params$rotation,
         x = opt_params$x,
         contrast = opt_params$contrast,
-        penalty = 0
+        penalty = opt_params$penalty
       )
     } else if (n_centers > 1) {
       max_idx <- which.max(opt_params$ave_sil_widths)
@@ -393,15 +393,14 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
                          clusters, eigdecomp_tol, eigdecomp_iter) {
   
   # call parallelized function variants if so requested
-  if (!parallel || (length(penalties) == 1 && penalties[1] == 0
-                    && length(contrasts) == 1)) {
+  if (!parallel || (length(penalties) == 1 && length(contrasts) == 1)) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = target, background = background, contrasts = contrasts,
       center = center, scale = scale
     )
     if (n_centers == 1 || (length(penalties) == 1 && penalties[1] == 0
-                           && length(contrasts) == 1)) {
+         && length(contrasts) == 1)) {
       opt_params <- fitCPCA(
         target = target, center = center, scale = scale,
         c_contrasts = c_contrasts, contrasts = contrasts,

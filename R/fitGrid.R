@@ -147,84 +147,95 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
     )
   }
 
-  # remove all duplicated spaces
-  kernal_idx <- which(!duplicated(subspaces))
-  param_grid <- param_grid[kernal_idx, ]
-  loadings_mat <- loadings_mat[kernal_idx]
-  subspaces <- unique(subspaces)
-
-  # rescale all spaces to the unit hyperplane. now objective functions based
-  # on metric spaces can be used
-  norm_subspaces <- lapply(
-    subspaces,
-    function(subspace) {
-      max_val <- max(subspace[, 1])
-      min_val <- min(subspace[, 1])
-      apply(
-        subspace, 2,
-        function(x) {
-          x / (max_val - min_val)
-        }
-      )
-    }
-  )
-
-  # remove all subspaces that had loading vectors consisting solely of zeros
-  zero_subs <- do.call(c, lapply(subspaces, function(s) {
-    any(apply(s, 2, function(l) all(l < 1e-6)))
-  }))
-  zero_subs_norm <- do.call(c, lapply(norm_subspaces, function(ns) {
-    any(apply(ns, 2, function(l) all(l < 1e-6)))
-  }))
-  nz_load_idx <- which((zero_subs + zero_subs_norm) == 0)
-  norm_subspaces <- norm_subspaces[nz_load_idx]
-  subspaces <- subspaces[nz_load_idx]
-  param_grid <- param_grid[nz_load_idx, ]
-  loadings_mat <- loadings_mat[nz_load_idx]
-
-  # get the objective function results for each space from clustering algorithm
-  ave_sil_widths <- do.call(c, lapply(
-    norm_subspaces, function(subspace) {
-      if (!is.null(clusters)) {
-        sil_width <- cluster::silhouette(
-          clusters,
-          stats::dist(subspace)
-        )[, 3]
-      } else if (clust_method == "pam") {
-        clust_res <- cluster::pam(x = subspace, k = n_centers)
-      } else if (clust_method == "kmeans") {
-        clust_res <- stats::kmeans(
-          x = subspace, centers = n_centers,
-          iter.max = max_iter
+  if (is.null(n_centers)) {
+    out <- list(
+      rotation = loadings_mat[[1]],
+      x = subspaces[[1]],
+      contrast = contrasts[[1]],
+      penalty = penalties[[1]]
+    )
+  } else {
+  
+    # remove all duplicated spaces
+    kernal_idx <- which(!duplicated(subspaces))
+    param_grid <- param_grid[kernal_idx, ]
+    loadings_mat <- loadings_mat[kernal_idx]
+    subspaces <- unique(subspaces)
+  
+    # rescale all spaces to the unit hyperplane. now objective functions based
+    # on metric spaces can be used
+    norm_subspaces <- lapply(
+      subspaces,
+      function(subspace) {
+        max_val <- max(subspace[, 1])
+        min_val <- min(subspace[, 1])
+        apply(
+          subspace, 2,
+          function(x) {
+            x / (max_val - min_val)
+          }
         )
-      } else if (clust_method == "hclust") {
-        dist_matrix <- stats::dist(x = subspace, method = "euclidean")
-        hclust_res <- stats::hclust(d = dist_matrix, method = linkage_method)
-        clust_res <- stats::cutree(tree = hclust_res, k = n_centers)
-        sil_width <- cluster::silhouette(
-          clust_res,
-          dist_matrix
-        )[, 3]
       }
-      if (clust_method %in% c("kmeans", "pam") && is.null(clusters)) {
-        sil_width <- cluster::silhouette(
-          clust_res$cluster,
-          stats::dist(subspace)
-        )[, 3]
+    )
+  
+    # remove all subspaces that had loading vectors consisting solely of zeros
+    zero_subs <- do.call(c, lapply(subspaces, function(s) {
+      any(apply(s, 2, function(l) all(l < 1e-6)))
+    }))
+    zero_subs_norm <- do.call(c, lapply(norm_subspaces, function(ns) {
+      any(apply(ns, 2, function(l) all(l < 1e-6)))
+    }))
+    nz_load_idx <- which((zero_subs + zero_subs_norm) == 0)
+    norm_subspaces <- norm_subspaces[nz_load_idx]
+    subspaces <- subspaces[nz_load_idx]
+    param_grid <- param_grid[nz_load_idx, ]
+    loadings_mat <- loadings_mat[nz_load_idx]
+  
+    # get the objective function results for each space from clustering algorithm
+    ave_sil_widths <- do.call(c, lapply(
+      norm_subspaces, function(subspace) {
+        if (!is.null(clusters)) {
+          sil_width <- cluster::silhouette(
+            clusters,
+            stats::dist(subspace)
+          )[, 3]
+        } else if (clust_method == "pam") {
+          clust_res <- cluster::pam(x = subspace, k = n_centers)
+        } else if (clust_method == "kmeans") {
+          clust_res <- stats::kmeans(
+            x = subspace, centers = n_centers,
+            iter.max = max_iter
+          )
+        } else if (clust_method == "hclust") {
+          dist_matrix <- stats::dist(x = subspace, method = "euclidean")
+          hclust_res <- stats::hclust(d = dist_matrix, method = linkage_method)
+          clust_res <- stats::cutree(tree = hclust_res, k = n_centers)
+          sil_width <- cluster::silhouette(
+            clust_res,
+            dist_matrix
+          )[, 3]
+        }
+        if (clust_method %in% c("kmeans", "pam") && is.null(clusters)) {
+          sil_width <- cluster::silhouette(
+            clust_res$cluster,
+            stats::dist(subspace)
+          )[, 3]
+        }
+        mean(sil_width)
       }
-      mean(sil_width)
-    }
-  ))
-
-  # select the best contrastive parameter, and return its covariance matrix,
-  # contrastive parameter, loadings and projection of the target data
-  out <- list(
-    rotation = loadings_mat,
-    x = subspaces,
-    contrast = param_grid[, 2],
-    penalty = param_grid[, 1],
-    ave_sil_widths = ave_sil_widths
-  )
+    ))
+  
+    # select the best contrastive parameter, and return its covariance matrix,
+    # contrastive parameter, loadings and projection of the target data
+    out <- list(
+      rotation = loadings_mat,
+      x = subspaces,
+      contrast = param_grid[, 2],
+      penalty = param_grid[, 1],
+      ave_sil_widths = ave_sil_widths
+    )
+  }
+  
   return(out)
 }
 

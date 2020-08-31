@@ -101,9 +101,9 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
   if (!is.null(clusters)) {
     assertthat::assert_that(is.numeric(clusters))
     assertthat::assert_that(length(clusters) == nrow(target))
-  } else {
+  } else if (length(penalties) != 1 && length(contrasts) != 1) {
     assertthat::assert_that(!is.null(n_centers))
-    assertthat::assert_that(n_centers > 0)
+    assertthat::assert_that(n_centers > 1)
   }
   
   # check that eigendecompostion parameters are positive
