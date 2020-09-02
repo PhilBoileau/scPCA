@@ -213,8 +213,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
     } else if (length(contrasts) == 1 && length(penalties) == 1 &&
                penalties[[1]] != 0) {
       opt_params <- list(
-        rotation = opt_params$rotation[[1]],
-        x = opt_params$x[[1]],
+        rotation = opt_params$rotation,
+        x = opt_params$x,
         contrast = opt_params$contrast,
         penalty = opt_params$penalty
       )

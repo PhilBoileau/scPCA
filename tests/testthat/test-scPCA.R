@@ -134,3 +134,176 @@ test_that("Users can provide cluster labels, bypassing clustering step", {
     clusters = toy_df[, 31]
   ))
 })
+
+test_that("`rotation` and `x` are always a matrices", {
+  
+  # cPCA, only one contrast
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 0,
+  )$x)[1],
+  "matrix")
+  
+  # scPCA, only one contrast and L1 penalty
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 1,
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = 1,
+    penalties = 1,
+  )$x)[1],
+  "matrix")
+  
+  # cPCA, abid et al version
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+    penalties = 0,
+    n_centers = 1,
+    n_medoids = 4
+  )$rotation)[1],
+  "list")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+    penalties = 0,
+    n_centers = 1,
+    n_medoids = 4
+  )$rotation[[1]])[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+    penalties = 0,
+    n_centers = 1,
+    n_medoids = 4
+  )$x)[1],
+  "list")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 10)),
+    penalties = 0,
+    n_centers = 1,
+    n_medoids = 4
+  )$x[[1]])[1],
+  "matrix")
+  
+  # cPCA, Boileau et al
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0,
+    n_centers = 4
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0,
+    n_centers = 4
+  )$x)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0,
+    clusters = toy_df[, 31]
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0,
+    clusters = toy_df[, 31]
+  )$x)[1],
+  "matrix")
+  
+  # scPCA, Boileau et al
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0.1,
+    n_centers = 4
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = 0.1,
+    n_centers = 4
+  )$x)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    clusters = toy_df[, 31]
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    clusters = toy_df[, 31]
+  )$x)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    n_centers = 4
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    n_centers = 4
+  )$x)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    clusters = toy_df[, 31]
+  )$rotation)[1],
+  "matrix")
+  expect_equal(class(scPCA(
+    target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = c(1, 2, 3),
+    penalties = c(0.1, 1),
+    clusters = toy_df[, 31]
+  )$x)[1],
+  "matrix")
+})

@@ -47,3 +47,6 @@
 # Changes in version 1.3.6 (2020-08-30)
 + Fixed issue where n_centers was required when only one penalty and contrast term were provided
 + Users can now pass factors and character vectors to the clusters argument.
+
+# Changes in version 1.3.7 and 1.3.8 (2020-09-01)
++ Minor bug fixes
