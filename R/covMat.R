@@ -16,22 +16,19 @@
 #'
 #' @keywords internal
 covMat <- function(data, center = TRUE, scale = TRUE) {
-  # convert data to a data.frame
-  # NOTE: consider replacing with DataFrame
-  data <- as.data.frame(data)
 
-  # center the data matrix if required
-  if (center) {
-    data <- safeColScale(data, center = TRUE, scale = FALSE)
+  # center and scale the data matrix if required
+  if (center || scale) {
+    data <- safeColScale(data, center = center, scale = scale)
   }
-
-  # scale the matrix if required
-  if (scale) {
-    # scale the data and avoid columns with no variation by small perturbation
-    data <- safeColScale(data, center = FALSE, scale = TRUE)
-  }
-
+  
   # compute the covariance matrix of the data
-  cov_mat <- coop::covar(data)
+  if (class(data)[1] == "DelayedMatrix" || class(data)[1] == "dgCMatrix" ||
+      class(data)[1] == "dgeMatrix") {
+    cov_mat <- 1/(nrow(data)-1) * t(data) %*% data
+    cov_mat <- as.matrix(cov_mat)
+  } else {
+    cov_mat <- coop::covar(data)
+  }
   return(cov_mat)
 }
