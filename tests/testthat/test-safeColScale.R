@@ -9,7 +9,6 @@ set.seed(123)
 target <- toy_df[, -31]
 dgC_target <- as(as.matrix(toy_df[, -31]), "dgCMatrix")
 dm_target <- DelayedArray(toy_df[, -31])
-background <- background_df
 center <- TRUE
 scale <- TRUE
 

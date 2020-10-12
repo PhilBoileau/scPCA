@@ -25,8 +25,8 @@
 #' @return A centered and/or scaled version of the input data.
 #'
 #' @importFrom matrixStats colSds
-#' @importFrom DelayedMatrixStats colMeans2 colSds
 #' @importFrom sparseMatrixStats colMeans2 colSds
+#' @importFrom DelayedMatrixStats colMeans2 colSds
 #' @importFrom DelayedArray t
 #' @importFrom Matrix t
 #' @importFrom assertthat assert_that

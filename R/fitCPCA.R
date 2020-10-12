@@ -82,6 +82,10 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   
   if (num_contrasts == 1) {
     
+    # remove rownames for spaces if not null (due to DelayedMatrix mult)
+    if(!is.null(rownames(spaces[[1]])[1]))
+      rownames(spaces[[1]]) <- NULL
+    
     out <- list(
       rotation = loadings_mat[[1]],
       x = spaces[[1]],
@@ -147,9 +151,23 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   
     # create the lists of contrastive parameter medoids, loadings and projections
     med_index <- which(contrasts %in% contrast_medoids)
+    
+    # remove rownames for spaces if not null (due to DelayedMatrix mult)
+    if(!is.null(rownames(spaces[[1]])[1])) {
+      spaces <- lapply(
+        med_index,
+        function(id) {
+          rownames(spaces[[id]]) <- NULL
+          spaces[[id]]
+        }
+      )
+    } else {
+      spaces <- spaces[med_index]
+    }
+    
     out <- list(
       rotation = loadings_mat[med_index],
-      x = spaces[med_index],
+      x = spaces,
       contrast = contrasts[med_index],
       penalty = rep(0, length(med_index))
     )
@@ -302,9 +320,23 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
 
   # create the lists of contrastive parameter medoids, loadings and projections
   med_index <- which(contrasts %in% contrast_medoids)
+  
+  # remove rownames for spaces if not null (due to DelayedMatrix mult)
+  if(!is.null(dimnames(spaces[[1]])[[1]])) {
+    spaces <- lapply(
+      med_index,
+      function(id) {
+        rownames(spaces[[id]]) <- NULL
+        spaces[[id]]
+      }
+    )
+  } else {
+    spaces <- spaces[med_index]
+  }
+  
   out <- list(
     rotation = loadings_mat[med_index],
-    x = spaces[med_index],
+    x = spaces,
     contrast = contrasts[med_index],
     penalty = rep(0, length(med_index))
   )
