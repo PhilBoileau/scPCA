@@ -46,13 +46,6 @@ test_that(paste0("Only data.frames, tibbles, matrices, sparse matrices and",
     eigdecomp_tol, eigdecomp_iter, n_centers
   ))
   expect_silent(checkArgs(
-    as(as.matrix(toy_df[, 1:30]), "dgeMatrix"),
-    as(as.matrix(background_df), "dgeMatrix"),
-    center, scale, n_eigen, contrasts, penalties,
-    clust_method, linkage_method, clusters,
-    eigdecomp_tol, eigdecomp_iter, n_centers
-  ))
-  expect_silent(checkArgs(
     DelayedArray(toy_df[, 1:30]),
     DelayedArray(background_df),
     center, scale, n_eigen, contrasts, penalties,

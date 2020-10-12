@@ -5,10 +5,12 @@
 #'  \code{\link[base]{scale}} on data with constant variance by inducing adding
 #'  a small perturbation to truncate the values in such columns. It also takes
 #'  the opportunity to be faster than \code{\link[base]{scale}} through relying
-#'  on \pkg{matrixStats} for a key internal computation.
+#'  on \pkg{matrixStats} or \pkg{DelayedMatrixStats}, depending on the type of
+#'  matrix being processed, for a key internal computation.
 #'
 #' @param X An input \code{matrix} to be centered and/or scaled. If \code{X} is
-#'  not of class \code{matrix}, then it must be coercible to such.
+#'  not of class \code{matrix} or \code{DelayedMatrix}, then it must be
+#'  coercible to a \code{matrix}.
 #' @param center A \code{logical} indicating whether to re-center the columns
 #'  of the input \code{X}.
 #' @param scale A \code{logical} indicating whether to re-scale the columns of
@@ -23,6 +25,10 @@
 #' @return A centered and/or scaled version of the input data.
 #'
 #' @importFrom matrixStats colSds
+#' @importFrom DelayedMatrixStats colMeans2 colSds
+#' @importFrom sparseMatrixStats colMeans2 colSds
+#' @importFrom DelayedArray t
+#' @importFrom Matrix t
 #' @importFrom assertthat assert_that
 #'
 #' @keywords internal
@@ -31,6 +37,7 @@ safeColScale <- function(X,
                          scale = TRUE,
                          tol = .Machine$double.eps,
                          eps = 0.01) {
+  
   # check argument types
   assertthat::assert_that(is.logical(center))
   assertthat::assert_that(is.logical(scale))
@@ -38,18 +45,34 @@ safeColScale <- function(X,
   assertthat::assert_that(is.numeric(eps))
 
   # input X must be a matrix for matrixStats
-  if (!is.matrix(X)) X <- as.matrix(X)
+  if (!is.matrix(X) && class(X)[1] != "dgCMatrix" &&
+      class(X)[1] != "DelayedMatrix") {
+    X <- as.matrix(X)
+  }
 
   # compute column means
-  colMeansX <- colMeans(X, na.rm = TRUE)
-
-  # just subtract off zero if not centering
-  if (!center) {
-    colMeansX <- rep(0, length(colMeansX))
+  if (center) {
+    if (is.matrix(X)) {
+      colMeansX <- base::colMeans(X, na.rm = TRUE)
+    } else if (class(X)[1] == "dgCMatrix") {
+      colMeansX <- sparseMatrixStats::colMeans2(X, na.rm = TRUE)
+    } else if (class(X)[1] == "DelayedMatrix") {
+      colMeansX <- DelayedMatrixStats::colMeans2(X, na.rm = TRUE)
+    }
+  } else {
+    # just subtract off zero if not centering
+      colMeansX <- rep(0, ncol(X))
   }
+
   # compute scaling; replace by one if not scaling
   if (scale) {
-    colSdsX <- matrixStats::colSds(X)
+    if (is.matrix(X)) {
+      colSdsX <- matrixStats::colSds(X, na.rm = TRUE)
+    } else if (class(X)[1] == "dgCMatrix") {
+      colSdsX <- sparseMatrixStats::colSds(X, na.rm = TRUE)
+    } else if (class(X)[1] == "DelayedMatrix") {
+      colSdsX <- DelayedMatrixStats::colSds(X, na.rm = TRUE)
+    }
     colSdsX[colSdsX < tol] <- eps
   } else {
     colSdsX <- rep(1, length(colMeansX))
@@ -57,15 +80,17 @@ safeColScale <- function(X,
 
   # compute re-centered and re-scaled output
   # NOTE: there might be a  _faster_ way to do this?
-  stdX <- t((t(X) - colMeansX) / colSdsX)
-
-  # tweak attributes to exactly match output of base::scale
-  if (center) {
-    attr(stdX, "scaled:center") <- colMeansX
+  if (is.matrix(X)) {
+    stdX <- t((t(X)-colMeansX)/colSdsX)
+  } else if (class(X)[1] == "dgCMatrix") {
+    stdX <- Matrix::t((Matrix::t(X) - colMeansX) / colSdsX)
+  } else if (class(X)[1] == "DelayedMatrix") {
+    stdX <- DelayedArray::t((DelayedArray::t(X) - colMeansX) / colSdsX)
   }
-  if (scale) {
-    names(colSdsX) <- names(colMeansX)
-    attr(stdX, "scaled:scale") <- colSdsX
+  
+  # fix issues with DelayedMatrix dimnames
+  if (class(X)[1] == "DelayedArray") {
+    dimnames(X)[[1]] <- NULL
   }
 
   # return output
