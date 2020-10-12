@@ -1,6 +1,7 @@
 context("Test checking of input arguments")
 library(Matrix)
 library(tibble)
+library(DelayedArray)
 
 # set up dummy input for testing
 target_df <- toy_df
@@ -17,7 +18,8 @@ eigdecomp_tol <- 1e-10
 eigdecomp_iter <- 1000
 n_centers <- 2
 
-test_that("Only data.frames, tibbles, matrices, and sparse matrices pass", {
+test_that(paste0("Only data.frames, tibbles, matrices, sparse matrices and",
+                 "DelayedMatrices pass"), {
   expect_silent(checkArgs(
     toy_df[, 1:30], background_df, center,
     scale, n_eigen, contrasts, penalties,
@@ -46,6 +48,13 @@ test_that("Only data.frames, tibbles, matrices, and sparse matrices pass", {
   expect_silent(checkArgs(
     as(as.matrix(toy_df[, 1:30]), "dgeMatrix"),
     as(as.matrix(background_df), "dgeMatrix"),
+    center, scale, n_eigen, contrasts, penalties,
+    clust_method, linkage_method, clusters,
+    eigdecomp_tol, eigdecomp_iter, n_centers
+  ))
+  expect_silent(checkArgs(
+    DelayedArray(toy_df[, 1:30]),
+    DelayedArray(background_df),
     center, scale, n_eigen, contrasts, penalties,
     clust_method, linkage_method, clusters,
     eigdecomp_tol, eigdecomp_iter, n_centers
