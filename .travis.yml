@@ -20,16 +20,17 @@ r:
   - bioc-devel
 
 before_install:
-  - apt-get -y install libmagick++-dev
-  - apt-get -y install librsvg2-dev
-  - apt-get -y install libwebp-dev
-  - apt-get -y install libpoppler-cpp-dev
-  - apt-get -y install libtesseract-dev
-  - apt-get -y install libleptonica-dev
-  - apt-get -y install tesseract-ocr-eng
-  - apt-get -y install libfftw3-dev
-  - apt-get -y install cargo
-  - apt-get -y install Rhdf5lib
+  - sudo apt-get update
+  - sudo apt-get -y install libmagick++-dev
+  - sudo apt-get -y install librsvg2-dev
+  - sudo apt-get -y install libwebp-dev
+  - sudo apt-get -y install libpoppler-cpp-dev
+  - sudo apt-get -y install libtesseract-dev
+  - sudo apt-get -y install libleptonica-dev
+  - sudo apt-get -y install tesseract-ocr-eng
+  - sudo apt-get -y install libfftw3-dev
+  - sudo apt-get -y install cargo
+  - sudo apt-get -y install Rhdf5lib
 
 r_packages:
   - devtools
