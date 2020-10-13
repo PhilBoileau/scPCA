@@ -30,7 +30,6 @@ before_install:
   - sudo apt-get -y install tesseract-ocr-eng
   - sudo apt-get -y install libfftw3-dev
   - sudo apt-get -y install cargo
-  - sudo apt-get -y install Rhdf5lib
 
 r_packages:
   - devtools
@@ -56,6 +55,7 @@ bioc_packages:
   - S4Vectors
   - splatter
   - SingleCellExperiment
+  - Rhdf5lib
   - HDF5Array
   - DelayedArray
   - DelayedMatrixStats
