@@ -20,7 +20,6 @@ r:
   - bioc-devel
 
 before_install:
-  - Rscript -e 'BiocManager::install(ask = FALSE)'
   - apt-get update
   - apt-get -y install libmagick++-dev
   - apt-get -y install librsvg2-dev
