@@ -98,7 +98,7 @@ test_that("The parallelized analog matches the sequential variant exactly", {
     n_eigen, n_medoids, eigdecomp_tol, eigdecomp_iter
   )
   expect_equal(fit, bpfit)
-  expect_equal(dgC_fit, bpfit)
+  expect_equivalent(dgC_fit, bpfit)
   expect_equivalent(dm_fit, bpfit)
 })
 

@@ -76,7 +76,7 @@ fitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   spaces <- lapply(
     seq_len(num_contrasts),
     function(x) {
-      as.matrix(target) %*% loadings_mat[[x]]
+      as.matrix(target %*% loadings_mat[[x]])
     }
   )
   
@@ -259,7 +259,7 @@ bpFitCPCA <- function(target, center, scale, c_contrasts, contrasts, n_eigen,
   spaces <- BiocParallel::bplapply(
     seq_len(num_contrasts),
     function(x) {
-      as.matrix(target) %*% loadings_mat[[x]]
+      as.matrix(target %*% loadings_mat[[x]])
     }
   )
 
