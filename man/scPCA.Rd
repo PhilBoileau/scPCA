@@ -27,11 +27,13 @@ scPCA(
 }
 \arguments{
 \item{target}{The target (experimental) data set, in a standard format such
-as a \code{data.frame} or \code{matrix}.}
+as a \code{data.frame} or \code{matrix}. \code{dgCMatrix} and
+\code{DelayedMatrix} objects are also supported.}
 
 \item{background}{The background data set, in a standard format such as a
 \code{data.frame} or \code{matrix}. The features must match the features of
-the target data set.}
+the target data set. \code{dgCMatrix} and \code{DelayedMatrix} objects are
+also supported.}
 
 \item{center}{A \code{logical} indicating whether the target and background
 data sets' features should be centered to mean zero.}

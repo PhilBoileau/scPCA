@@ -14,7 +14,8 @@ safeColScale(
 }
 \arguments{
 \item{X}{An input \code{matrix} to be centered and/or scaled. If \code{X} is
-not of class \code{matrix}, then it must be coercible to such.}
+not of class \code{matrix} or \code{DelayedMatrix}, then it must be
+coercible to a \code{matrix}.}
 
 \item{center}{A \code{logical} indicating whether to re-center the columns
 of the input \code{X}.}
@@ -39,6 +40,7 @@ A centered and/or scaled version of the input data.
  \code{\link[base]{scale}} on data with constant variance by inducing adding
  a small perturbation to truncate the values in such columns. It also takes
  the opportunity to be faster than \code{\link[base]{scale}} through relying
- on \pkg{matrixStats} for a key internal computation.
+ on \pkg{matrixStats} or \pkg{DelayedMatrixStats}, depending on the type of
+ matrix being processed, for a key internal computation.
 }
 \keyword{internal}

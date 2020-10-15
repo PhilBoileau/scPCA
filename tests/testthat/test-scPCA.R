@@ -1,5 +1,9 @@
 context("Test fitting of sparse contrastive PCA")
 library(BiocParallel)
+library(Matrix)
+library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 test_that("scPCA outputs a list of length 6", {
   cPCA_res <- scPCA(
@@ -12,8 +16,8 @@ test_that("scPCA outputs a list of length 6", {
   expect_equal(length(cPCA_res), 6)
 
   scPCA_res <- scPCA(
-    target = toy_df[, 1:30],
-    background = background_df,
+    target = as(as.matrix(toy_df[, -31]), "dgCMatrix"),
+    background = as(as.matrix(background_df), "dgCMatrix"),
     contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
     penalties = seq(0.1, 1, length.out = 3),
     n_centers = 4, alg = "iterative"
@@ -23,6 +27,15 @@ test_that("scPCA outputs a list of length 6", {
   set.seed(978)
   cv_cPCA_res <- scPCA(
     target = toy_df[, 1:30],
+    background = background_df,
+    contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
+    penalties = 0,
+    n_centers = 4,
+    cv = 2
+  )
+  expect_equal(length(cv_cPCA_res), 6)
+  cv_cPCA_res <- scPCA(
+    target = DelayedArray(toy_df[, 1:30]),
     background = background_df,
     contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
     penalties = 0,
@@ -115,6 +128,12 @@ test_that("n_centers need not be passed when contrasts is a single number", {
     contrasts = 1,
     penalties = 0.1
   ))
+  expect_silent(scPCA(
+    target = as(as.matrix(toy_df[, -31]), "dgCMatrix"),
+    background = as(as.matrix(background_df), "dgCMatrix"),
+    contrasts = 1,
+    penalties = 0.1
+  ))
 })
 
 test_that("Users can provide cluster labels, bypassing clustering step", {
@@ -126,7 +145,7 @@ test_that("Users can provide cluster labels, bypassing clustering step", {
     clusters = toy_df[, 31]
   ))
   expect_silent(scPCA(
-    target = toy_df[, 1:30],
+    target = DelayedArray(toy_df[, 1:30]),
     background = background_df,
     contrasts = exp(seq(log(0.1), log(100), length.out = 5)),
     penalties = seq(0.1, 1, length.out = 3),
@@ -146,8 +165,8 @@ test_that("`rotation` and `x` are always a matrices", {
   )$rotation)[1],
   "matrix")
   expect_equal(class(scPCA(
-    target = toy_df[, 1:30],
-    background = background_df,
+    target = DelayedArray(toy_df[, 1:30]),
+    background = DelayedArray(background_df),
     contrasts = 1,
     penalties = 0,
   )$x)[1],
@@ -251,8 +270,8 @@ test_that("`rotation` and `x` are always a matrices", {
   )$rotation)[1],
   "matrix")
   expect_equal(class(scPCA(
-    target = toy_df[, 1:30],
-    background = background_df,
+    target = DelayedArray(toy_df[, 1:30]),
+    background = DelayedArray(background_df),
     contrasts = c(1, 2, 3),
     penalties = 0.1,
     n_centers = 4
@@ -283,8 +302,8 @@ test_that("`rotation` and `x` are always a matrices", {
   )$rotation)[1],
   "matrix")
   expect_equal(class(scPCA(
-    target = toy_df[, 1:30],
-    background = background_df,
+    target = DelayedArray(toy_df[, 1:30]),
+    background = DelayedArray(background_df),
     contrasts = c(1, 2, 3),
     penalties = c(0.1, 1),
     n_centers = 4
@@ -299,8 +318,8 @@ test_that("`rotation` and `x` are always a matrices", {
   )$rotation)[1],
   "matrix")
   expect_equal(class(scPCA(
-    target = toy_df[, 1:30],
-    background = background_df,
+    target = as(as.matrix(toy_df[, -31]), "dgCMatrix"),
+    background = as(as.matrix(background_df), "dgCMatrix"),
     contrasts = c(1, 2, 3),
     penalties = c(0.1, 1),
     clusters = toy_df[, 31]

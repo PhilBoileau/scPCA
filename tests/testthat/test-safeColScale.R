@@ -1,17 +1,34 @@
 context("Test routines for safe column scaling")
+library(Matrix)
+library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 # initialization of inputs for testing function
 set.seed(123)
 target <- toy_df[, -31]
-background <- background_df
+dgC_target <- as(as.matrix(toy_df[, -31]), "dgCMatrix")
+dm_target <- DelayedArray(toy_df[, -31])
 center <- TRUE
 scale <- TRUE
 
 # unit tests
 test_that("`scale` and `safeColScale` produce the same output", {
   target_safeColScaled <- safeColScale(target, center, scale)
+  dgc_target_safeColScaled <- safeColScale(dgC_target, center, scale)
+  dm_target_safeColScaled <- safeColScale(dm_target, center, scale)
   target_scaled <- scale(target, center, scale)
+  
+  # remove pesky attributed
+  attr(target_scaled, "scaled:center") <- NULL
+  attr(target_scaled, "scaled:scale") <- NULL
+  
   expect_equal(target_scaled, target_safeColScaled)
+  expect_equal(target_scaled, as.matrix(dgc_target_safeColScaled))
+  # DelayedMatrices seem to require rownames, so add some to target_scaled
+  # for comparions purposes
+  dimnames(target_scaled)[[1]] <- dimnames(dm_target_safeColScaled)[[1]]
+  expect_equal(target_scaled, as.matrix(dm_target_safeColScaled))
 })
 
 test_that("`safeColScale` avoid NA in its output even when `scale` fails to", {
@@ -25,6 +42,12 @@ test_that("`safeColScale` avoid NA in its output even when `scale` fails to", {
   # check that safeColScale avoids NAs
   target_safeColScaled <- safeColScale(target, center, scale)
   expect_true(sum(colSums(is.na(target_safeColScaled))) == 0)
+  
+  dgc_target_safeColScaled <- safeColScale(dgC_target, center, scale)
+  expect_true(sum(Matrix::colSums(is.na(dgc_target_safeColScaled))) == 0)
+  
+  dm_target_safeColScaled <- safeColScale(dm_target, center, scale)
+  expect_true(sum(DelayedArray::colSums(is.na(dm_target_safeColScaled))) == 0)
 })
 
 # `safeColScale` is faster than `scale`

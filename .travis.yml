@@ -11,7 +11,7 @@ sudo: required
 cache: packages
 cran: https://cran.rstudio.com
 
-warnings_are_errors: true
+warnings_are_errors: false
 r_build_args: '--no-manual'
 r_check_args: '--no-build-vignettes --no-manual'
 
@@ -20,7 +20,6 @@ r:
   - bioc-devel
 
 before_install:
-  - Rscript -e 'BiocManager::install(ask = FALSE)'
   - sudo apt-get update
   - sudo apt-get -y install libmagick++-dev
   - sudo apt-get -y install librsvg2-dev
@@ -56,6 +55,11 @@ bioc_packages:
   - S4Vectors
   - splatter
   - SingleCellExperiment
+  - Rhdf5lib
+  - HDF5Array
+  - DelayedArray
+  - DelayedMatrixStats
+  - sparseMatrixStats
 
 after_success:
   ## coverage
@@ -68,4 +72,3 @@ on_failure:
 notifications:
   email:
     on_success: change
-    on_failure: change

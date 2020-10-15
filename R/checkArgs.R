@@ -56,15 +56,15 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
     tibble::is_tibble(target) ||
       is.data.frame(target) ||
       is.matrix(target) ||
-      is(target, "dgeMatrix") ||
-      is(target, "dgCMatrix")
+      is(target, "dgCMatrix") ||
+      is(target, "DelayedMatrix")
   )
   assertthat::assert_that(
     tibble::is_tibble(background) ||
       is.data.frame(background) ||
       is.matrix(background) ||
-      is(background, "dgeMatrix") ||
-      is(background, "dgCMatrix")
+      is(background, "dgCMatrix") ||
+      is(background, "DelayedMatrix")
   )
 
   # assert that target and background have the same number of variables

@@ -2,6 +2,8 @@
 
 export(scPCA)
 importFrom(BiocParallel,bplapply)
+importFrom(DelayedArray,t)
+importFrom(Matrix,t)
 importFrom(RSpectra,eigs_sym)
 importFrom(Rdpack,reprompt)
 importFrom(assertthat,assert_that)

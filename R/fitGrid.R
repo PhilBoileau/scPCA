@@ -130,7 +130,7 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
     subspaces <- lapply(
       seq_len(num_contrasts * num_penal),
       function(x) {
-        as.matrix(target) %*% loadings_mat[[x]]
+        as.matrix(target %*% loadings_mat[[x]])
       }
     )
   } else {
@@ -142,12 +142,17 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
     subspaces <- lapply(
       seq_len(num_contrasts * num_penal),
       function(x) {
-        as.matrix(target_valid) %*% loadings_mat[[x]]
+        as.matrix(target_valid %*% loadings_mat[[x]])
       }
     )
   }
 
   if (is.null(n_centers)) {
+    
+    # remove rownames for spaces if not null (due to DelayedMatrix mult)
+    if(!is.null(rownames(subspaces[[1]])[1]))
+      rownames(subspaces[[1]]) <- NULL
+    
     out <- list(
       rotation = loadings_mat[[1]],
       x = subspaces[[1]],
@@ -225,6 +230,17 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
       }
     ))
   
+    # remove rownames for spaces if not null (due to DelayedMatrix mult)
+    if(!is.null(rownames(subspaces[[1]])[1])) {
+      subspaces <- lapply(
+        seq_len(length(subspaces)),
+        function(id) {
+          rownames(subspaces[[id]]) <- NULL
+          subspaces[[id]]
+        }
+      )
+    }
+    
     # select the best contrastive parameter, and return its covariance matrix,
     # contrastive parameter, loadings and projection of the target data
     out <- list(
@@ -376,7 +392,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
     subspaces <- BiocParallel::bplapply(
       seq_len(num_contrasts * num_penal),
       function(x) {
-        as.matrix(target) %*% loadings_mat[[x]]
+        as.matrix(target %*% loadings_mat[[x]])
       }
     )
   } else {
@@ -387,7 +403,7 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
     subspaces <- BiocParallel::bplapply(
       seq_len(num_contrasts * num_penal),
       function(x) {
-        as.matrix(target_valid) %*% loadings_mat[[x]]
+        as.matrix(target_valid %*% loadings_mat[[x]])
       }
     )
   }
@@ -469,6 +485,18 @@ bpFitGrid <- function(target, target_valid = NULL, center, scale,
   )
   ave_sil_widths <- unlist(ave_sil_widths)
 
+  
+  # remove rownames for spaces if not null (due to DelayedMatrix mult)
+  if(!is.null(rownames(subspaces[[1]])[1])) {
+    subspaces <- lapply(
+      seq_len(length(subspaces)),
+      function(id) {
+        rownames(subspaces[[id]]) <- NULL
+        subspaces[[id]]
+      }
+    )
+  }
+  
   # select the best contrastive parameter, and return its covariance matrix,
   # contrastive parameter, loadings and projection of the target data
   out <- list(
