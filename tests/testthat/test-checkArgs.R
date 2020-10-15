@@ -1,7 +1,9 @@
 context("Test checking of input arguments")
-library(Matrix)
 library(tibble)
+library(Matrix)
 library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 # set up dummy input for testing
 target_df <- toy_df

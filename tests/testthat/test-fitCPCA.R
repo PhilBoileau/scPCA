@@ -2,6 +2,8 @@ context("Test fitting of contrastive PCA")
 library(BiocParallel)
 library(Matrix)
 library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 # initialization of inputs for testing function
 target <- toy_df[, -31]

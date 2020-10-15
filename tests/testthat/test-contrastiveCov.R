@@ -2,6 +2,8 @@ context("Test contrastive covariance matrices")
 library(BiocParallel)
 library(Matrix)
 library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 dgC_back <- as(as.matrix(background_df), "dgCMatrix")
 dgC_toy <- as(as.matrix(toy_df[, -31]), "dgCMatrix")

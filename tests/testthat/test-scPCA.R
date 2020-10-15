@@ -1,5 +1,9 @@
 context("Test fitting of sparse contrastive PCA")
 library(BiocParallel)
+library(Matrix)
+library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 test_that("scPCA outputs a list of length 6", {
   cPCA_res <- scPCA(

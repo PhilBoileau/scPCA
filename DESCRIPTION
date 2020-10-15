@@ -43,10 +43,10 @@ Imports:
     RSpectra,
     coop,
     Matrix,
-    DelayedArray,
-    DelayedMatrixStats,
-    sparseMatrixStats
+    DelayedArray
 Suggests:
+    DelayedMatrixStats,
+    sparseMatrixStats,
     testthat (>= 2.1.0),
     covr,
     knitr,

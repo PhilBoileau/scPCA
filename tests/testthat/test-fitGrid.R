@@ -2,6 +2,8 @@ context("Test routine for fitting grid of contrastive/penalization parameters")
 library(BiocParallel)
 library(Matrix)
 library(DelayedArray)
+library(sparseMatrixStats)
+library(DelayedMatrixStats)
 
 # initialization of inputs for testing function
 set.seed(123)
