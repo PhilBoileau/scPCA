@@ -1,14 +1,11 @@
 context("Test routines for safe column scaling")
-library(Matrix)
-library(DelayedArray)
-library(sparseMatrixStats)
-library(DelayedMatrixStats)
 
 # initialization of inputs for testing function
 set.seed(123)
 target <- toy_df[, -31]
 dgC_target <- as(as.matrix(toy_df[, -31]), "dgCMatrix")
-dm_target <- DelayedArray(toy_df[, -31])
+dm_target <- DelayedArray::DelayedArray(toy_df[, -31])
+rownames(dm_target) <- NULL
 center <- TRUE
 scale <- TRUE
 
@@ -25,9 +22,6 @@ test_that("`scale` and `safeColScale` produce the same output", {
   
   expect_equal(target_scaled, target_safeColScaled)
   expect_equal(target_scaled, as.matrix(dgc_target_safeColScaled))
-  # DelayedMatrices seem to require rownames, so add some to target_scaled
-  # for comparions purposes
-  dimnames(target_scaled)[[1]] <- dimnames(dm_target_safeColScaled)[[1]]
   expect_equal(target_scaled, as.matrix(dm_target_safeColScaled))
 })
 

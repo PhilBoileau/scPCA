@@ -13,6 +13,8 @@
 #' @return the covariance matrix of the data.
 #'
 #' @importFrom coop covar
+#' @importFrom Matrix crossprod
+#' @importFrom tibble is_tibble
 #'
 #' @keywords internal
 covMat <- function(data, center = TRUE, scale = TRUE) {
@@ -23,12 +25,11 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
   }
   
   # compute the covariance matrix of the data
-  if (class(data)[1] == "DelayedMatrix" || class(data)[1] == "dgCMatrix" ||
-      class(data)[1] == "dgeMatrix") {
-    cov_mat <- 1/(nrow(data)-1) * t(data) %*% data
-    cov_mat <- as.matrix(cov_mat)
-  } else {
+  if (is.matrix(data) || is.data.frame(data) || is_tibble(data)) {
     cov_mat <- coop::covar(data)
+  } else {
+    cov_mat <- 1/(nrow(data)-1) * Matrix::crossprod(data)
+    cov_mat <- as.matrix(cov_mat)
   }
   return(cov_mat)
 }
