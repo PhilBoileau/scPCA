@@ -2,7 +2,8 @@
 
 export(scPCA)
 importFrom(BiocParallel,bplapply)
-importFrom(DelayedArray,t)
+importFrom(Matrix,colMeans)
+importFrom(Matrix,crossprod)
 importFrom(Matrix,t)
 importFrom(RSpectra,eigs_sym)
 importFrom(Rdpack,reprompt)

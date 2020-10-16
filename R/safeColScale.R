@@ -25,8 +25,7 @@
 #' @return A centered and/or scaled version of the input data.
 #'
 #' @importFrom matrixStats colSds
-#' @importFrom Matrix t
-#' @importFrom DelayedArray t
+#' @importFrom Matrix t colMeans
 #' @importFrom assertthat assert_that
 #'
 #' @keywords internal
@@ -50,16 +49,10 @@ safeColScale <- function(X,
 
   # compute column means
   if (center) {
-    if (is.matrix(X)) {
-      colMeansX <- base::colMeans(X, na.rm = TRUE)
-    } else if (class(X)[1] == "dgCMatrix") {
-      colMeansX <- sparseMatrixStats::colMeans2(X, na.rm = TRUE)
-    } else if (class(X)[1] == "DelayedMatrix") {
-      colMeansX <- DelayedMatrixStats::colMeans2(X, na.rm = TRUE)
-    }
+    colMeansX <- Matrix::colMeans(X, na.rm = TRUE)
   } else {
     # just subtract off zero if not centering
-      colMeansX <- rep(0, ncol(X))
+    colMeansX <- rep(0, ncol(X))
   }
 
   # compute scaling; replace by one if not scaling
@@ -78,18 +71,7 @@ safeColScale <- function(X,
 
   # compute re-centered and re-scaled output
   # NOTE: there might be a  _faster_ way to do this?
-  if (is.matrix(X)) {
-    stdX <- t((t(X)-colMeansX)/colSdsX)
-  } else if (class(X)[1] == "dgCMatrix") {
-    stdX <- Matrix::t((Matrix::t(X) - colMeansX) / colSdsX)
-  } else if (class(X)[1] == "DelayedMatrix") {
-    stdX <- DelayedArray::t((DelayedArray::t(X) - colMeansX) / colSdsX)
-  }
-  
-  # fix issues with DelayedMatrix dimnames
-  if (class(X)[1] == "DelayedArray") {
-    dimnames(X)[[1]] <- NULL
-  }
+  stdX <- t((t(X)-colMeansX)/colSdsX)
 
   # return output
   return(stdX)

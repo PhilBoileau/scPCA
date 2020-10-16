@@ -53,3 +53,6 @@
 
 # Changes in version 1.3.9 (2020-10-12)
 + scPCA now accepts DelayedMatrix objects as target and background datasets.
+
+# Changes in version 1.3.10 (2020-10-16)
++ Implementing suggested improvements from Aaron Lun
