@@ -20,15 +20,17 @@
 covMat <- function(data, center = TRUE, scale = TRUE) {
 
   # center and scale the data matrix if required
-  if (center || scale) {
-    data <- safeColScale(data, center = center, scale = scale)
+  if (scale) {
+    data <- safeColScale(data, center = TRUE, scale = scale)
+  } else {
+    data <- safeColScale(data, center = TRUE, scale = FALSE)
   }
   
   # compute the covariance matrix of the data
   if (is.matrix(data) || is.data.frame(data) || is_tibble(data)) {
     cov_mat <- coop::covar(data)
   } else {
-    cov_mat <- 1/(nrow(data)-1) * Matrix::crossprod(data)
+    cov_mat <- 1 / (nrow(data) - 1) * Matrix::crossprod(data)
     cov_mat <- as.matrix(cov_mat)
   }
   return(cov_mat)
