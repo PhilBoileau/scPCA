@@ -23,7 +23,7 @@ Description: A toolbox for sparse contrastive principal component analysis
     and interpretability of sparse PCA with contrastive PCA's ability to
     disentangle biological signal from unwanted variation through the use of
     control data. Also implements and extends cPCA.
-Depends: R (>= 3.6)
+Depends: R (>= 4.1.0)
 Imports:
     stats,
     methods,
