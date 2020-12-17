@@ -46,6 +46,7 @@ r_packages:
 r_github_packages:
   - r-lib/sessioninfo
   - r-lib/covr
+  - LTLA/ScaledMatrix
 
 bioc_packages:
   - BiocStyle
@@ -60,6 +61,7 @@ bioc_packages:
   - DelayedArray
   - DelayedMatrixStats
   - sparseMatrixStats
+  - MatrixGenerics
 
 after_success:
   ## coverage
