@@ -17,7 +17,6 @@ r_check_args: '--no-build-vignettes --no-manual'
 
 r:
   - bioc-release
-  - bioc-devel
 
 before_install:
   - sudo apt-get update
@@ -32,6 +31,7 @@ before_install:
   - sudo apt-get -y install cargo
 
 r_packages:
+  - gert
   - devtools
   - covr
   - BiocManager
