@@ -56,3 +56,9 @@
 
 # Changes in version 1.3.10 (2020-10-16)
 + Implementing suggested improvements from Aaron Lun
+
+# Changes in version 1.5.1 (2020-12-17)
++ `scPCA` and other internal functions may now take advantage of the
+  `ScaledMatrix` object class. This allows more computationally efficient
+  contrastive covariance matrix estimation when analyzing large datasets.
++ `safeColScale` now used `MatrixGenerics` to handle feature standardization.

@@ -4,7 +4,7 @@
 \alias{covMat}
 \title{Compute Sample Covariance Matrix}
 \usage{
-covMat(data, center = TRUE, scale = TRUE)
+covMat(data, center = TRUE, scale = TRUE, scaled_matrix = FALSE)
 }
 \arguments{
 \item{data}{The data for which to compute the sample covariance matrix.}
@@ -14,6 +14,12 @@ data sets should be centered to mean zero.}
 
 \item{scale}{A \code{logical} indicating whether the target and background
 data sets should be scaled to unit variance.}
+
+\item{scaled_matrix}{A \code{logical} indicating whether to output a
+\code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+procedure is delayed until later, permitting more efficient matrix
+multiplication and row or column sums downstream. However, this comes at the
+at the cost of numerical precision. Defaults to \code{FALSE}.}
 }
 \value{
 the covariance matrix of the data.

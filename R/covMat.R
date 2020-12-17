@@ -9,6 +9,11 @@
 #'  data sets should be centered to mean zero.
 #' @param scale A \code{logical} indicating whether the target and background
 #'  data sets should be scaled to unit variance.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision. Defaults to \code{FALSE}.
 #'
 #' @return the covariance matrix of the data.
 #'
@@ -17,15 +22,17 @@
 #' @importFrom tibble is_tibble
 #'
 #' @keywords internal
-covMat <- function(data, center = TRUE, scale = TRUE) {
+covMat <- function(data, center = TRUE, scale = TRUE, scaled_matrix = FALSE) {
 
   # center and scale the data matrix if required
   if (scale) {
-    data <- safeColScale(data, center = TRUE, scale = scale)
+    data <- safeColScale(data, center = TRUE, scale = TRUE,
+                         scaled_matrix = scaled_matrix)
   } else {
-    data <- safeColScale(data, center = TRUE, scale = FALSE)
+    data <- safeColScale(data, center = TRUE, scale = FALSE,
+                         scaled_matrix = scaled_matrix)
   }
-  
+
   # compute the covariance matrix of the data
   if (is.matrix(data) || is.data.frame(data) || is_tibble(data)) {
     cov_mat <- coop::covar(data)

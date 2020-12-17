@@ -22,7 +22,8 @@ scPCA(
   parallel = FALSE,
   clusters = NULL,
   eigdecomp_tol = 1e-10,
-  eigdecomp_iter = 1000
+  eigdecomp_iter = 1000,
+  scaled_matrix = FALSE
 )
 }
 \arguments{
@@ -112,6 +113,12 @@ eigendecompositon calculations. Defaults to \code{1e-10}.}
 \item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
 interations performed by eigendecompositon calculations. Defaults to
 \code{1000}.}
+
+\item{scaled_matrix}{A \code{logical} indicating whether to output a
+\code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+procedure is delayed until later, permitting more efficient matrix
+multiplication and row or column sums downstream. However, this comes at the
+at the cost of numerical precision. Defaults to \code{FALSE}.}
 }
 \value{
 A list containing the following components:
@@ -136,7 +143,7 @@ Given target and background data frames or matrices,
  analysis (scPCA) of the target data for a given number of eigenvectors, a
  vector of real-valued contrast parameters, and a vector of sparsity inducing
  penalty terms.
- 
+
  If instead you wish to perform contrastive principal component analysis
  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
  \code{n_centers} parameter is larger than one, the automated hyperparameter

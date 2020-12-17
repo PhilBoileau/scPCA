@@ -31,7 +31,7 @@ branches:
 
 environment:
   global:
-    WARNINGS_ARE_ERRORS: 0
+    WARNINGS_ARE_ERRORS:
     _R_CHECK_FORCE_SUGGESTS_: false
     USE_RTOOLS: true
     PKGTYPE: both
@@ -43,8 +43,8 @@ environment:
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r base64 BiocManager testthat knitr RSpectra coop matrixStats elasticnet sparsepca dplyr purrr Rdpack kernlab origami ggpubr microbenchmark Matrix
-  - travis-tool.sh install_github r-lib/remotes r-lib/covr Bioconductor/HDF5Array
-  - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics S4Vectors DelayedArray DelayedMatrixStats sparseMatrixStats splatter SingleCellExperiment
+  - travis-tool.sh install_github r-lib/remotes r-lib/covr Bioconductor/HDF5Array LTLA/ScaledMatrix
+  - travis-tool.sh install_bioc BiocStyle BiocCheck BiocGenerics S4Vectors DelayedArray DelayedMatrixStats sparseMatrixStats splatter SingleCellExperiment MatrixGenerics
 
 test_script:
   - travis-tool.sh run_tests

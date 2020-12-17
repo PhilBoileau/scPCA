@@ -21,10 +21,16 @@
 #' @param eps The desired lower bound of the estimated variance for a given
 #'  column. When the lowest estimate falls below \code{tol}, it is truncated
 #'  to the value specified in this argument. The default is 0.01.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision. Defaults to \code{FALSE}.
 #'
 #' @return A centered and/or scaled version of the input data.
 #'
-#' @importFrom matrixStats colSds
+#' @importFrom MatrixGenerics colSds
+#' @import ScaledMatrix
 #' @importFrom Matrix t colMeans
 #' @importFrom assertthat assert_that
 #'
@@ -33,13 +39,15 @@ safeColScale <- function(X,
                          center = TRUE,
                          scale = TRUE,
                          tol = .Machine$double.eps,
-                         eps = 0.01) {
-  
+                         eps = 0.01,
+                         scaled_matrix = FALSE) {
+
   # check argument types
   assertthat::assert_that(is.logical(center))
   assertthat::assert_that(is.logical(scale))
   assertthat::assert_that(is.numeric(tol))
   assertthat::assert_that(is.numeric(eps))
+  assertthat::assert_that(is.logical(scaled_matrix))
 
   # input X must be a matrix for matrixStats
   if (!is.matrix(X) && class(X)[1] != "dgCMatrix" &&
@@ -47,7 +55,7 @@ safeColScale <- function(X,
     X <- as.matrix(X)
   }
 
-  # compute column means
+  # center if required
   if (center) {
     colMeansX <- Matrix::colMeans(X, na.rm = TRUE)
   } else {
@@ -55,14 +63,10 @@ safeColScale <- function(X,
     colMeansX <- rep(0, ncol(X))
   }
 
-  # compute scaling; replace by one if not scaling
+  # scale if required
   if (scale) {
-    if (is.matrix(X)) {
-      colSdsX <- matrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "dgCMatrix") {
-      colSdsX <- sparseMatrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "DelayedMatrix") {
-      colSdsX <- DelayedMatrixStats::colSds(X, na.rm = TRUE)
+    if (is.matrix(X) || class(X)[1] %in% c("dgCMatrix", "DelayedMatrix")) {
+      colSdsX <- MatrixGenerics::colSds(X, na.rm = TRUE)
     }
     colSdsX[colSdsX < tol] <- eps
   } else {
@@ -70,8 +74,11 @@ safeColScale <- function(X,
   }
 
   # compute re-centered and re-scaled output
-  # NOTE: there might be a  _faster_ way to do this?
-  stdX <- t((t(X)-colMeansX)/colSdsX)
+  if (scaled_matrix) {
+    stdX <- ScaledMatrix::ScaledMatrix(X, center = colMeansX, scale = colSdsX)
+  } else {
+    stdX <- t((t(X) - colMeansX) / colSdsX)
+  }
 
   # return output
   return(stdX)
