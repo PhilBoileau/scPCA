@@ -44,7 +44,8 @@ Imports:
     coop,
     Matrix,
     DelayedArray,
-    ScaledMatrix
+    ScaledMatrix,
+    MatrixGenerics
 Suggests:
     DelayedMatrixStats,
     sparseMatrixStats,

@@ -29,7 +29,7 @@
 #'
 #' @return A centered and/or scaled version of the input data.
 #'
-#' @importFrom matrixStats colSds
+#' @importFrom MatrixGenerics colSds
 #' @import ScaledMatrix
 #' @importFrom Matrix t colMeans
 #' @importFrom assertthat assert_that
@@ -65,12 +65,8 @@ safeColScale <- function(X,
 
   # scale if required
   if (scale) {
-    if (is.matrix(X)) {
-      colSdsX <- matrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "dgCMatrix") {
-      colSdsX <- sparseMatrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "DelayedMatrix") {
-      colSdsX <- DelayedMatrixStats::colSds(X, na.rm = TRUE)
+    if (is.matrix(X) || class(X)[1] %in% c("dgCMatrix", "DelayedMatrix")) {
+      colSdsX <- MatrixGenerics::colSds(X, na.rm = TRUE)
     }
     colSdsX[colSdsX < tol] <- eps
   } else {
