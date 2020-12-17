@@ -17,7 +17,8 @@ checkArgs(
   clusters,
   eigdecomp_tol,
   eigdecomp_iter,
-  n_centers
+  n_centers,
+  scaled_matrix
 )
 }
 \arguments{
@@ -66,6 +67,12 @@ interations performed by eigendecompositon calculations.}
 clustering algorithm. If set to 1, cPCA, as first proposed by
 \insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
 what the \code{penalties} argument is set to.}
+
+\item{scaled_matrix}{A \code{logical} indicating whether to output a
+\code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+procedure is delayed until later, permitting more efficient matrix
+multiplication and row or column sums downstream. However, this comes at the
+at the cost of numerical precision.}
 }
 \value{
 Whether all argument conditions are satisfied

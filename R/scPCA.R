@@ -5,7 +5,7 @@
 #'  analysis (scPCA) of the target data for a given number of eigenvectors, a
 #'  vector of real-valued contrast parameters, and a vector of sparsity inducing
 #'  penalty terms.
-#'  
+#'
 #'  If instead you wish to perform contrastive principal component analysis
 #'  (cPCA), set the \code{penalties} argument to \code{0}. So long as the
 #'  \code{n_centers} parameter is larger than one, the automated hyperparameter
@@ -83,6 +83,11 @@
 #' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
 #'  interations performed by eigendecompositon calculations. Defaults to
 #'  \code{1000}.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision. Defaults to \code{FALSE}.
 #'
 #' @return A list containing the following components:
 #'   \itemize{
@@ -109,7 +114,7 @@
 #'
 #' @references
 #'   \insertAllCited{}
-#'   
+#'
 #' @export
 #'
 #' @examples
@@ -156,7 +161,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
                   clust_method = c("kmeans", "pam", "hclust"),
                   n_centers = NULL, max_iter = 10, linkage_method = "complete",
                   n_medoids = 8, parallel = FALSE, clusters = NULL,
-                  eigdecomp_tol = 1e-10, eigdecomp_iter = 1000) {
+                  eigdecomp_tol = 1e-10, eigdecomp_iter = 1000,
+                  scaled_matrix = FALSE) {
   # set defaults
   clust_method <- match.arg(clust_method)
   alg <- match.arg(alg)
@@ -165,13 +171,14 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
   checkArgs(
     target, background, center, scale, n_eigen,
     contrasts, penalties, clust_method, linkage_method,
-    clusters, eigdecomp_tol, eigdecomp_iter, n_centers
+    clusters, eigdecomp_tol, eigdecomp_iter, n_centers,
+    scaled_matrix
   )
 
   if (!is.null(clusters)) {
     # set a dummy value for clusters when cluster labels are passed in
     n_centers <- 2
-    
+
     # coerce clusters argument to an integer
     if (is.factor(clusters)) {
       clusters <- as.numeric(clusters)
@@ -198,7 +205,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel,
       clusters = clusters,
       eigdecomp_tol = eigdecomp_tol,
-      eigdecomp_iter = eigdecomp_iter
+      eigdecomp_iter = eigdecomp_iter,
+      scaled_matrix = scaled_matrix
     )
     if (length(contrasts) == 1 && length(penalties) == 1 &&
         penalties[[1]] == 0) {
@@ -258,6 +266,7 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       clusters = clusters,
       eigdecomp_tol = eigdecomp_tol,
       eigdecomp_iter = eigdecomp_iter,
+      scaled_matrix = scaled_matrix,
       use_future = FALSE,
       .combine = FALSE
     )
@@ -301,7 +310,8 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
       parallel = parallel,
       clusters = clusters,
       eigdecomp_tol = eigdecomp_tol,
-      eigdecomp_iter = eigdecomp_iter
+      eigdecomp_iter = eigdecomp_iter,
+      scaled_matrix = scaled_matrix
     )
     if (n_centers > 1 && length(penalties) == 1 && penalties[1] == 0) {
       opt_params <- list(
@@ -392,6 +402,11 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
 #'  interations performed by eigendecompositon calculations. Defaults to
 #'  \code{1000}.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision.
 #'
 #' @return Output structure matching either that of \code{\link{fitCPCA}} or
 #'  \code{\link{fitGrid}} (or their parallelized variants, namely either
@@ -399,19 +414,20 @@ scPCA <- function(target, background, center = TRUE, scale = FALSE,
 #'
 #' @references
 #'   \insertAllCited{}
-#'   
+#'
 #' @keywords internal
 selectParams <- function(target, background, center, scale, n_eigen, alg,
                          contrasts, penalties, clust_method, n_centers,
                          max_iter, linkage_method, n_medoids, parallel,
-                         clusters, eigdecomp_tol, eigdecomp_iter) {
-  
+                         clusters, eigdecomp_tol, eigdecomp_iter,
+                         scaled_matrix) {
+
   # call parallelized function variants if so requested
   if (!parallel || (length(penalties) == 1 && length(contrasts) == 1)) {
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = target, background = background, contrasts = contrasts,
-      center = center, scale = scale
+      center = center, scale = scale, scaled_matrix = scaled_matrix
     )
     if (length(penalties) == 1 && penalties[1] != 0 && length(contrasts) == 1) {
       opt_params <- fitGrid(
@@ -446,7 +462,7 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
     # create contrastive covariance matrices
     c_contrasts <- bpContrastiveCov(
       target = target, background = background, contrasts = contrasts,
-      center = center, scale = scale
+      center = center, scale = scale, scaled_matrix = scaled_matrix
     )
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(
@@ -531,6 +547,11 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
 #'  interations performed by eigendecompositon calculations. Defaults to
 #'  \code{1000}.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision.
 #'
 #' @importFrom origami training validation
 #'
@@ -540,13 +561,14 @@ selectParams <- function(target, background, center, scale, n_eigen, alg,
 #'
 #' @references
 #'   \insertAllCited{}
-#'   
+#'
 #' @keywords internal
 cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
                            alg = alg, contrasts, penalties, clust_method,
                            n_centers, max_iter, linkage_method, n_medoids,
-                           parallel, clusters, eigdecomp_tol, eigdecomp_iter) {
-  
+                           parallel, clusters, eigdecomp_tol, eigdecomp_iter,
+                           scaled_matrix) {
+
   # make training and validation folds
   train_target <- origami::training(target, fold$target)
   valid_target <- origami::validation(target, fold$target)
@@ -557,7 +579,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
     # create contrastive covariance matrices
     c_contrasts <- contrastiveCov(
       target = train_target, background = train_background,
-      contrasts = contrasts, center = center, scale = scale
+      contrasts = contrasts, center = center, scale = scale,
+      scaled_matrix = scaled_matrix
     )
     if (n_centers == 1) {
       opt_params <- fitCPCA(
@@ -590,7 +613,8 @@ cvSelectParams <- function(fold, target, background, center, scale, n_eigen,
     # create contrastive covariance matrices
     c_contrasts <- bpContrastiveCov(
       target = train_target, background = train_background,
-      contrasts = contrasts, center = center, scale = scale
+      contrasts = contrasts, center = center, scale = scale,
+      scaled_matrix = scaled_matrix
     )
     if (n_centers == 1) {
       opt_params <- bpFitCPCA(

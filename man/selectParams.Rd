@@ -21,7 +21,8 @@ selectParams(
   parallel,
   clusters,
   eigdecomp_tol,
-  eigdecomp_iter
+  eigdecomp_iter,
+  scaled_matrix
 )
 }
 \arguments{
@@ -92,6 +93,12 @@ eigendecompositon calculations. Defaults to \code{1e-10}.}
 \item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
 interations performed by eigendecompositon calculations. Defaults to
 \code{1000}.}
+
+\item{scaled_matrix}{A \code{logical} indicating whether to output a
+\code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+procedure is delayed until later, permitting more efficient matrix
+multiplication and row or column sums downstream. However, this comes at the
+at the cost of numerical precision.}
 }
 \value{
 Output structure matching either that of \code{\link{fitCPCA}} or

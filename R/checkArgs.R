@@ -36,6 +36,11 @@
 #'  clustering algorithm. If set to 1, cPCA, as first proposed by
 #'  \insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
 #'  what the \code{penalties} argument is set to.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision.
 #'
 #' @importFrom methods is
 #' @importFrom assertthat assert_that see_if is.count is.flag
@@ -49,8 +54,8 @@
 #' @return Whether all argument conditions are satisfied
 checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
                       penalties, clust_method, linkage_method, clusters,
-                      eigdecomp_tol, eigdecomp_iter, n_centers) {
-  
+                      eigdecomp_tol, eigdecomp_iter, n_centers, scaled_matrix) {
+
   # assert that the target and background data frames are of the right class
   assertthat::assert_that(
     tibble::is_tibble(target) ||
@@ -96,7 +101,7 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
   if (clust_method == "hclust") {
     assertthat::assert_that(linkage_method != "ward.D")
   }
-  
+
   # check that the clusters argument has the same length as the target
   if (!is.null(clusters)) {
     assertthat::assert_that(length(clusters) == nrow(target))
@@ -104,10 +109,13 @@ checkArgs <- function(target, background, center, scale, n_eigen, contrasts,
     assertthat::assert_that(!is.null(n_centers))
     assertthat::assert_that(n_centers > 1)
   }
-  
+
   # check that eigendecompostion parameters are positive
   assertthat::assert_that(is.numeric(eigdecomp_tol))
   assertthat::assert_that(eigdecomp_tol > 0)
   assertthat::assert_that(is.numeric(eigdecomp_iter))
   assertthat::assert_that(eigdecomp_iter > 0)
+
+  # check the scaled matrix argument
+  assertthat::assert_that(assertthat::is.flag(scaled_matrix))
 }
