@@ -9,7 +9,8 @@ safeColScale(
   center = TRUE,
   scale = TRUE,
   tol = .Machine$double.eps,
-  eps = 0.01
+  eps = 0.01,
+  scaled_matrix = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,12 @@ set to \code{double.eps} of machine precision \code{.Machine}.}
 \item{eps}{The desired lower bound of the estimated variance for a given
 column. When the lowest estimate falls below \code{tol}, it is truncated
 to the value specified in this argument. The default is 0.01.}
+
+\item{scaled_matrix}{A \code{logical} indicating whether to output a
+\code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+procedure is delayed until later, permitting more efficient matrix
+multiplication and row or column sums downstream. However, this comes at the
+at the cost of numerical precision. Defaults to \code{FALSE}.}
 }
 \value{
 A centered and/or scaled version of the input data.

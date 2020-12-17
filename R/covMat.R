@@ -25,7 +25,7 @@ covMat <- function(data, center = TRUE, scale = TRUE) {
   } else {
     data <- safeColScale(data, center = TRUE, scale = FALSE)
   }
-  
+
   # compute the covariance matrix of the data
   if (is.matrix(data) || is.data.frame(data) || is_tibble(data)) {
     cov_mat <- coop::covar(data)

@@ -11,6 +11,11 @@
 #' @param X An input \code{matrix} to be centered and/or scaled. If \code{X} is
 #'  not of class \code{matrix} or \code{DelayedMatrix}, then it must be
 #'  coercible to a \code{matrix}.
+#' @param scaled_matrix A \code{logical} indicating whether to output a
+#'  \code{\link[ScaledMatrix]{ScaledMatrix}} object. The centering and scaling
+#'  procedure is delayed until later, permitting more efficient matrix
+#'  multiplication and row or column sums downstream. However, this comes at the
+#'  at the cost of numerical precision. Defaults to \code{FALSE}.
 #' @param center A \code{logical} indicating whether to re-center the columns
 #'  of the input \code{X}.
 #' @param scale A \code{logical} indicating whether to re-scale the columns of
@@ -25,6 +30,7 @@
 #' @return A centered and/or scaled version of the input data.
 #'
 #' @importFrom matrixStats colSds
+#' @import ScaledMatrix
 #' @importFrom Matrix t colMeans
 #' @importFrom assertthat assert_that
 #'
@@ -33,8 +39,9 @@ safeColScale <- function(X,
                          center = TRUE,
                          scale = TRUE,
                          tol = .Machine$double.eps,
-                         eps = 0.01) {
-  
+                         eps = 0.01,
+                         scaled_matrix = FALSE) {
+
   # check argument types
   assertthat::assert_that(is.logical(center))
   assertthat::assert_that(is.logical(scale))
@@ -47,31 +54,41 @@ safeColScale <- function(X,
     X <- as.matrix(X)
   }
 
-  # compute column means
-  if (center) {
-    colMeansX <- Matrix::colMeans(X, na.rm = TRUE)
+  # center and scale matrix, if necessary
+  if (scaled_matrix) {
+    # output a ScaledMatrix object, which delays centering and scaling 
+    stdX <- ScaledMatrix::ScaledMatrix(X, center = center, scale = scale)
+    # set columns with zero variance to 0 -- all cols should be centered anyways
+    stdX[, which(is.na(colSums(stdX)))] <- 0
   } else {
-    # just subtract off zero if not centering
-    colMeansX <- rep(0, ncol(X))
-  }
 
-  # compute scaling; replace by one if not scaling
-  if (scale) {
-    if (is.matrix(X)) {
-      colSdsX <- matrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "dgCMatrix") {
-      colSdsX <- sparseMatrixStats::colSds(X, na.rm = TRUE)
-    } else if (class(X)[1] == "DelayedMatrix") {
-      colSdsX <- DelayedMatrixStats::colSds(X, na.rm = TRUE)
+    # center if required
+    if (center) {
+      colMeansX <- Matrix::colMeans(X, na.rm = TRUE)
+    } else {
+      # just subtract off zero if not centering
+      colMeansX <- rep(0, ncol(X))
     }
-    colSdsX[colSdsX < tol] <- eps
-  } else {
-    colSdsX <- rep(1, length(colMeansX))
-  }
 
-  # compute re-centered and re-scaled output
-  # NOTE: there might be a  _faster_ way to do this?
-  stdX <- t((t(X)-colMeansX)/colSdsX)
+    # scale if required
+    if (scale) {
+      if (is.matrix(X)) {
+        colSdsX <- matrixStats::colSds(X, na.rm = TRUE)
+      } else if (class(X)[1] == "dgCMatrix") {
+        colSdsX <- sparseMatrixStats::colSds(X, na.rm = TRUE)
+      } else if (class(X)[1] == "DelayedMatrix") {
+        colSdsX <- DelayedMatrixStats::colSds(X, na.rm = TRUE)
+      }
+      colSdsX[colSdsX < tol] <- eps
+    } else {
+      colSdsX <- rep(1, length(colMeansX))
+    }
+
+    # compute re-centered and re-scaled output
+    # NOTE: there might be a  _faster_ way to do this?
+    stdX <- t((t(X) - colMeansX) / colSdsX)
+
+  }
 
   # return output
   return(stdX)

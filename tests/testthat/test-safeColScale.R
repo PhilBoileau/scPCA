@@ -14,15 +14,19 @@ test_that("`scale` and `safeColScale` produce the same output", {
   target_safeColScaled <- safeColScale(target, center, scale)
   dgc_target_safeColScaled <- safeColScale(dgC_target, center, scale)
   dm_target_safeColScaled <- safeColScale(dm_target, center, scale)
+  sm_target_safeColScaled <- safeColScale(target, center, scale,
+                                          scaled_matrix = TRUE)
   target_scaled <- scale(target, center, scale)
-  
+
   # remove pesky attributed
   attr(target_scaled, "scaled:center") <- NULL
   attr(target_scaled, "scaled:scale") <- NULL
-  
+
   expect_equal(target_scaled, target_safeColScaled)
   expect_equal(target_scaled, as.matrix(dgc_target_safeColScaled))
   expect_equal(target_scaled, as.matrix(dm_target_safeColScaled))
+  expect_equal(round(target_scaled, 6),
+               round(as.matrix(sm_target_safeColScaled), 6))
 })
 
 test_that("`safeColScale` avoid NA in its output even when `scale` fails to", {
@@ -36,12 +40,17 @@ test_that("`safeColScale` avoid NA in its output even when `scale` fails to", {
   # check that safeColScale avoids NAs
   target_safeColScaled <- safeColScale(target, center, scale)
   expect_true(sum(colSums(is.na(target_safeColScaled))) == 0)
-  
+
   dgc_target_safeColScaled <- safeColScale(dgC_target, center, scale)
   expect_true(sum(Matrix::colSums(is.na(dgc_target_safeColScaled))) == 0)
-  
+
   dm_target_safeColScaled <- safeColScale(dm_target, center, scale)
   expect_true(sum(DelayedArray::colSums(is.na(dm_target_safeColScaled))) == 0)
+
+  sm_target_safeColScaled <- safeColScale(target, center, scale,
+                                          scaled_matrix = TRUE)
+
+  expect_true(sum(colSums(is.na(sm_target_safeColScaled))) == 0)
 })
 
 # `safeColScale` is faster than `scale`
