@@ -22,6 +22,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y install libmagick++-dev
   - sudo apt-get -y install librsvg2-dev
+  - sudo apt-get -y install libgit2-dev
   - sudo apt-get -y install libwebp-dev
   - sudo apt-get -y install libpoppler-cpp-dev
   - sudo apt-get -y install libtesseract-dev
