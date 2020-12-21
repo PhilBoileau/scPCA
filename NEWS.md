@@ -62,3 +62,6 @@
   `ScaledMatrix` object class. This allows more computationally efficient
   contrastive covariance matrix estimation when analyzing large datasets.
 + `safeColScale` now used `MatrixGenerics` to handle feature standardization.
+
+# Changes in version 1.5.2 (2020-12-21)
++ Adding `LTLA/ScaledMatrix` to "Remotes" section of `DESCRIPTION`.

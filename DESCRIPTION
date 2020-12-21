@@ -1,6 +1,6 @@
 Package: scPCA
 Title: Sparse Contrastive Principal Component Analysis
-Version: 1.5.1
+Version: 1.5.2
 Authors@R: c(
     person(given = "Philippe",
            family = "Boileau",
@@ -59,6 +59,8 @@ Suggests:
     splatter,
     SingleCellExperiment,
     microbenchmark
+Remotes:
+  LTLA/ScaledMatrix
 License: MIT + file LICENSE
 URL: https://github.com/PhilBoileau/scPCA
 BugReports: https://github.com/PhilBoileau/scPCA/issues
