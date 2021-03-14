@@ -1,0 +1,14 @@
+template:
+  params:
+    bootswatch: readable
+
+reference:
+  - title: "Apply scPCA"
+    desc: >
+      A function for (sparse) contrastive principal component analysis.
+  - contents:
+    - scPCA
+  - title: "Toy Datasets"
+  - contents:
+    - toy_df
+    - background_df

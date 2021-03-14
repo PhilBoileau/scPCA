@@ -205,7 +205,7 @@ non-zero loadings, in terms of interpretability. As with cPCA, the scPCA
 algorithm has demonstrated its insensitivity to reasonable choices of
 `n_centers` [@boileau2020].
 
-```{r scPCA_sim}
+```{r scPCA_sim, warning=FALSE}
 # run scPCA for using 40 logarithmically seperated contrastive parameter values
 # and possible 20 L1 penalty terms
 scpca_sim <- scPCA(target = toy_df[, 1:30],
@@ -229,9 +229,11 @@ p_scpca
 
 
 # create the loadings comparison plot
+scpca_sim$rotation[, 1] <- -scpca_sim$rotation[, 1]
 load_diff_df <- bind_rows(
   cpca_sim$rotation %>% as.data.frame,
-  scpca_sim$rotation %>% as.data.frame) %>%
+  scpca_sim$rotation %>% as.data.frame
+  ) %>%
   mutate(
     sparse = c(rep("0", 30), rep("1", 30)),
     coef = rep(1:30, 2)
