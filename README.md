@@ -4,7 +4,7 @@
 # R/`scPCA`
 
 [![Travis CI Build
-Status](https://travis-ci.com/PhilBoileau/scPCA.svg?branch=master)](https://travis-ci.com/PhilBoileau/scPCA)
+Status](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)](https://travis-ci.org/PhilBoileau/scPCA.svg?branch=master)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/PhilBoileau/scPCA?branch=master&svg=true)](https://ci.appveyor.com/project/PhilBoileau/scPCA/)
 [![Codecov test
@@ -27,7 +27,7 @@ license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://openso
 Hejazi](https://nimahejazi.org), [Sandrine
 Dudoit](https://statistics.berkeley.edu/~sandrine/)
 
------
+------------------------------------------------------------------------
 
 ## What’s `scPCA`?
 
@@ -56,7 +56,7 @@ biological data. In addition to implementing this newly developed
 technique, the `scPCA` package implements cPCA and generalizations
 thereof.
 
------
+------------------------------------------------------------------------
 
 ## Installation
 
@@ -79,7 +79,7 @@ remotes::install_github("PhilBoileau/scPCA")
 ```
 
 Current and prior [Bioconductor](https://bioconductor.org) releases are
-available under branches with numbers prefixed by “RELEASE\_”. For
+available under branches with numbers prefixed by “RELEASE\_.” For
 example, to install the version of this package available via
 Bioconductor 3.10, use
 
@@ -87,7 +87,7 @@ Bioconductor 3.10, use
 remotes::install_github("PhilBoileau/scPCA@RELEASE_3_10")
 ```
 
------
+------------------------------------------------------------------------
 
 ## Example
 
@@ -97,14 +97,14 @@ vignette](https://bioconductor.org/packages/release/bioc/vignettes/scPCA/inst/do
 available through the [Bioconductor
 project](https://bioconductor.org/packages/scPCA).
 
------
+------------------------------------------------------------------------
 
 ## Issues
 
 If you encounter any bugs or have any specific feature requests, please
 [file an issue](https://github.com/PhilBoileau/scPCA/issues).
 
------
+------------------------------------------------------------------------
 
 ## Contributions
 
@@ -113,7 +113,7 @@ our [contribution
 guidelines](https://github.com/PhilBoileau/scPCA/blob/master/CONTRIBUTING.md)
 prior to submitting a pull request.
 
------
+------------------------------------------------------------------------
 
 ## Citation
 
@@ -133,7 +133,7 @@ describing the statistical methodology.
       title = {scPCA: A toolbox for sparse contrastive principal component analysis in R},
       journal = {Journal of Open Source Software}
     }
-    
+
     @manual{boileau2020scPCAbioc,
       title = {{scPCA}: Sparse contrastive principal component analysis},
       author = {Philippe  Boileau and Nima S Hejazi and Sandrine Dudoit},
@@ -141,7 +141,7 @@ describing the statistical methodology.
       note = {R package version 1.1.9},
       url = {https://bioconductor.org/scPCA},
     }
-    
+
     @article{boileau2020scPCA,
         author = {Boileau, Philippe and Hejazi, Nima S and Dudoit, Sandrine},
         title = "{Exploring High-Dimensional Biological Data with Sparse Contrastive Principal Component Analysis}",
@@ -155,7 +155,7 @@ describing the statistical methodology.
         eprint = {https://academic.oup.com/bioinformatics/article-pdf/doi/10.1093/bioinformatics/btaa176/32914142/btaa176.pdf},
     }
 
------
+------------------------------------------------------------------------
 
 ## License
 
@@ -164,13 +164,13 @@ describing the statistical methodology.
 The contents of this repository are distributed under the MIT license.
 See file `LICENSE` for details.
 
------
+------------------------------------------------------------------------
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-abid2018exploring">
+<div id="ref-abid2018exploring" class="csl-entry">
 
 Abid, Abubakar, Martin J Zhang, Vivek K Bagaria, and James Zou. 2018.
 “Exploring Patterns Enriched in a Dataset with Contrastive Principal
@@ -178,16 +178,16 @@ Component Analysis.” *Nature Communications* 9 (1): 2134.
 
 </div>
 
-<div id="ref-boileau2020">
+<div id="ref-boileau2020" class="csl-entry">
 
-Boileau, Philippe, Nima S Hejazi, and Sandrine Dudoit. 2020. “Exploring
-High-Dimensional Biological Data with Sparse Contrastive Principal
-Component Analysis.” *Bioinformatics*, March.
-<https://doi.org/10.1093/bioinformatics/btaa176>.
+Boileau, Philippe, Nima S Hejazi, and Sandrine Dudoit. 2020. “<span
+class="nocase">Exploring High-Dimensional Biological Data with Sparse
+Contrastive Principal Component Analysis</span>.” *Bioinformatics*,
+March. <https://doi.org/10.1093/bioinformatics/btaa176>.
 
 </div>
 
-<div id="ref-erichson2018sparse">
+<div id="ref-erichson2018sparse" class="csl-entry">
 
 Erichson, N. Benjamin, Peng Zeng, Krithika Manohar, Steven L. Brunton,
 J. Nathan Kutz, and Aleksandr Y. Aravkin. 2018. “Sparse Principal
@@ -195,11 +195,11 @@ Component Analysis via Variable Projection.” *ArXiv* abs/1804.00341.
 
 </div>
 
-<div id="ref-zou2006sparse">
+<div id="ref-zou2006sparse" class="csl-entry">
 
 Zou, Hui, Trevor Hastie, and Robert Tibshirani. 2006. “Sparse Principal
 Component Analysis.” *Journal of Computational and Graphical Statistics*
-15 (2). Taylor & Francis: 265–86.
+15 (2): 265–86.
 
 </div>
 
