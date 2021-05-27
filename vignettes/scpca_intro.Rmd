@@ -410,7 +410,7 @@ params <- newSplatParams(
   batchCells = c(150, 150),
   batch.facLoc = c(0.05, 0.05),
   batch.facScale = c(0.05, 0.05),
-  group.prob = rep(1/3, 3),
+  group.prob = c(0.333, 0.333, 0.334),
   de.prob = c(0.1, 0.05, 0.1),
   de.downProb = c(0.1, 0.05, 0.1),
   de.facLoc = rep(0.2, 3),
