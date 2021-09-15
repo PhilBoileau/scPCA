@@ -88,3 +88,10 @@
 + Updating plotting issue in vignette: comparison of cPCA and scPCA loadings.
 + Adding `pkgdown` site.
 + Moving `ScaledMatrix` to "imports" section of `DESCRIPTION`.
+
+# Changes in version 1.7.2 (2021-09-15)
+
++ Removing tests checking that sequential and parallel calls to `scPCA()`
+  produce identical outputs when `BiocParallel`'s `SerialParam()` is used. This
+  due to new handing of random number generation in `BiocParallel` version 1.28.
+

@@ -1,6 +1,6 @@
 Package: scPCA
 Title: Sparse Contrastive Principal Component Analysis
-Version: 1.7.1
+Version: 1.7.2
 Authors@R: c(
     person(given = "Philippe",
            family = "Boileau",
@@ -65,7 +65,7 @@ BugReports: https://github.com/PhilBoileau/scPCA/issues
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 RdMacros: Rdpack
 biocViews:
     PrincipalComponent,
