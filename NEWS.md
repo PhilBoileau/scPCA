@@ -94,4 +94,9 @@
 + Removing tests checking that sequential and parallel calls to `scPCA()`
   produce identical outputs when `BiocParallel`'s `SerialParam()` is used. This
   due to new handing of random number generation in `BiocParallel` version 1.28.
+  
+# Changes in version 1.7.3 (2021-10-07)
+
++ Removing more tests attempting to verify that parallelized outputs perfectly
+  match their serial counterparts.
 
