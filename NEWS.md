@@ -100,3 +100,7 @@
 + Removing more tests attempting to verify that parallelized outputs perfectly
   match their serial counterparts.
 
+# Changes in version 1.9.1 (2022-01-19)
+
++ Updating copyright years
++ Updating citation information
