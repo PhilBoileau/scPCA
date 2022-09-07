@@ -28,8 +28,8 @@
 #'  the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 #'  identify the optimal set of hyperparameters when fitting the scPCA and the
 #'  automated version of cPCA.
-#' @param eigdecomp_tol A \code{numeric} providing the level of precision used by
-#'  eigendecompositon calculations.
+#' @param eigdecomp_tol A \code{numeric} providing the level of precision used
+#'  by eigendecompositon calculations.
 #' @param eigdecomp_iter A \code{numeric} indicating the maximum number of
 #'  interations performed by eigendecompositon calculations. 
 #' @param n_centers A \code{numeric} giving the number of centers to use in the

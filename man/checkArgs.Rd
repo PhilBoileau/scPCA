@@ -57,8 +57,8 @@ the \code{target} data. Defaults to \code{NULL}, but is otherwise used to
 identify the optimal set of hyperparameters when fitting the scPCA and the
 automated version of cPCA.}
 
-\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used by
-eigendecompositon calculations.}
+\item{eigdecomp_tol}{A \code{numeric} providing the level of precision used
+by eigendecompositon calculations.}
 
 \item{eigdecomp_iter}{A \code{numeric} indicating the maximum number of
 interations performed by eigendecompositon calculations.}
