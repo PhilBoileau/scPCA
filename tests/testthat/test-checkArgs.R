@@ -45,8 +45,10 @@ test_that(paste0("Only data.frames, tibbles, matrices, sparse matrices and",
     scaled_matrix
   ))
   expect_silent(checkArgs(
-    as(as.matrix(toy_df[, 1:30]), "dgCMatrix"),
-    as(as.matrix(background_df), "dgCMatrix"),
+    as(as(as(as.matrix(toy_df[, 1:30]), "dMatrix"),
+          "generalMatrix"), "CsparseMatrix"),
+    as(as(as(as.matrix(background_df), "dMatrix"),
+          "generalMatrix"), "CsparseMatrix"),
     center, scale, n_eigen, contrasts, penalties,
     clust_method, linkage_method, clusters,
     eigdecomp_tol, eigdecomp_iter, n_centers,
