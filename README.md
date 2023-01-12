@@ -79,7 +79,7 @@ remotes::install_github("PhilBoileau/scPCA")
 ```
 
 Current and prior [Bioconductor](https://bioconductor.org) releases are
-available under branches with numbers prefixed by “RELEASE\_.” For
+available under branches with numbers prefixed by “RELEASE\_”. For
 example, to install the version of this package available via
 Bioconductor 3.10, use
 
@@ -108,8 +108,8 @@ If you encounter any bugs or have any specific feature requests, please
 
 ## Contributions
 
-Contributions are very welcome. Interested contributors should consult
-our [contribution
+Contributions are welcome. Interested contributors should consult our
+[contribution
 guidelines](https://github.com/PhilBoileau/scPCA/blob/master/CONTRIBUTING.md)
 prior to submitting a pull request.
 
@@ -152,7 +152,7 @@ of an analysis.
 
 ## License
 
-© 2019-2022 [Philippe Boileau](https://pboileau.ca/)
+© 2019-2023 [Philippe Boileau](https://pboileau.ca/)
 
 The contents of this repository are distributed under the MIT license.
 See file `LICENSE` for details.

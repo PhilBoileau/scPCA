@@ -107,7 +107,7 @@ issue](https://github.com/PhilBoileau/scPCA/issues).
 
 ## Contributions
 
-Contributions are very welcome. Interested contributors should consult our
+Contributions are welcome. Interested contributors should consult our
 [contribution
 guidelines](https://github.com/PhilBoileau/scPCA/blob/master/CONTRIBUTING.md)
 prior to submitting a pull request.
@@ -152,7 +152,7 @@ when using scPCA or cross-validated cPCA as part of an analysis.
 
 ## License
 
-&copy; 2019-2022 [Philippe Boileau](https://pboileau.ca/)
+&copy; 2019-2023 [Philippe Boileau](https://pboileau.ca/)
 
 The contents of this repository are distributed under the MIT license. See file
 `LICENSE` for details.
