@@ -104,3 +104,7 @@
 
 + Updating copyright years
 + Updating citation information
+
+# Changes in version 1.15.1 (2023-06-19)
+
++ Address `useNames` issue in `colSds()` that caused tests to throw warnings.

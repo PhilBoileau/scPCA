@@ -66,7 +66,7 @@ safeColScale <- function(X,
   # scale if required
   if (scale) {
     if (is.matrix(X) || class(X)[1] %in% c("dgCMatrix", "DelayedMatrix")) {
-      colSdsX <- MatrixGenerics::colSds(X, na.rm = TRUE)
+      colSdsX <- MatrixGenerics::colSds(X, na.rm = TRUE, useNames = FALSE)
     }
     colSdsX[colSdsX < tol] <- eps
   } else {
