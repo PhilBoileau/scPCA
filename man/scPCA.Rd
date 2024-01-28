@@ -80,7 +80,7 @@ hierarchical clustering. The default is k-means clustering.}
 
 \item{n_centers}{A \code{numeric} giving the number of centers to use in the
 clustering algorithm. If set to 1, cPCA, as first proposed by
-\insertCite{erichson2018sparse;textual}{scPCA}, is performed, regardless of
+\insertCite{abid2018exploring;textual}{scPCA}, is performed, regardless of
 what the \code{penalties} argument is set to.}
 
 \item{max_iter}{A \code{numeric} giving the maximum number of iterations to

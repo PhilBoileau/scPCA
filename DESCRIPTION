@@ -65,7 +65,7 @@ BugReports: https://github.com/PhilBoileau/scPCA/issues
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.1
 RdMacros: Rdpack
 biocViews:
     PrincipalComponent,
