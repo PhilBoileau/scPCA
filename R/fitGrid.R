@@ -112,6 +112,12 @@ fitGrid <- function(target, target_valid = NULL, center, scale,
               eigdecomp_iter = eigdecomp_iter
             )
           }
+          # if no eigenvalues are identified, create a zero loadings matrix
+          if (ncol(res) == 0) {
+            res <- matrix(0, nrow = nrow(res), ncol = n_eigen)
+          }
+          
+          # name the eigenvectors for future reference
           colnames(res) <- paste0("V", as.character(seq_len(ncol(res))))
           res
         }
